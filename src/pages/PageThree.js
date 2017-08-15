@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 
 import PageTwo from './PageTwo';
 
-export default class PageOne extends Component {
+export default class PageThree extends Component {
 
   constructor() {
     super();
@@ -19,9 +19,9 @@ export default class PageOne extends Component {
     console.log('ionViewWillEnter');
   }
 
-  goToPageTwo() {
+  goBack() {
     const nav = this.element.closest('ion-nav');
-    nav.push(PageTwo);
+    nav.pop();
   }
 
   render() {
@@ -29,13 +29,13 @@ export default class PageOne extends Component {
       <div style={this.style} ref={(element) => this.element = element}>
         <ion-header>
           <ion-navbar>
-            <ion-title>Page One</ion-title>
+            <ion-title>Page three</ion-title>
           </ion-navbar>
         </ion-header>
         <ion-content>
-          Page One
+          Page Three
           <div>
-            <ion-button onClick={() => this.goToPageTwo()}>Go to Page Two</ion-button>
+            <ion-button onClick={() => this.goBack()}>Go Back</ion-button>
           </div>
         </ion-content>
       </div>

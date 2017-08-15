@@ -1,17 +1,30 @@
-
+import React from 'react';
+import ReactDOM from 'react-dom';
 
 export function attachViewToDom(navController, viewController) {
-  console.log('my custom attachViewToDom method');
+  // add the view
+  const page = document.createElement('ion-page');
+  navController.element.appendChild(page);
+
+  const element = React.createElement(viewController.component, viewController.data || {});
+  const component = ReactDOM.render(element, page);
+  viewController.element = page;
+  viewController.reactElement = element;
+  viewController.instance = component;
+
   return Promise.resolve();
 }
 
 export function removeViewFromDom(navController, viewController) {
-  console.log('custom removeViewFromDom called');
-  return Promise.resolve();
+  return Promise.resolve().then(() => {
+    return ReactDOM.unmountComponentAtNode(viewController.element);
+  });
 }
 
 export function destroy(viewController) {
-  console.log('custom destroy called');
+  viewController.instance = null;
+  viewController.element = null;
+  viewController.reactElement = null;
   return Promise.resolve();
 }
 
