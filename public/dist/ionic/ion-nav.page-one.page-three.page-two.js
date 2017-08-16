@@ -67,22 +67,8 @@ function assert(bool, msg) {
 var ViewControllerImpl = (function () {
     function ViewControllerImpl(component, data) {
         this.component = component;
-        if (!data) {
-            this.data = {};
-        }
+        this.data = data || {};
     }
-    /**
-     * Called when the current viewController has be successfully dismissed
-     */
-    ViewControllerImpl.prototype.onDidDismiss = function (callback) {
-        this.onDidDismissCallback = callback;
-    };
-    /**
-     * Called when the current viewController will be dismissed
-     */
-    ViewControllerImpl.prototype.onWillDismiss = function (callback) {
-        this.onWillDismissCallback = callback;
-    };
     /**
      * Dismiss the current viewController
      * @param {any} [data] Data that you want to return when the viewController is dismissed.
@@ -95,25 +81,26 @@ var ViewControllerImpl = (function () {
         this.dismissProxy = {};
         return dismiss(this.nav, this.dismissProxy, data, role, navOptions);
     };
-    ViewControllerImpl.prototype.willLeave = function (_unload) {
-        return Promise.resolve();
-        // throw new Error("Method not implemented.");
-    };
-    ViewControllerImpl.prototype.willEnter = function () {
-        // throw new Error("Method not implemented.");
-        return Promise.resolve();
+    ViewControllerImpl.prototype.willLeave = function (unload) {
+        willLeaveImpl(unload, this);
     };
     ViewControllerImpl.prototype.didLeave = function () {
-        // throw new Error("Method not implemented.");
-        return Promise.resolve();
+        didLeaveImpl(this);
+    };
+    ViewControllerImpl.prototype.willEnter = function () {
+        callLifeCycleFunction(this.instance, 'ionViewWillEnter');
     };
     ViewControllerImpl.prototype.didEnter = function () {
-        // throw new Error("Method not implemented.");
-        return Promise.resolve();
+        didEnterImpl(this);
+    };
+    ViewControllerImpl.prototype.willLoad = function () {
+        willLoadImpl(this);
+    };
+    ViewControllerImpl.prototype.didLoad = function () {
+        didLoadImpl(this);
     };
     ViewControllerImpl.prototype.willUnload = function () {
-        // throw new Error("Method not implemented.");
-        return Promise.resolve();
+        willUnloadImpl(this);
     };
     ViewControllerImpl.prototype.destroy = function () {
         return destroy(this);
@@ -156,6 +143,40 @@ function destroy(viewController) {
         viewController.id = viewController.data = viewController.element = viewController.instance = viewController.nav = viewController.dismissProxy = viewController.frameworkDelegate = null;
         viewController.state = STATE_DESTROYED;
     });
+}
+function callLifeCycleFunction(instance, functionName) {
+    instance && instance[functionName] && instance[functionName]();
+}
+function willLeaveImpl(unload, viewController) {
+    callLifeCycleFunction(viewController.instance, 'ionViewWillLeave');
+    if (unload && viewController.onWillDismiss) {
+        viewController.onWillDismiss(this.dismissProxy.data, this.dismissProxy.proxy);
+        viewController.onWillDismiss = null;
+    }
+}
+function didLeaveImpl(viewController) {
+    callLifeCycleFunction(viewController.instance, 'ionViewDidLeave');
+    // TODO, maybe need to do something framework specific here... figure this out later
+    // for example, disconnecting from change detection
+}
+
+function didEnterImpl(viewController) {
+    assert(viewController.state === STATE_ATTACHED, 'view state must be ATTACHED');
+    // TODO - navbar didEnter here
+    callLifeCycleFunction(viewController.instance, 'ionViewDidEnter');
+}
+function willLoadImpl(viewController) {
+    assert(viewController.state === STATE_INITIALIZED, 'view state must be INITIALIZED');
+    callLifeCycleFunction(viewController.instance, 'ionViewWillLoad');
+}
+function willUnloadImpl(viewController) {
+    callLifeCycleFunction(viewController.instance, 'ionViewWillUnLoad');
+    viewController.onDidDismiss && viewController.onDidDismiss(viewController.dismissProxy.data, viewController.dismissProxy.role);
+    viewController.onDidDismiss = viewController.dismissProxy = null;
+}
+function didLoadImpl(viewController) {
+    assert(viewController.state === STATE_ATTACHED, 'view state must be ATTACHED');
+    callLifeCycleFunction(viewController.instance, 'ionViewDidLoad');
 }
 
 var NAV_ID_START = 1000;
@@ -1756,22 +1777,18 @@ function updateNavStacks(enteringView, leavingView, ti) {
         // batch all of lifecycles together
         if (destroyQueue && destroyQueue.length) {
             // TODO, figure out how the zone stuff should work in angular
-            var lifeCyclePromises = [];
             for (var i = 0; i < destroyQueue.length; i++) {
                 var view = destroyQueue[i];
-                lifeCyclePromises.push(view.willLeave(true));
-                lifeCyclePromises.push(view.didLeave());
-                lifeCyclePromises.push(view.willUnload());
+                view.willLeave(true);
+                view.didLeave();
+                view.willUnload();
             }
-            // once all lifecycle events has been delivered, we can safely detroy the views
-            return Promise.all(lifeCyclePromises).then(function () {
-                var destroyQueuePromises = [];
-                for (var _i = 0, destroyQueue_1 = destroyQueue; _i < destroyQueue_1.length; _i++) {
-                    var viewController = destroyQueue_1[_i];
-                    destroyQueuePromises.push(destroyView(ti.nav, viewController));
-                }
-                return Promise.all(destroyQueuePromises);
-            });
+            var destroyQueuePromises = [];
+            for (var _i = 0, destroyQueue_1 = destroyQueue; _i < destroyQueue_1.length; _i++) {
+                var viewController = destroyQueue_1[_i];
+                destroyQueuePromises.push(destroyView(ti.nav, viewController));
+            }
+            return Promise.all(destroyQueuePromises);
         }
         return null;
     }).then(function () {

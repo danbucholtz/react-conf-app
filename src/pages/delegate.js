@@ -3,12 +3,12 @@ import ReactDOM from 'react-dom';
 
 export function attachViewToDom(navController, viewController) {
   // add the view
-  const page = document.createElement('ion-page');
-  navController.element.appendChild(page);
+  const wrapper = document.createElement('div');
+  navController.element.appendChild(wrapper);
 
   const element = React.createElement(viewController.component, viewController.data || {});
-  const component = ReactDOM.render(element, page);
-  viewController.element = page;
+  const component = ReactDOM.render(element, wrapper);
+  viewController.element = wrapper;
   viewController.reactElement = element;
   viewController.instance = component;
 

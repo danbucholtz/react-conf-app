@@ -9,6 +9,9 @@ export default class PageOne extends Component {
     this.style = {
       height: '100%'
     };
+    this.state = {
+      content: 50
+    }
   }
 
   ionViewDidEnter() {
@@ -19,14 +22,28 @@ export default class PageOne extends Component {
     console.log('ionViewWillEnter');
   }
 
+  ionViewWillLeave() {
+    console.log('ionViewWillLeave')
+  }
+
+  ionViewDidLeave() {
+    console.log('ionViewDidLeave')
+  }
+
   goToPageTwo() {
     const nav = this.element.closest('ion-nav');
-    nav.push(PageTwo);
+    nav.push(PageTwo, { paramOne: 'Tobey Flenderson'});
+  }
+
+  componentDidMount() {
+    setInterval(() => {
+      this.setState({ content: Math.random() * 1000});
+    }, 1000);
   }
 
   render() {
     return [
-      <div style={this.style} ref={(element) => this.element = element}>
+      <ion-page style={this.style} ref={(element) => this.element = element}>
         <ion-header>
           <ion-navbar>
             <ion-title>Page One</ion-title>
@@ -37,8 +54,11 @@ export default class PageOne extends Component {
           <div>
             <ion-button onClick={() => this.goToPageTwo()}>Go to Page Two</ion-button>
           </div>
+          <div>
+            Some random content: {this.state.content}
+          </div>
         </ion-content>
-      </div>
+      </ion-page>
     ];
   }
 }

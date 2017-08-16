@@ -9,6 +9,9 @@ export default class PageThree extends Component {
     this.style = {
       height: '100%'
     };
+    this.state = {
+      content: 'page three - ' + 50
+    }
   }
 
   ionViewDidEnter() {
@@ -19,6 +22,13 @@ export default class PageThree extends Component {
     console.log('ionViewWillEnter');
   }
 
+  componentDidMount() {
+    setInterval(() => {
+      this.setState({ content: 'page three - ' + Math.random() * 1000});
+    }, 1000);
+  }
+
+
   goBack() {
     const nav = this.element.closest('ion-nav');
     nav.pop();
@@ -26,7 +36,7 @@ export default class PageThree extends Component {
 
   render() {
     return [
-      <div style={this.style} ref={(element) => this.element = element}>
+      <ion-page style={this.style} ref={(element) => this.element = element}>
         <ion-header>
           <ion-navbar>
             <ion-title>Page three</ion-title>
@@ -37,8 +47,14 @@ export default class PageThree extends Component {
           <div>
             <ion-button onClick={() => this.goBack()}>Go Back</ion-button>
           </div>
+          <div>
+            Some random content: {this.state.content}
+          </div>
+          <div>
+            Props : {this.props.paramOne}
+          </div>
         </ion-content>
-      </div>
+      </ion-page>
     ];
   }
 }
