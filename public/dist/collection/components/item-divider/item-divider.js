@@ -1,4 +1,4 @@
-var ItemDivider = (function () {
+var ItemDivider = /** @class */ (function () {
     function ItemDivider() {
     }
     ItemDivider.prototype.render = function () {

@@ -109,7 +109,7 @@ ion-searchbar {
 }
 
 .searchbar-wp.searchbar-has-focus .searchbar-input-container {
-  border-color: #327eff;
+  border-color: #488aff;
 }
 
 .searchbar-wp.searchbar-has-value .searchbar-search-icon {
@@ -129,7 +129,7 @@ ion-searchbar {
 }
 
 .searchbar-wp-primary.searchbar-has-focus .searchbar-input-container {
-  border-color: #327eff;
+  border-color: #488aff;
 }
 
 .searchbar-wp-secondary.searchbar-has-focus .searchbar-input-container {

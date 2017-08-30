@@ -144,11 +144,11 @@ ion-searchbar {
 }
 
 .searchbar-ios-primary .searchbar-ios-cancel {
-  color: #327eff;
+  color: #488aff;
 }
 
 .searchbar-ios-primary .searchbar-ios-cancel:hover:not(.disable-hover) {
-  color: #2e74eb;
+  color: #427feb;
 }
 
 .toolbar-ios-primary .searchbar-ios .searchbar-search-icon {
@@ -292,7 +292,7 @@ ion-searchbar {
 }
 
 .toolbar-ios-light .searchbar-ios .searchbar-ios-cancel {
-  color: #327eff;
+  color: #488aff;
 }
 
 .searchbar-ios-dark .searchbar-ios-cancel {

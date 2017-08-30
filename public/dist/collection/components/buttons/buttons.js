@@ -1,4 +1,4 @@
-var Buttons = (function () {
+var Buttons = /** @class */ (function () {
     function Buttons() {
     }
     Buttons.prototype["componentDidLoad"] = function () {

@@ -1,5 +1,4 @@
-import { MenuController } from './menu-controller';
-var Menu = (function () {
+var Menu = /** @class */ (function () {
     function Menu() {
         this._init = false;
         this._isPane = false;
@@ -23,8 +22,6 @@ var Menu = (function () {
          * @input {boolean} If true, the menu will persist on child pages.
          */
         this.persistent = false;
-        // get or create the MenuController singleton
-        this._ctrl = Ionic.controllers.menu = (Ionic.controllers.menu || new MenuController());
     }
     Menu.prototype.swipeEnabledChange = function (isEnabled) {
         this.swipeEnable(isEnabled);
@@ -78,7 +75,7 @@ var Menu = (function () {
     Menu.prototype.render = function () {
         // normalize the "type"
         if (!this.type) {
-            this.type = Ionic.config.get('menuType', 'overlay');
+            this.type = this.config.get('menuType', 'overlay');
         }
         return [
             h("div", { "c": { "menu-inner": true } },
@@ -100,7 +97,7 @@ var Menu = (function () {
     Menu.prototype._getType = function () {
         if (!this._type) {
             this._type = this._ctrl.create(this.type, this);
-            if (Ionic.config.getBoolean('animate') === false) {
+            if (this.config.getBoolean('animate') === false) {
                 this._type.ani.duration(0);
             }
         }
@@ -199,7 +196,7 @@ var Menu = (function () {
             // disable swipe to go back gesture
             this._activeBlock = GESTURE_BLOCKER;
             // add css class
-            Core.dom.write(function () {
+            Context.dom.write(function () {
                 _this._cntElm.classList.add('menu-content-open');
             });
             // emit open event
@@ -209,7 +206,7 @@ var Menu = (function () {
             // enable swipe to go back gesture
             this._activeBlock = null;
             // remove css classes
-            Core.dom.write(function () {
+            Context.dom.write(function () {
                 _this._cntElm.classList.remove('menu-content-open');
                 _this._cntElm.classList.remove('show-menu');
                 _this._backdropElm.classList.remove('show-menu');
@@ -343,8 +340,8 @@ var Menu = (function () {
     Menu.prototype._backdropClick = function (shouldAdd) {
         var onBackdropClick = this.onBackdropClick.bind(this);
         if (shouldAdd && !this._unregBdClick) {
-            this._unregBdClick = Core.addListener(this._cntElm, 'click', onBackdropClick, { capture: true });
-            this._unregCntClick = Core.addListener(this._cntElm, 'click', onBackdropClick, { capture: true });
+            this._unregBdClick = Context.addListener(this._cntElm, 'click', onBackdropClick, { capture: true });
+            this._unregCntClick = Context.addListener(this._cntElm, 'click', onBackdropClick, { capture: true });
         }
         else if (!shouldAdd && this._unregBdClick) {
             this._unregBdClick();

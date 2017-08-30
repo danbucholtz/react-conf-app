@@ -1,4 +1,4 @@
-var Label = (function () {
+var Label = /** @class */ (function () {
     function Label() {
         /**
          * @output {event} If true, the label will sit alongside an input. Defaults to `false`.
@@ -13,6 +13,12 @@ var Label = (function () {
          */
         this.stacked = false;
     }
+    /**
+     * @hidden
+     */
+    Label.prototype.getText = function () {
+        return this.el.textContent || '';
+    };
     Label.prototype["componentDidLoad"] = function () {
         this.emitStyle();
     };

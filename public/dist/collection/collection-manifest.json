@@ -1,8 +1,309 @@
 {
   "components": [
     {
+      "tag": "ion-action-sheet",
+      "componentClass": "ActionSheet",
+      "componentPath": "components/action-sheet/action-sheet.js",
+      "styles": {
+        "ios": {
+          "stylePaths": [
+            "components/action-sheet/action-sheet.ios.scss"
+          ]
+        },
+        "md": {
+          "stylePaths": [
+            "components/action-sheet/action-sheet.md.scss"
+          ]
+        },
+        "wp": {
+          "stylePaths": [
+            "components/action-sheet/action-sheet.wp.scss"
+          ]
+        }
+      },
+      "props": [
+        {
+          "name": "buttons"
+        },
+        {
+          "name": "cssClass"
+        },
+        {
+          "name": "enableBackdropDismiss",
+          "type": "boolean"
+        },
+        {
+          "name": "enterAnimation"
+        },
+        {
+          "name": "exitAnimation"
+        },
+        {
+          "name": "id"
+        },
+        {
+          "name": "subTitle"
+        },
+        {
+          "name": "title"
+        }
+      ],
+      "listeners": [
+        {
+          "event": "ionDismiss",
+          "method": "onDismiss",
+          "passive": false,
+          "capture": false
+        }
+      ],
+      "context": [
+        {
+          "name": "config",
+          "id": "config"
+        }
+      ],
+      "connect": [
+        {
+          "name": "animationCtrl",
+          "tag": "ion-animation-controller"
+        }
+      ],
+      "hostElement": {
+        "name": "el"
+      },
+      "events": [
+        {
+          "event": "ionActionSheetDidDismiss"
+        },
+        {
+          "event": "ionActionSheetDidLoad"
+        },
+        {
+          "event": "ionActionSheetDidPresent"
+        },
+        {
+          "event": "ionActionSheetDidUnload"
+        },
+        {
+          "event": "ionActionSheetWillDismiss"
+        },
+        {
+          "event": "ionActionSheetWillPresent"
+        }
+      ],
+      "host": {
+        "theme": "action-sheet"
+      }
+    },
+    {
+      "tag": "ion-action-sheet-controller",
+      "componentClass": "ActionSheetController",
+      "componentPath": "components/action-sheet-controller/action-sheet-controller.js",
+      "styles": {
+        "ios": {},
+        "md": {},
+        "wp": {}
+      },
+      "listeners": [
+        {
+          "event": "body:ionActionSheetDidLoad",
+          "method": "viewDidLoad",
+          "passive": false,
+          "capture": false
+        },
+        {
+          "event": "body:ionActionSheetDidUnload",
+          "method": "willDismiss",
+          "passive": false,
+          "capture": false
+        },
+        {
+          "event": "body:ionActionSheetWillDismiss",
+          "method": "willDismiss",
+          "passive": false,
+          "capture": false
+        },
+        {
+          "event": "body:ionActionSheetWillPresent",
+          "method": "willPresent",
+          "passive": false,
+          "capture": false
+        },
+        {
+          "event": "body:keyup.escape",
+          "method": "escapeKeyUp",
+          "passive": false,
+          "capture": false
+        }
+      ],
+      "methods": [
+        {
+          "name": "create"
+        }
+      ]
+    },
+    {
+      "tag": "ion-alert",
+      "componentClass": "Alert",
+      "componentPath": "components/alert/alert.js",
+      "styles": {
+        "ios": {
+          "stylePaths": [
+            "components/alert/alert.ios.scss"
+          ]
+        },
+        "md": {
+          "stylePaths": [
+            "components/alert/alert.md.scss"
+          ]
+        },
+        "wp": {
+          "stylePaths": [
+            "components/alert/alert.wp.scss"
+          ]
+        }
+      },
+      "props": [
+        {
+          "name": "buttons"
+        },
+        {
+          "name": "cssClass"
+        },
+        {
+          "name": "enableBackdropDismiss",
+          "type": "boolean"
+        },
+        {
+          "name": "enterAnimation"
+        },
+        {
+          "name": "exitAnimation"
+        },
+        {
+          "name": "id"
+        },
+        {
+          "name": "inputs",
+          "stateful": true
+        },
+        {
+          "name": "message"
+        },
+        {
+          "name": "subTitle"
+        },
+        {
+          "name": "title"
+        }
+      ],
+      "listeners": [
+        {
+          "event": "ionDismiss",
+          "method": "onDismiss",
+          "passive": false,
+          "capture": false
+        }
+      ],
+      "context": [
+        {
+          "name": "config",
+          "id": "config"
+        }
+      ],
+      "connect": [
+        {
+          "name": "animationCtrl",
+          "tag": "ion-animation-controller"
+        }
+      ],
+      "hostElement": {
+        "name": "el"
+      },
+      "events": [
+        {
+          "event": "ionAlertDidDismiss"
+        },
+        {
+          "event": "ionAlertDidLoad"
+        },
+        {
+          "event": "ionAlertDidPresent"
+        },
+        {
+          "event": "ionAlertDidUnload"
+        },
+        {
+          "event": "ionAlertWillDismiss"
+        },
+        {
+          "event": "ionAlertWillPresent"
+        }
+      ],
+      "host": {
+        "theme": "alert"
+      }
+    },
+    {
+      "tag": "ion-alert-controller",
+      "componentClass": "AlertController",
+      "componentPath": "components/alert-controller/alert-controller.js",
+      "styles": {
+        "ios": {},
+        "md": {},
+        "wp": {}
+      },
+      "listeners": [
+        {
+          "event": "body:ionAlertDidLoad",
+          "method": "viewDidLoad",
+          "passive": false,
+          "capture": false
+        },
+        {
+          "event": "body:ionAlertDidUnload",
+          "method": "willDismiss",
+          "passive": false,
+          "capture": false
+        },
+        {
+          "event": "body:ionAlertWillDismiss",
+          "method": "willDismiss",
+          "passive": false,
+          "capture": false
+        },
+        {
+          "event": "body:ionAlertWillPresent",
+          "method": "willPresent",
+          "passive": false,
+          "capture": false
+        },
+        {
+          "event": "body:keyup.escape",
+          "method": "escapeKeyUp",
+          "passive": false,
+          "capture": false
+        }
+      ],
+      "methods": [
+        {
+          "name": "create"
+        }
+      ]
+    },
+    {
+      "tag": "ion-animation-controller",
+      "componentClass": "AnimationControllerImpl",
+      "componentPath": "components/animation-controller/animation-controller.js",
+      "methods": [
+        {
+          "name": "create"
+        }
+      ]
+    },
+    {
       "tag": "ion-app",
-      "componentClass": "App",
+      "componentClass": "IonApp",
       "componentPath": "components/app/app.js",
       "styles": {
         "$": {},
@@ -21,6 +322,29 @@
             "components/app/app.wp.scss"
           ]
         }
+      },
+      "listeners": [
+        {
+          "event": "body:navInit",
+          "method": "registerRootNav",
+          "passive": false,
+          "capture": false
+        },
+        {
+          "event": "body:registerPortal",
+          "method": "registerPortal",
+          "passive": false,
+          "capture": false
+        }
+      ],
+      "context": [
+        {
+          "name": "config",
+          "id": "config"
+        }
+      ],
+      "hostElement": {
+        "name": "element"
       },
       "host": {
         "theme": "app"
@@ -52,6 +376,18 @@
         "theme": "avatar"
       },
       "slot": "hasSlots"
+    },
+    {
+      "tag": "ion-backdrop",
+      "componentClass": "Backdrop",
+      "componentPath": "components/backdrop/backdrop.js",
+      "styles": {
+        "$": {
+          "stylePaths": [
+            "components/backdrop/backdrop.scss"
+          ]
+        }
+      }
     },
     {
       "tag": "ion-badge",
@@ -113,9 +449,6 @@
           "type": "boolean"
         },
         {
-          "name": "color"
-        },
-        {
           "name": "default",
           "type": "boolean"
         },
@@ -139,9 +472,6 @@
           "type": "boolean"
         },
         {
-          "name": "mode"
-        },
-        {
           "name": "outline",
           "type": "boolean"
         },
@@ -162,7 +492,9 @@
           "type": "boolean"
         }
       ],
-      "hostElement": "el",
+      "hostElement": {
+        "name": "el"
+      },
       "slot": "hasNamedSlots"
     },
     {
@@ -174,7 +506,9 @@
         "md": {},
         "wp": {}
       },
-      "hostElement": "el",
+      "hostElement": {
+        "name": "el"
+      },
       "host": {
         "theme": "bar-buttons"
       },
@@ -285,6 +619,73 @@
       "slot": "hasSlots"
     },
     {
+      "tag": "ion-checkbox",
+      "componentClass": "Checkbox",
+      "componentPath": "components/checkbox/checkbox.js",
+      "styles": {
+        "ios": {
+          "stylePaths": [
+            "components/checkbox/checkbox.ios.scss"
+          ]
+        },
+        "md": {
+          "stylePaths": [
+            "components/checkbox/checkbox.md.scss"
+          ]
+        },
+        "wp": {
+          "stylePaths": [
+            "components/checkbox/checkbox.wp.scss"
+          ]
+        }
+      },
+      "props": [
+        {
+          "name": "checked",
+          "type": "boolean",
+          "stateful": true
+        },
+        {
+          "name": "disabled",
+          "type": "boolean",
+          "stateful": true
+        },
+        {
+          "name": "value",
+          "stateful": true
+        }
+      ],
+      "propsDidChange": [
+        {
+          "name": "checked",
+          "method": "checkedChanged"
+        },
+        {
+          "name": "disabled",
+          "method": "disabledChanged"
+        }
+      ],
+      "listeners": [
+        {
+          "event": "keydown.space",
+          "method": "onSpace",
+          "passive": false,
+          "capture": false
+        }
+      ],
+      "events": [
+        {
+          "event": "ionChange"
+        },
+        {
+          "event": "ionStyle"
+        }
+      ],
+      "host": {
+        "theme": "checkbox"
+      }
+    },
+    {
       "tag": "ion-chip",
       "componentClass": "Chip",
       "componentPath": "components/chip/chip.js",
@@ -344,7 +745,9 @@
           "name": "href"
         }
       ],
-      "hostElement": "el",
+      "hostElement": {
+        "name": "el"
+      },
       "slot": "hasSlots"
     },
     {
@@ -392,7 +795,15 @@
           "name": "ionScrollStart"
         }
       ],
-      "hostElement": "el",
+      "context": [
+        {
+          "name": "config",
+          "id": "config"
+        }
+      ],
+      "hostElement": {
+        "name": "el"
+      },
       "slot": "hasSlots"
     },
     {
@@ -405,9 +816,13 @@
         "wp": {}
       },
       "methods": [
-        "close"
+        {
+          "name": "close"
+        }
       ],
-      "hostElement": "el",
+      "hostElement": {
+        "name": "el"
+      },
       "slot": "hasSlots"
     },
     {
@@ -441,15 +856,27 @@
         }
       ],
       "states": [
-        "activated",
-        "inContainer",
-        "inList",
-        "show"
+        {
+          "name": "activated"
+        },
+        {
+          "name": "inContainer"
+        },
+        {
+          "name": "inList"
+        },
+        {
+          "name": "show"
+        }
       ],
       "methods": [
-        "close"
+        {
+          "name": "close"
+        }
       ],
-      "hostElement": "el",
+      "hostElement": {
+        "name": "el"
+      },
       "slot": "hasSlots"
     },
     {
@@ -468,9 +895,13 @@
         }
       ],
       "states": [
-        "activated"
+        {
+          "name": "activated"
+        }
       ],
-      "hostElement": "el",
+      "hostElement": {
+        "name": "el"
+      },
       "slot": "hasSlots"
     },
     {
@@ -499,7 +930,15 @@
           ]
         }
       },
-      "hostElement": "el",
+      "context": [
+        {
+          "name": "config",
+          "id": "config"
+        }
+      ],
+      "hostElement": {
+        "name": "el"
+      },
       "slot": "hasSlots"
     },
     {
@@ -626,6 +1065,9 @@
           "capture": false
         }
       ],
+      "hostElement": {
+        "name": "el"
+      },
       "events": [
         {
           "event": "ionGestureEnd"
@@ -642,8 +1084,7 @@
         {
           "event": "ionPress"
         }
-      ],
-      "hostElement": "el"
+      ]
     },
     {
       "tag": "ion-grid",
@@ -698,6 +1139,9 @@
       ],
       "props": [
         {
+          "name": "ariaLabel"
+        },
+        {
           "name": "ios"
         },
         {
@@ -708,8 +1152,15 @@
         }
       ],
       "states": [
-        "ariaLabel",
-        "svgContent"
+        {
+          "name": "svgContent"
+        }
+      ],
+      "context": [
+        {
+          "name": "isServer",
+          "id": "isServer"
+        }
       ],
       "host": {
         "theme": "icon"
@@ -738,6 +1189,12 @@
       },
       "props": [
         {
+          "name": "accept"
+        },
+        {
+          "name": "autocapitalize"
+        },
+        {
           "name": "autocomplete"
         },
         {
@@ -765,10 +1222,31 @@
           "type": "boolean"
         },
         {
+          "name": "inputmode"
+        },
+        {
           "name": "max"
         },
         {
+          "name": "maxlength",
+          "type": "number"
+        },
+        {
           "name": "min"
+        },
+        {
+          "name": "minlength",
+          "type": "number"
+        },
+        {
+          "name": "multiple",
+          "type": "boolean"
+        },
+        {
+          "name": "name"
+        },
+        {
+          "name": "pattern"
         },
         {
           "name": "placeholder"
@@ -776,6 +1254,18 @@
         {
           "name": "readonly",
           "type": "boolean"
+        },
+        {
+          "name": "required",
+          "type": "boolean"
+        },
+        {
+          "name": "results",
+          "type": "number"
+        },
+        {
+          "name": "size",
+          "type": "number"
         },
         {
           "name": "spellcheck",
@@ -795,13 +1285,20 @@
       "propsDidChange": [
         {
           "name": "checked",
-          "method": "setChecked"
+          "method": "checkedChanged"
         },
         {
           "name": "disabled",
-          "method": "setDisabled"
+          "method": "disabledChanged"
+        },
+        {
+          "name": "value",
+          "method": "valueChanged"
         }
       ],
+      "hostElement": {
+        "name": "el"
+      },
       "events": [
         {
           "event": "ionBlur"
@@ -813,7 +1310,6 @@
           "event": "ionStyle"
         }
       ],
-      "hostElement": "el",
       "host": {
         "theme": "input"
       }
@@ -842,13 +1338,7 @@
       },
       "props": [
         {
-          "name": "color"
-        },
-        {
           "name": "href"
-        },
-        {
-          "name": "mode"
         }
       ],
       "listeners": [
@@ -859,7 +1349,14 @@
           "capture": false
         }
       ],
-      "hostElement": "el",
+      "methods": [
+        {
+          "name": "getLabelText"
+        }
+      ],
+      "hostElement": {
+        "name": "el"
+      },
       "slot": "hasNamedSlots"
     },
     {
@@ -925,7 +1422,14 @@
           "name": "side"
         }
       ],
-      "hostElement": "el",
+      "hostElement": {
+        "name": "el"
+      },
+      "events": [
+        {
+          "event": "ionSwipe"
+        }
+      ],
       "slot": "hasSlots"
     },
     {
@@ -951,17 +1455,23 @@
         }
       },
       "states": [
-        "state"
+        {
+          "name": "state"
+        }
       ],
       "methods": [
-        "close"
+        {
+          "name": "close"
+        }
       ],
+      "hostElement": {
+        "name": "el"
+      },
       "events": [
         {
           "event": "ionDrag"
         }
       ],
-      "hostElement": "el",
       "slot": "hasSlots"
     },
     {
@@ -1000,6 +1510,14 @@
           "type": "boolean"
         }
       ],
+      "methods": [
+        {
+          "name": "getText"
+        }
+      ],
+      "hostElement": {
+        "name": "el"
+      },
       "events": [
         {
           "event": "ionStyle"
@@ -1033,10 +1551,14 @@
         }
       },
       "states": [
-        "openContainer"
+        {
+          "name": "openContainer"
+        }
       ],
       "methods": [
-        "closeSlidingItems"
+        {
+          "name": "closeSlidingItems"
+        }
       ],
       "host": {
         "theme": "list"
@@ -1049,9 +1571,21 @@
       "componentPath": "components/list-header/list-header.js",
       "styles": {
         "$": {},
-        "ios": {},
-        "md": {},
-        "wp": {}
+        "ios": {
+          "stylePaths": [
+            "components/list-header/list-header.ios.scss"
+          ]
+        },
+        "md": {
+          "stylePaths": [
+            "components/list-header/list-header.md.scss"
+          ]
+        },
+        "wp": {
+          "stylePaths": [
+            "components/list-header/list-header.wp.scss"
+          ]
+        }
       },
       "host": {
         "theme": "list-header"
@@ -1063,7 +1597,6 @@
       "componentClass": "Loading",
       "componentPath": "components/loading/loading.js",
       "styles": {
-        "$": {},
         "ios": {
           "stylePaths": [
             "components/loading/loading.ios.scss"
@@ -1110,8 +1643,12 @@
         }
       ],
       "states": [
-        "showSpinner",
-        "spinner"
+        {
+          "name": "showSpinner"
+        },
+        {
+          "name": "spinner"
+        }
       ],
       "listeners": [
         {
@@ -1121,6 +1658,21 @@
           "capture": false
         }
       ],
+      "context": [
+        {
+          "name": "config",
+          "id": "config"
+        }
+      ],
+      "connect": [
+        {
+          "name": "animationCtrl",
+          "tag": "ion-animation-controller"
+        }
+      ],
+      "hostElement": {
+        "name": "el"
+      },
       "events": [
         {
           "event": "ionLoadingDidDismiss"
@@ -1141,7 +1693,6 @@
           "event": "ionLoadingWillPresent"
         }
       ],
-      "hostElement": "el",
       "host": {
         "theme": "loading"
       }
@@ -1151,11 +1702,6 @@
       "componentClass": "LoadingController",
       "componentPath": "components/loading-controller/loading-controller.js",
       "styles": {
-        "$": {
-          "stylePaths": [
-            "components/loading-controller/loading-controller.scss"
-          ]
-        },
         "ios": {},
         "md": {},
         "wp": {}
@@ -1190,6 +1736,11 @@
           "method": "escapeKeyUp",
           "passive": false,
           "capture": false
+        }
+      ],
+      "methods": [
+        {
+          "name": "create"
         }
       ]
     },
@@ -1258,6 +1809,15 @@
           "method": "swipeEnabledChange"
         }
       ],
+      "context": [
+        {
+          "name": "config",
+          "id": "config"
+        }
+      ],
+      "hostElement": {
+        "name": "el"
+      },
       "events": [
         {
           "event": "ionClose"
@@ -1269,7 +1829,6 @@
           "event": "ionOpen"
         }
       ],
-      "hostElement": "el",
       "host": {
         "theme": "menu"
       },
@@ -1280,7 +1839,6 @@
       "componentClass": "Modal",
       "componentPath": "components/modal/modal.js",
       "styles": {
-        "$": {},
         "ios": {
           "stylePaths": [
             "components/modal/modal.ios.scss"
@@ -1298,9 +1856,6 @@
         }
       },
       "props": [
-        {
-          "name": "color"
-        },
         {
           "name": "component"
         },
@@ -1324,9 +1879,6 @@
           "name": "id"
         },
         {
-          "name": "mode"
-        },
-        {
           "name": "showBackdrop",
           "type": "boolean"
         }
@@ -1339,6 +1891,15 @@
           "capture": false
         }
       ],
+      "connect": [
+        {
+          "name": "animationCtrl",
+          "tag": "ion-animation-controller"
+        }
+      ],
+      "hostElement": {
+        "name": "el"
+      },
       "events": [
         {
           "event": "ionModalDidDismiss"
@@ -1359,18 +1920,15 @@
           "event": "ionModalWillPresent"
         }
       ],
-      "hostElement": "el"
+      "host": {
+        "theme": "modal"
+      }
     },
     {
       "tag": "ion-modal-controller",
       "componentClass": "ModalController",
       "componentPath": "components/modal-controller/modal-controller.js",
       "styles": {
-        "$": {
-          "stylePaths": [
-            "components/modal-controller/modal-controller.scss"
-          ]
-        },
         "ios": {},
         "md": {},
         "wp": {}
@@ -1378,25 +1936,25 @@
       "listeners": [
         {
           "event": "body:ionModalDidLoad",
-          "method": "viewDidLoad",
+          "method": "modalDidLoad",
           "passive": false,
           "capture": false
         },
         {
           "event": "body:ionModalDidUnload",
-          "method": "willDismiss",
+          "method": "modalWillDismiss",
           "passive": false,
           "capture": false
         },
         {
           "event": "body:ionModalWillDismiss",
-          "method": "willDismiss",
+          "method": "modalWillDismiss",
           "passive": false,
           "capture": false
         },
         {
           "event": "body:ionModalWillPresent",
-          "method": "willPresent",
+          "method": "modalWillPresent",
           "passive": false,
           "capture": false
         },
@@ -1406,11 +1964,16 @@
           "passive": false,
           "capture": false
         }
+      ],
+      "methods": [
+        {
+          "name": "create"
+        }
       ]
     },
     {
       "tag": "ion-nav",
-      "componentClass": "Nav",
+      "componentClass": "IonNav",
       "componentPath": "components/nav/nav.js",
       "props": [
         {
@@ -1420,11 +1983,127 @@
           "name": "root"
         }
       ],
-      "methods": [
-        "pop",
-        "push"
+      "listeners": [
+        {
+          "event": "navInit",
+          "method": "navInitialized",
+          "passive": false,
+          "capture": false
+        }
       ],
-      "hostElement": "element",
+      "methods": [
+        {
+          "name": "canGoBack"
+        },
+        {
+          "name": "canSwipeBack"
+        },
+        {
+          "name": "getActive"
+        },
+        {
+          "name": "getFirstView"
+        },
+        {
+          "name": "getPrevious"
+        },
+        {
+          "name": "insert"
+        },
+        {
+          "name": "insertPages"
+        },
+        {
+          "name": "pop"
+        },
+        {
+          "name": "popTo"
+        },
+        {
+          "name": "popToRoot"
+        },
+        {
+          "name": "push"
+        },
+        {
+          "name": "remove"
+        },
+        {
+          "name": "removeView"
+        },
+        {
+          "name": "setPages"
+        },
+        {
+          "name": "setRoot"
+        }
+      ],
+      "context": [
+        {
+          "name": "config",
+          "id": "config"
+        }
+      ],
+      "hostElement": {
+        "name": "element"
+      },
+      "events": [
+        {
+          "event": "navInit"
+        }
+      ],
+      "slot": "hasSlots"
+    },
+    {
+      "tag": "ion-nav-controller",
+      "componentClass": "NavControllerImpl",
+      "componentPath": "components/nav-controller/nav-controller.js",
+      "props": [
+        {
+          "name": "delegate"
+        }
+      ],
+      "methods": [
+        {
+          "name": "insert"
+        },
+        {
+          "name": "insertPages"
+        },
+        {
+          "name": "pop"
+        },
+        {
+          "name": "popTo"
+        },
+        {
+          "name": "popToRoot"
+        },
+        {
+          "name": "push"
+        },
+        {
+          "name": "remove"
+        },
+        {
+          "name": "removeView"
+        },
+        {
+          "name": "setPages"
+        },
+        {
+          "name": "setRoot"
+        }
+      ],
+      "connect": [
+        {
+          "name": "animationCtrl",
+          "tag": "ion-animation-controller"
+        }
+      ],
+      "hostElement": {
+        "name": "element"
+      },
       "slot": "hasSlots"
     },
     {
@@ -1453,11 +2132,44 @@
           "type": "boolean"
         }
       ],
-      "hostElement": "el",
+      "context": [
+        {
+          "name": "config",
+          "id": "config"
+        }
+      ],
+      "hostElement": {
+        "name": "el"
+      },
       "host": {
         "theme": "toolbar"
       },
       "slot": "hasNamedSlots"
+    },
+    {
+      "tag": "ion-overlay-portal",
+      "componentClass": "IonOverlayPortal",
+      "componentPath": "components/overlay-portal/overlay-portal.js",
+      "styles": {
+        "$": {},
+        "ios": {},
+        "md": {},
+        "wp": {}
+      },
+      "props": [
+        {
+          "name": "type"
+        }
+      ],
+      "hostElement": {
+        "name": "element"
+      },
+      "events": [
+        {
+          "event": "registerPortal"
+        }
+      ],
+      "slot": "hasSlots"
     },
     {
       "tag": "ion-page",
@@ -1485,6 +2197,157 @@
         "theme": "page"
       },
       "slot": "hasSlots"
+    },
+    {
+      "tag": "ion-popover",
+      "componentClass": "Popover",
+      "componentPath": "components/popover/popover.js",
+      "styles": {
+        "ios": {
+          "stylePaths": [
+            "components/popover/popover.ios.scss"
+          ]
+        },
+        "md": {
+          "stylePaths": [
+            "components/popover/popover.md.scss"
+          ]
+        },
+        "wp": {
+          "stylePaths": [
+            "components/popover/popover.wp.scss"
+          ]
+        }
+      },
+      "props": [
+        {
+          "name": "component"
+        },
+        {
+          "name": "componentProps"
+        },
+        {
+          "name": "cssClass"
+        },
+        {
+          "name": "enableBackdropDismiss",
+          "type": "boolean"
+        },
+        {
+          "name": "enterAnimation"
+        },
+        {
+          "name": "ev"
+        },
+        {
+          "name": "exitAnimation"
+        },
+        {
+          "name": "id"
+        },
+        {
+          "name": "showBackdrop",
+          "type": "boolean"
+        }
+      ],
+      "states": [
+        {
+          "name": "positioned"
+        }
+      ],
+      "listeners": [
+        {
+          "event": "ionDismiss",
+          "method": "onDismiss",
+          "passive": false,
+          "capture": false
+        }
+      ],
+      "context": [
+        {
+          "name": "config",
+          "id": "config"
+        }
+      ],
+      "connect": [
+        {
+          "name": "animationCtrl",
+          "tag": "ion-animation-controller"
+        }
+      ],
+      "hostElement": {
+        "name": "el"
+      },
+      "events": [
+        {
+          "event": "ionPopoverDidDismiss"
+        },
+        {
+          "event": "ionPopoverDidLoad"
+        },
+        {
+          "event": "ionPopoverDidPresent"
+        },
+        {
+          "event": "ionPopoverDidUnload"
+        },
+        {
+          "event": "ionPopoverWillDismiss"
+        },
+        {
+          "event": "ionPopoverWillPresent"
+        }
+      ],
+      "host": {
+        "theme": "popover"
+      }
+    },
+    {
+      "tag": "ion-popover-controller",
+      "componentClass": "PopoverController",
+      "componentPath": "components/popover-controller/popover-controller.js",
+      "styles": {
+        "ios": {},
+        "md": {},
+        "wp": {}
+      },
+      "listeners": [
+        {
+          "event": "body:ionPopoverDidLoad",
+          "method": "viewDidLoad",
+          "passive": false,
+          "capture": false
+        },
+        {
+          "event": "body:ionPopoverDidUnload",
+          "method": "willDismiss",
+          "passive": false,
+          "capture": false
+        },
+        {
+          "event": "body:ionPopoverWillDismiss",
+          "method": "willDismiss",
+          "passive": false,
+          "capture": false
+        },
+        {
+          "event": "body:ionPopoverWillPresent",
+          "method": "willPresent",
+          "passive": false,
+          "capture": false
+        },
+        {
+          "event": "body:keyup.escape",
+          "method": "escapeKeyUp",
+          "passive": false,
+          "capture": false
+        }
+      ],
+      "methods": [
+        {
+          "name": "create"
+        }
+      ]
     },
     {
       "tag": "ion-row",
@@ -1546,7 +2409,15 @@
           "capture": false
         }
       ],
-      "hostElement": "el",
+      "context": [
+        {
+          "name": "config",
+          "id": "config"
+        }
+      ],
+      "hostElement": {
+        "name": "el"
+      },
       "slot": "hasSlots"
     },
     {
@@ -1589,15 +2460,9 @@
           "stateful": true
         },
         {
-          "name": "color"
-        },
-        {
           "name": "debounce",
           "type": "number",
           "stateful": true
-        },
-        {
-          "name": "mode"
         },
         {
           "name": "placeholder",
@@ -1623,9 +2488,16 @@
         }
       ],
       "states": [
-        "activated",
-        "focused"
+        {
+          "name": "activated"
+        },
+        {
+          "name": "focused"
+        }
       ],
+      "hostElement": {
+        "name": "el"
+      },
       "events": [
         {
           "event": "ionBlur"
@@ -1643,7 +2515,6 @@
           "event": "ionInput"
         }
       ],
-      "hostElement": "el",
       "host": {
         "theme": "searchbar"
       }
@@ -1694,7 +2565,14 @@
           "capture": false
         }
       ],
-      "hostElement": "el",
+      "hostElement": {
+        "name": "el"
+      },
+      "events": [
+        {
+          "event": "ionChange"
+        }
+      ],
       "host": {
         "theme": "segment"
       },
@@ -1726,14 +2604,163 @@
         }
       ],
       "states": [
-        "activated"
+        {
+          "name": "activated"
+        }
       ],
+      "hostElement": {
+        "name": "el"
+      },
       "events": [
         {
           "event": "ionClick"
         }
       ],
       "slot": "hasSlots"
+    },
+    {
+      "tag": "ion-select",
+      "componentClass": "Select",
+      "componentPath": "components/select/select.js",
+      "styles": {
+        "ios": {
+          "stylePaths": [
+            "components/select/select.ios.scss"
+          ]
+        },
+        "md": {
+          "stylePaths": [
+            "components/select/select.md.scss"
+          ]
+        },
+        "wp": {
+          "stylePaths": [
+            "components/select/select.wp.scss"
+          ]
+        }
+      },
+      "props": [
+        {
+          "name": "cancelText"
+        },
+        {
+          "name": "disabled",
+          "type": "boolean"
+        },
+        {
+          "name": "interface"
+        },
+        {
+          "name": "multiple",
+          "type": "boolean"
+        },
+        {
+          "name": "okText"
+        },
+        {
+          "name": "placeholder"
+        },
+        {
+          "name": "selectedText"
+        },
+        {
+          "name": "selectOptions"
+        },
+        {
+          "name": "value",
+          "stateful": true
+        }
+      ],
+      "connect": [
+        {
+          "name": "actionSheetCtrl",
+          "tag": "ion-action-sheet-controller"
+        },
+        {
+          "name": "alertCtrl",
+          "tag": "ion-alert-controller"
+        },
+        {
+          "name": "popoverCtrl",
+          "tag": "ion-popover-controller"
+        }
+      ],
+      "hostElement": {
+        "name": "el"
+      },
+      "events": [
+        {
+          "event": "ionCancel"
+        }
+      ],
+      "host": {
+        "theme": "select"
+      }
+    },
+    {
+      "tag": "ion-select-option",
+      "componentClass": "SelectOption",
+      "componentPath": "components/select-option/select-option.js",
+      "styles": {
+        "ios": {},
+        "md": {},
+        "wp": {}
+      },
+      "props": [
+        {
+          "name": "disabled",
+          "type": "boolean"
+        },
+        {
+          "name": "selected",
+          "type": "boolean"
+        },
+        {
+          "name": "value"
+        }
+      ],
+      "methods": [
+        {
+          "name": "getText"
+        }
+      ],
+      "hostElement": {
+        "name": "el"
+      },
+      "events": [
+        {
+          "event": "ionSelect"
+        }
+      ],
+      "host": {
+        "theme": "select-option"
+      },
+      "slot": "hasSlots"
+    },
+    {
+      "tag": "ion-select-popover",
+      "componentClass": "SelectPopover",
+      "componentPath": "components/select/select-popover.js",
+      "styles": {
+        "ios": {},
+        "md": {},
+        "wp": {}
+      },
+      "props": [
+        {
+          "name": "options"
+        },
+        {
+          "name": "value",
+          "stateful": true
+        }
+      ],
+      "propsDidChange": [
+        {
+          "name": "value",
+          "method": "valueChanged"
+        }
+      ]
     },
     {
       "tag": "ion-skeleton-text",
@@ -1835,6 +2862,9 @@
           "type": "boolean"
         }
       ],
+      "hostElement": {
+        "name": "el"
+      },
       "events": [
         {
           "event": "ionSlideDidChange"
@@ -1876,7 +2906,6 @@
           "event": "ionSlideWillChange"
         }
       ],
-      "hostElement": "el",
       "slot": "hasSlots"
     },
     {
@@ -1902,14 +2931,8 @@
       },
       "props": [
         {
-          "name": "color"
-        },
-        {
           "name": "duration",
           "type": "number"
-        },
-        {
-          "name": "mode"
         },
         {
           "name": "name"
@@ -1918,7 +2941,16 @@
           "name": "paused",
           "type": "boolean"
         }
-      ]
+      ],
+      "context": [
+        {
+          "name": "config",
+          "id": "config"
+        }
+      ],
+      "host": {
+        "theme": "spinner"
+      }
     },
     {
       "tag": "ion-tab",
@@ -1965,7 +2997,9 @@
         }
       ],
       "states": [
-        "isSelected"
+        {
+          "name": "isSelected"
+        }
       ],
       "events": [
         {
@@ -2086,9 +3120,15 @@
         }
       ],
       "states": [
-        "selectedIndex",
-        "selectedTab",
-        "tabs"
+        {
+          "name": "selectedIndex"
+        },
+        {
+          "name": "selectedTab"
+        },
+        {
+          "name": "tabs"
+        }
       ],
       "listeners": [
         {
@@ -2108,6 +3148,117 @@
         "theme": "tabs"
       },
       "slot": "hasSlots"
+    },
+    {
+      "tag": "ion-textarea",
+      "componentClass": "Textarea",
+      "componentPath": "components/input/textarea.js",
+      "styles": {
+        "ios": {
+          "stylePaths": [
+            "components/input/input.ios.scss"
+          ]
+        },
+        "md": {
+          "stylePaths": [
+            "components/input/input.md.scss"
+          ]
+        },
+        "wp": {
+          "stylePaths": [
+            "components/input/input.wp.scss"
+          ]
+        }
+      },
+      "props": [
+        {
+          "name": "autocapitalize"
+        },
+        {
+          "name": "autocomplete"
+        },
+        {
+          "name": "autofocus",
+          "type": "boolean"
+        },
+        {
+          "name": "clearOnEdit",
+          "type": "boolean",
+          "stateful": true
+        },
+        {
+          "name": "cols",
+          "type": "number"
+        },
+        {
+          "name": "disabled",
+          "type": "boolean"
+        },
+        {
+          "name": "maxlength",
+          "type": "number"
+        },
+        {
+          "name": "minlength",
+          "type": "number"
+        },
+        {
+          "name": "name"
+        },
+        {
+          "name": "placeholder"
+        },
+        {
+          "name": "readonly",
+          "type": "boolean"
+        },
+        {
+          "name": "required",
+          "type": "boolean"
+        },
+        {
+          "name": "rows",
+          "type": "number"
+        },
+        {
+          "name": "spellcheck",
+          "type": "boolean"
+        },
+        {
+          "name": "value",
+          "stateful": true
+        },
+        {
+          "name": "wrap"
+        }
+      ],
+      "propsDidChange": [
+        {
+          "name": "disabled",
+          "method": "disabledChanged"
+        },
+        {
+          "name": "value",
+          "method": "valueChanged"
+        }
+      ],
+      "hostElement": {
+        "name": "el"
+      },
+      "events": [
+        {
+          "event": "ionBlur"
+        },
+        {
+          "event": "ionFocus"
+        },
+        {
+          "event": "ionStyle"
+        }
+      ],
+      "host": {
+        "theme": "input"
+      }
     },
     {
       "tag": "ion-thumbnail",
@@ -2163,6 +3314,156 @@
       "slot": "hasSlots"
     },
     {
+      "tag": "ion-toast",
+      "componentClass": "Toast",
+      "componentPath": "components/toast/toast.js",
+      "styles": {
+        "ios": {
+          "stylePaths": [
+            "components/toast/toast.ios.scss"
+          ]
+        },
+        "md": {
+          "stylePaths": [
+            "components/toast/toast.md.scss"
+          ]
+        },
+        "wp": {
+          "stylePaths": [
+            "components/toast/toast.wp.scss"
+          ]
+        }
+      },
+      "props": [
+        {
+          "name": "closeButtonText"
+        },
+        {
+          "name": "cssClass"
+        },
+        {
+          "name": "dismissOnPageChange",
+          "type": "boolean"
+        },
+        {
+          "name": "duration",
+          "type": "number"
+        },
+        {
+          "name": "enterAnimation"
+        },
+        {
+          "name": "exitAnimation"
+        },
+        {
+          "name": "id"
+        },
+        {
+          "name": "message"
+        },
+        {
+          "name": "position"
+        },
+        {
+          "name": "showCloseButton",
+          "type": "boolean"
+        }
+      ],
+      "listeners": [
+        {
+          "event": "ionDismiss",
+          "method": "onDismiss",
+          "passive": false,
+          "capture": false
+        }
+      ],
+      "context": [
+        {
+          "name": "config",
+          "id": "config"
+        }
+      ],
+      "connect": [
+        {
+          "name": "animationCtrl",
+          "tag": "ion-animation-controller"
+        }
+      ],
+      "hostElement": {
+        "name": "el"
+      },
+      "events": [
+        {
+          "event": "ionToastDidDismiss"
+        },
+        {
+          "event": "ionToastDidLoad"
+        },
+        {
+          "event": "ionToastDidPresent"
+        },
+        {
+          "event": "ionToastDidUnload"
+        },
+        {
+          "event": "ionToastWillDismiss"
+        },
+        {
+          "event": "ionToastWillPresent"
+        }
+      ],
+      "host": {
+        "theme": "toast"
+      }
+    },
+    {
+      "tag": "ion-toast-controller",
+      "componentClass": "ToastController",
+      "componentPath": "components/toast-controller/toast-controller.js",
+      "styles": {
+        "ios": {},
+        "md": {},
+        "wp": {}
+      },
+      "listeners": [
+        {
+          "event": "body:ionToastDidLoad",
+          "method": "viewDidLoad",
+          "passive": false,
+          "capture": false
+        },
+        {
+          "event": "body:ionToastDidUnload",
+          "method": "willDismiss",
+          "passive": false,
+          "capture": false
+        },
+        {
+          "event": "body:ionToastWillDismiss",
+          "method": "willDismiss",
+          "passive": false,
+          "capture": false
+        },
+        {
+          "event": "body:ionToastWillPresent",
+          "method": "willPresent",
+          "passive": false,
+          "capture": false
+        },
+        {
+          "event": "body:keyup.escape",
+          "method": "escapeKeyUp",
+          "passive": false,
+          "capture": false
+        }
+      ],
+      "methods": [
+        {
+          "name": "create"
+        }
+      ]
+    },
+    {
       "tag": "ion-toggle",
       "componentClass": "Toggle",
       "componentPath": "components/toggle/toggle.js",
@@ -2190,15 +3491,9 @@
           "stateful": true
         },
         {
-          "name": "color"
-        },
-        {
           "name": "disabled",
           "type": "boolean",
           "stateful": true
-        },
-        {
-          "name": "mode"
         },
         {
           "name": "value",
@@ -2208,11 +3503,11 @@
       "propsDidChange": [
         {
           "name": "checked",
-          "method": "changed"
+          "method": "checkedChanged"
         },
         {
           "name": "disabled",
-          "method": "disableChanged"
+          "method": "disabledChanged"
         }
       ],
       "listeners": [
@@ -2263,7 +3558,15 @@
           ]
         }
       },
-      "hostElement": "el",
+      "context": [
+        {
+          "name": "config",
+          "id": "config"
+        }
+      ],
+      "hostElement": {
+        "name": "el"
+      },
       "host": {
         "theme": "toolbar"
       },
@@ -2273,22 +3576,58 @@
       "tag": "page-one",
       "componentClass": "PageOne",
       "componentPath": "components/nav/page-one.js",
-      "hostElement": "element"
+      "hostElement": {
+        "name": "element"
+      }
     },
     {
       "tag": "page-three",
       "componentClass": "PageThree",
       "componentPath": "components/nav/page-three.js",
-      "hostElement": "element"
+      "hostElement": {
+        "name": "element"
+      }
     },
     {
       "tag": "page-two",
       "componentClass": "PageTwo",
       "componentPath": "components/nav/page-two.js",
-      "hostElement": "element"
+      "hostElement": {
+        "name": "element"
+      }
+    },
+    {
+      "tag": "stencil-ion-nav-delegate",
+      "componentClass": "StencilNavDelegate",
+      "componentPath": "components/nav-controller/stencil-nav-delegate.js",
+      "methods": [
+        {
+          "name": "attachViewToDom"
+        },
+        {
+          "name": "removeViewFromDom"
+        }
+      ]
     }
   ],
   "bundles": [
+    {
+      "components": [
+        "ion-action-sheet",
+        "ion-action-sheet-controller"
+      ]
+    },
+    {
+      "components": [
+        "ion-alert",
+        "ion-alert-controller"
+      ]
+    },
+    {
+      "components": [
+        "ion-animation-controller"
+      ]
+    },
     {
       "components": [
         "ion-app",
@@ -2297,6 +3636,7 @@
         "ion-footer",
         "ion-header",
         "ion-navbar",
+        "ion-overlay-portal",
         "ion-page",
         "ion-title",
         "ion-toolbar"
@@ -2307,6 +3647,11 @@
         "ion-avatar",
         "ion-badge",
         "ion-thumbnail"
+      ]
+    },
+    {
+      "components": [
+        "ion-backdrop"
       ]
     },
     {
@@ -2322,6 +3667,11 @@
         "ion-card-content",
         "ion-card-header",
         "ion-card-title"
+      ]
+    },
+    {
+      "components": [
+        "ion-checkbox"
       ]
     },
     {
@@ -2352,7 +3702,8 @@
     },
     {
       "components": [
-        "ion-input"
+        "ion-input",
+        "ion-textarea"
       ]
     },
     {
@@ -2388,9 +3739,17 @@
     {
       "components": [
         "ion-nav",
+        "ion-nav-controller",
         "page-one",
         "page-three",
-        "page-two"
+        "page-two",
+        "stencil-ion-nav-delegate"
+      ]
+    },
+    {
+      "components": [
+        "ion-popover",
+        "ion-popover-controller"
       ]
     },
     {
@@ -2402,6 +3761,13 @@
       "components": [
         "ion-segment",
         "ion-segment-button"
+      ]
+    },
+    {
+      "components": [
+        "ion-select",
+        "ion-select-option",
+        "ion-select-popover"
       ]
     },
     {
@@ -2426,9 +3792,19 @@
     },
     {
       "components": [
+        "ion-toast",
+        "ion-toast-controller"
+      ]
+    },
+    {
+      "components": [
         "ion-toggle"
       ]
     }
   ],
+  "compiler": {
+    "name": "@stencil/core",
+    "version": "0.0.4"
+  },
   "global": "global/ionic-global.js"
 }

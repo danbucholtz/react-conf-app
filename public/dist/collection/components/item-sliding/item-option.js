@@ -1,5 +1,5 @@
 import { createThemedClasses } from '../../utils/theme';
-var ItemOption = (function () {
+var ItemOption = /** @class */ (function () {
     function ItemOption() {
         /**
          * @Prop {boolean} If true, sets the button into a disabled state.

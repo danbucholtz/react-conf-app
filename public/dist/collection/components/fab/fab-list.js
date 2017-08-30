@@ -1,4 +1,4 @@
-var FabList = (function () {
+var FabList = /** @class */ (function () {
     function FabList() {
         this.activated = false;
     }

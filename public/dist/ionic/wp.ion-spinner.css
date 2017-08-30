@@ -127,13 +127,13 @@ ion-spinner.spinner-paused svg {
 .spinner-wp-primary.spinner-lines line,
 .spinner-wp-primary.spinner-lines-sm line,
 .spinner-wp-primary.spinner-crescent circle {
-  stroke: #327eff;
+  stroke: #488aff;
 }
 
 .spinner-wp-primary.spinner-bubbles circle,
 .spinner-wp-primary.spinner-circles circle,
 .spinner-wp-primary.spinner-dots circle {
-  fill: #327eff;
+  fill: #488aff;
 }
 
 .spinner-wp-secondary.spinner-lines line,

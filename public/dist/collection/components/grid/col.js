@@ -1,4 +1,4 @@
-var Col = (function () {
+var Col = /** @class */ (function () {
     function Col() {
     }
     return Col;

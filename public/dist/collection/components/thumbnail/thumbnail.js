@@ -1,4 +1,4 @@
-var Thumbnail = (function () {
+var Thumbnail = /** @class */ (function () {
     function Thumbnail() {
     }
     Thumbnail.prototype.render = function () {

@@ -1,4 +1,4 @@
-var TabBar = (function () {
+var TabBar = /** @class */ (function () {
     function TabBar() {
         this.selectedIndex = 0;
         /**

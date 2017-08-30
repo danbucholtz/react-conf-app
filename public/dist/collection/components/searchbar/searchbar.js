@@ -1,4 +1,4 @@
-var Searchbar = (function () {
+var Searchbar = /** @class */ (function () {
     function Searchbar() {
         this._isCancelVisible = false;
         this._shouldBlur = true;

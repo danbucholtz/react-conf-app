@@ -1,4 +1,4 @@
-var ListHeader = (function () {
+var ListHeader = /** @class */ (function () {
     function ListHeader() {
     }
     ListHeader.prototype.render = function () {

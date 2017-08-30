@@ -1,4 +1,4 @@
-var Header = (function () {
+var Header = /** @class */ (function () {
     function Header() {
     }
     Header.prototype.render = function () {

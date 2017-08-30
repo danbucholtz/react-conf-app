@@ -1,4 +1,4 @@
-var PageThree = (function () {
+var PageThree = /** @class */ (function () {
     function PageThree() {
     }
     PageThree.prototype.ionViewDidEnter = function () {

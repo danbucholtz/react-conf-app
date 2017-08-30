@@ -1,4 +1,4 @@
-var Router = (function () {
+var Router = /** @class */ (function () {
     function Router() {
         this.root = '';
         this.routeMatch = {};

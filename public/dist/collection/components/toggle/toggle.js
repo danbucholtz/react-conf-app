@@ -1,4 +1,4 @@
-var Toggle = (function () {
+var Toggle = /** @class */ (function () {
     function Toggle() {
         this.activated = false;
         this.hasFocus = false;
@@ -8,11 +8,11 @@ var Toggle = (function () {
     Toggle.prototype["componentWillLoad"] = function () {
         this.emitStyle();
     };
-    Toggle.prototype.changed = function (val) {
+    Toggle.prototype.checkedChanged = function (val) {
         this.ionChange.emit({ checked: val });
         this.emitStyle();
     };
-    Toggle.prototype.disableChanged = function () {
+    Toggle.prototype.disabledChanged = function () {
         this.emitStyle();
     };
     Toggle.prototype.emitStyle = function () {

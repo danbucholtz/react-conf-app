@@ -1,5 +1,5 @@
 import { isRightSide } from '../../utils/helpers';
-var ItemOptions = (function () {
+var ItemOptions = /** @class */ (function () {
     function ItemOptions() {
         /**
          * @input {string} The side the option button should be on. Defaults to `"right"`.
@@ -7,10 +7,6 @@ var ItemOptions = (function () {
          */
         this.side = 'right';
     }
-    /**
-     * @output {event} Emitted when the item has been fully swiped.
-     */
-    // @Event() ionSwipe: EventEmitter;
     /**
      * @hidden
      */

@@ -1,4 +1,4 @@
-var Slide = (function () {
+var Slide = /** @class */ (function () {
     function Slide() {
     }
     Slide.prototype.hostData = function () {

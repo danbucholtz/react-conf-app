@@ -1,4 +1,4 @@
-var Avatar = (function () {
+var Avatar = /** @class */ (function () {
     function Avatar() {
     }
     Avatar.prototype.render = function () {

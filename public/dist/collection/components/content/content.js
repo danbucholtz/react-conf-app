@@ -1,6 +1,14 @@
-import { createThemedClasses } from '../../utils/theme';
+var __assign = (this && this.__assign) || Object.assign || function(t) {
+    for (var s, i = 1, n = arguments.length; i < n; i++) {
+        s = arguments[i];
+        for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
+            t[p] = s[p];
+    }
+    return t;
+};
+import { createThemedClasses, getElementClassObject } from '../../utils/theme';
 import { getParentElement, getToolbarHeight } from '../../utils/helpers';
-var Content = (function () {
+var Content = /** @class */ (function () {
     function Content() {
         this.$scrollDetail = {};
         /**
@@ -60,8 +68,9 @@ var Content = (function () {
             props['ionScrollEnd'] = this.ionScrollEnd.bind(this);
         }
         var themedClasses = createThemedClasses(this.mode, this.color, 'content');
-        themedClasses['statusbar-padding'] = Ionic.config.getBoolean('statusbarPadding');
-        return (h("ion-scroll", { "s": scrollStyle, "p": props, "c": themedClasses },
+        var hostClasses = getElementClassObject(this.el.classList);
+        var scrollClasses = __assign({}, themedClasses, hostClasses, { 'statusbar-padding': this.config.getBoolean('statusbarPadding') });
+        return (h("ion-scroll", { "s": scrollStyle, "p": props, "c": scrollClasses },
             h(0, 0)));
     };
     return Content;

@@ -1,4 +1,4 @@
-var Tabs = (function () {
+var Tabs = /** @class */ (function () {
     function Tabs() {
         /**
          * @state {number} The selected tab index

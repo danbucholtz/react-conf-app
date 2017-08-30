@@ -1,4 +1,4 @@
-var TabButton = (function () {
+var TabButton = /** @class */ (function () {
     function TabButton() {
     }
     TabButton.prototype.hostData = function () {

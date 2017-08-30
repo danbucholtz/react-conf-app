@@ -1,4 +1,4 @@
-var Footer = (function () {
+var Footer = /** @class */ (function () {
     function Footer() {
     }
     Footer.prototype.render = function () {

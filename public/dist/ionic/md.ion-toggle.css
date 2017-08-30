@@ -67,12 +67,12 @@ ion-toggle ion-gesture {
 }
 
 .toggle-md.toggle-checked .toggle-icon {
-  background-color: #b2ceff;
+  background-color: #c8dcff;
 }
 
 .toggle-md.toggle-checked .toggle-inner {
   transform: translate3d(16px,  0,  0);
-  background-color: #327eff;
+  background-color: #488aff;
 }
 
 .toggle-md.toggle-disabled,
@@ -100,11 +100,11 @@ ion-toggle ion-gesture {
 }
 
 .toggle-md-primary.toggle-checked .toggle-icon {
-  background-color: #b2ceff;
+  background-color: #c8dcff;
 }
 
 .toggle-md-primary.toggle-checked .toggle-inner {
-  background-color: #327eff;
+  background-color: #488aff;
 }
 
 .toggle-md-secondary.toggle-checked .toggle-icon {

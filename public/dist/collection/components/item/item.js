@@ -7,7 +7,7 @@ var __assign = (this && this.__assign) || Object.assign || function(t) {
     return t;
 };
 import { createThemedClasses } from '../../utils/theme';
-var Item = (function () {
+var Item = /** @class */ (function () {
     function Item() {
         this.childStyles = Object.create(null);
         // _ids: number = -1;
@@ -84,12 +84,6 @@ var Item = (function () {
         // /**
         //  * @hidden
         //  */
-        // getLabelText(): string {
-        //   return this._label ? this._label.text : '';
-        // }
-        // /**
-        //  * @hidden
-        //  */
         // @ContentChild(Label)
         // set contentLabel(label: Label) {
         //   if (label) {
@@ -144,12 +138,24 @@ var Item = (function () {
         // returning true tells the renderer to queue an update
         return hasChildStyleChange;
     };
+    Item.prototype.getLabelText = function () {
+        return this.label ? this.label.getText() : '';
+    };
     Item.prototype["componentDidLoad"] = function () {
         // Add item-button classes to each ion-button in the item
         var buttons = this.el.querySelectorAll('ion-button');
         for (var i = 0; i < buttons.length; i++) {
             buttons[i].itemButton = true;
         }
+        this.label = this.el.querySelector('ion-label');
+        // if (label) {
+        //   this.label = label;
+        //   this.labelId = label.id = ('lbl-' + this.id);
+        //   if (label.type) {
+        //     this.setElementClass('item-label-' + label.type, true);
+        //   }
+        //   this.viewLabel = false;
+        // }
     };
     Item.prototype.render = function () {
         var themedClasses = __assign({}, this.childStyles, createThemedClasses(this.mode, this.color, 'item'), { 'item-block': true });

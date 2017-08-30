@@ -1,4 +1,4 @@
-var PageOne = (function () {
+var PageOne = /** @class */ (function () {
     function PageOne() {
     }
     PageOne.prototype.ionViewDidEnter = function () {

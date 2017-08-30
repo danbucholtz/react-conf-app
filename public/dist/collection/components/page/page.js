@@ -1,4 +1,4 @@
-var Page = (function () {
+var Page = /** @class */ (function () {
     function Page() {
     }
     Page.prototype.render = function () {

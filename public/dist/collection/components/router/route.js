@@ -1,4 +1,4 @@
-var Route = (function () {
+var Route = /** @class */ (function () {
     function Route() {
         this.componentProps = {};
         //@Prop() match: any;

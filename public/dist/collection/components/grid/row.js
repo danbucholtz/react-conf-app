@@ -1,4 +1,4 @@
-var Row = (function () {
+var Row = /** @class */ (function () {
     function Row() {
     }
     return Row;

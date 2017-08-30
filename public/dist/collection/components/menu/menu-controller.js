@@ -1,5 +1,5 @@
 import { MenuRevealType, MenuPushType, MenuOverlayType } from './menu-types';
-var MenuController = (function () {
+var MenuController = /** @class */ (function () {
     function MenuController() {
         this._menus = [];
         this._menuTypes = {};

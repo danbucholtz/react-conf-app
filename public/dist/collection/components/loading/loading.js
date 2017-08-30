@@ -1,36 +1,11 @@
 import iOSEnterAnimation from './animations/ios.enter';
 import iOSLeaveAnimation from './animations/ios.leave';
-var Loading = (function () {
+var Loading = /** @class */ (function () {
     function Loading() {
         this.showSpinner = null;
         this.dismissOnPageChange = false;
         this.showBackdrop = true;
     }
-    Loading.prototype.onDismiss = function (ev) {
-        ev.stopPropagation();
-        ev.preventDefault();
-        this.dismiss();
-    };
-    Loading.prototype["componentDidLoad"] = function () {
-        if (!this.spinner) {
-            this.spinner = Ionic.config.get('loadingSpinner', Ionic.config.get('spinner', 'lines'));
-        }
-        if (this.showSpinner === null || this.showSpinner === undefined) {
-            this.showSpinner = !!(this.spinner && this.spinner !== 'hide');
-        }
-        this.ionLoadingDidLoad.emit({ loading: this });
-    };
-    Loading.prototype.ionViewDidEnter = function () {
-        var _this = this;
-        // blur the currently active element
-        var activeElement = document.activeElement;
-        activeElement && activeElement.blur && activeElement.blur();
-        // If there is a duration, dismiss after that amount of time
-        if (typeof this.duration === 'number' && this.duration > 10) {
-            this.durationTimeout = setTimeout(function () { return _this.dismiss(); }, this.duration);
-        }
-        this.ionLoadingDidPresent.emit({ loading: this });
-    };
     Loading.prototype.present = function () {
         var _this = this;
         return new Promise(function (resolve) {
@@ -49,16 +24,17 @@ var Loading = (function () {
         if (!animationBuilder) {
             // user did not provide a custom animation fn
             // decide from the config which animation to use
-            // TODO!!
             animationBuilder = iOSEnterAnimation;
         }
         // build the animation and kick it off
-        this.animation = animationBuilder(this.el);
-        this.animation.onFinish(function (a) {
-            a.destroy();
-            _this.ionViewDidEnter();
-            resolve();
-        }).play();
+        this.animationCtrl.create(animationBuilder, this.el).then(function (animation) {
+            _this.animation = animation;
+            animation.onFinish(function (a) {
+                a.destroy();
+                _this.ionViewDidEnter();
+                resolve();
+            }).play();
+        });
     };
     Loading.prototype.dismiss = function () {
         var _this = this;
@@ -74,23 +50,56 @@ var Loading = (function () {
             if (!animationBuilder) {
                 // user did not provide a custom animation fn
                 // decide from the config which animation to use
-                // TODO!!
                 animationBuilder = iOSLeaveAnimation;
             }
             // build the animation and kick it off
-            _this.animation = animationBuilder(_this.el);
-            _this.animation.onFinish(function (a) {
-                a.destroy();
-                _this.ionLoadingDidDismiss.emit({ loading: _this });
-                Core.dom.write(function () {
-                    _this.el.parentNode.removeChild(_this.el);
-                });
-                resolve();
-            }).play();
+            _this.animationCtrl.create(animationBuilder, _this.el).then(function (animation) {
+                _this.animation = animation;
+                animation.onFinish(function (a) {
+                    a.destroy();
+                    _this.ionLoadingDidDismiss.emit({ loading: _this });
+                    Context.dom.write(function () {
+                        _this.el.parentNode.removeChild(_this.el);
+                    });
+                    resolve();
+                }).play();
+            });
         });
     };
     Loading.prototype["componentDidunload"] = function () {
         this.ionLoadingDidUnload.emit({ loading: this });
+    };
+    Loading.prototype.onDismiss = function (ev) {
+        ev.stopPropagation();
+        ev.preventDefault();
+        this.dismiss();
+    };
+    Loading.prototype["componentDidLoad"] = function () {
+        if (!this.spinner) {
+            var defaultSpinner = 'lines';
+            if (this.mode === 'md') {
+                defaultSpinner = 'crescent';
+            }
+            else if (this.mode === 'wp') {
+                defaultSpinner = 'circles';
+            }
+            this.spinner = this.config.get('loadingSpinner') || defaultSpinner;
+        }
+        if (this.showSpinner === null || this.showSpinner === undefined) {
+            this.showSpinner = !!(this.spinner && this.spinner !== 'hide');
+        }
+        this.ionLoadingDidLoad.emit({ loading: this });
+    };
+    Loading.prototype.ionViewDidEnter = function () {
+        var _this = this;
+        // blur the currently active element
+        var activeElement = document.activeElement;
+        activeElement && activeElement.blur && activeElement.blur();
+        // If there is a duration, dismiss after that amount of time
+        if (typeof this.duration === 'number' && this.duration > 10) {
+            this.durationTimeout = setTimeout(function () { return _this.dismiss(); }, this.duration);
+        }
+        this.ionLoadingDidPresent.emit({ loading: this });
     };
     Loading.prototype.render = function () {
         var userCssClass = 'loading-content';

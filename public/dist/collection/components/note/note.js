@@ -1,4 +1,4 @@
-var Note = (function () {
+var Note = /** @class */ (function () {
     function Note() {
     }
     Note.prototype.render = function () {

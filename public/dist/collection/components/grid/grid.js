@@ -1,4 +1,4 @@
-var Grid = (function () {
+var Grid = /** @class */ (function () {
     function Grid() {
     }
     return Grid;

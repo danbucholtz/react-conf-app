@@ -2,16 +2,19 @@
  * (C) Ionic http://ionicframework.com - MIT License
  * Built with http://stenciljs.com
  */
-Ionic.defineComponents(
+Ionic.loadComponents(
 
 /**** module id (dev mode) ****/
-'ion-spinner',
+"ion-spinner",
 
 /**** component modules ****/
-function importComponent(exports, h, t, Core, publicPath) {
-function createThemedClasses(mode, color, classList) {
-    var allClassObj = {};
-    return classList.split(' ')
+function importComponent(exports, h, t, Context, publicPath) {
+/**
+ * Create the mode and color classes for the component based on the classes passed in
+ */
+function createThemedClasses(mode, color, classes) {
+    var classObj = {};
+    return classes.split(' ')
         .reduce(function (classObj, classString) {
         classObj[classString] = true;
         if (mode) {
@@ -22,8 +25,11 @@ function createThemedClasses(mode, color, classList) {
             }
         }
         return classObj;
-    }, allClassObj);
+    }, classObj);
 }
+/**
+ * Get the classes from a class list and return them as an object
+ */
 
 var SPINNERS = {
     lines: {
@@ -122,36 +128,56 @@ var SPINNERS = {
     }
 };
 
-var Spinner = (function () {
+var __assign = (undefined && undefined.__assign) || Object.assign || function(t) {
+    for (var s, i = 1, n = arguments.length; i < n; i++) {
+        s = arguments[i];
+        for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
+            t[p] = s[p];
+    }
+    return t;
+};
+var Spinner = /** @class */ (function () {
     function Spinner() {
-        this.duration = null;
+        /**
+         * @input {boolean} If true, pause the animation.
+         */
         this.paused = false;
     }
-    Spinner.prototype["componentDidLoad"] = function () {
-        if (this.name === 'ios') {
+    Spinner.prototype.getName = function () {
+        var name = this.name || this.config.get('spinner');
+        if (!name) {
+            // fallback
+            if (this.mode === 'md') {
+                return 'crescent';
+            }
+            else if (this.mode === 'wp') {
+                return 'circles';
+            }
+            else {
+                return 'lines';
+            }
+        }
+        if (name === 'ios') {
             // deprecation warning, renamed in v4
             console.warn("spinner \"ios\" has been renamed to \"lines\"");
+            name = 'lines';
         }
-        else if (this.name === 'ios-small') {
+        else if (name === 'ios-small') {
             // deprecation warning, renamed in v4
             console.warn("spinner \"ios-small\" has been renamed to \"lines-sm\"");
+            name = 'lines-sm';
         }
+        return name;
     };
     Spinner.prototype.hostData = function () {
-        var spinnerThemedClasses = createThemedClasses(this.mode, this.color, "spinner spinner-" + this.name);
-        spinnerThemedClasses['spinner-paused'] = true;
+        var themedClasses = createThemedClasses(this.mode, this.color, "spinner spinner-" + this.getName());
+        var spinnerClasses = __assign({}, themedClasses, { 'spinner-paused': this.paused });
         return {
-            class: spinnerThemedClasses
+            class: spinnerClasses
         };
     };
     Spinner.prototype.render = function () {
-        var name = this.name || Ionic.config.get('spinner', 'lines');
-        if (name === 'ios') {
-            name = this.name = 'lines';
-        }
-        else if (this.name === 'ios-small') {
-            name = this.name = 'lines-sm';
-        }
+        var name = this.getName();
         var spinner = SPINNERS[name] || SPINNERS['lines'];
         var duration = (typeof this.duration === 'number' && this.duration > 10 ? this.duration : spinner.dur);
         var svgs = [];
@@ -174,12 +200,14 @@ var Spinner = (function () {
 function buildCircle(spinner, duration, index, total) {
     var data = spinner.fn(duration, index, total);
     data.style.animationDuration = duration + 'ms';
-    return h('svg', { "n": "http://www.w3.org/2000/svg", "s": data.style, "a": { "attrs": { "viewBox": '0 0 64 64' } } }, h('circle', { "n": "http://www.w3.org/2000/svg", "a": { "attrs": { "r": data.r, "transform": 'translate(32,32)' } } }));
+    return (h("svg", { "n": "http://www.w3.org/2000/svg", "s": data.style, "a": { "viewBox": '0 0 64 64' } },
+        h("circle", { "n": "http://www.w3.org/2000/svg", "a": { "transform": "translate(32,32)", "r": data.r } })));
 }
 function buildLine(spinner, duration, index, total) {
     var data = spinner.fn(duration, index, total);
     data.style.animationDuration = duration + 'ms';
-    return h('svg', { "n": "http://www.w3.org/2000/svg", "s": data.style, "a": { "attrs": { "viewBox": '0 0 64 64' } } }, h('line', { "n": "http://www.w3.org/2000/svg", "a": { "attrs": { "y1": data.y1, "y2": data.y2, "transform": 'translate(32,32)' } } }));
+    return (h("svg", { "n": "http://www.w3.org/2000/svg", "s": data.style, "a": { "viewBox": '0 0 64 64' } },
+        h("line", { "n": "http://www.w3.org/2000/svg", "a": { "transform": "translate(32,32)", "y1": data.y1, "y2": data.y2 } })));
 }
 
 exports['ION-SPINNER'] = Spinner;
@@ -188,11 +216,19 @@ exports['ION-SPINNER'] = Spinner;
 
 /***************** ion-spinner *****************/
 [
-/** ion-spinner: [0] tag **/
-'ION-SPINNER',
+/** ion-spinner: tag **/
+"ION-SPINNER",
 
-/** ion-spinner: [1] host **/
-{}
+/** ion-spinner: members **/
+[
+  [ "config", /** prop context **/ 3, /** type any **/ 0, /** context ***/ "config" ],
+  [ "duration", /** prop **/ 1, /** type number **/ 2 ],
+  [ "name", /** prop **/ 1 ],
+  [ "paused", /** prop **/ 1, /** type boolean **/ 1 ]
+],
+
+/** ion-spinner: host **/
+{"theme":"spinner"}
 
 ]
 )

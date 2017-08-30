@@ -1,5 +1,5 @@
 import { getParentElement, getToolbarHeight } from '../../utils/helpers';
-var Fixed = (function () {
+var Fixed = /** @class */ (function () {
     function Fixed() {
     }
     Fixed.prototype.hostData = function () {
@@ -8,7 +8,7 @@ var Fixed = (function () {
         var footerHeight = getToolbarHeight('ION-FOOTER', pageChildren, this.mode, '50px', '48px');
         return {
             class: {
-                'statusbar-padding': Ionic.config.getBoolean('statusbarPadding')
+                'statusbar-padding': this.config.getBoolean('statusbarPadding')
             },
             style: {
                 'margin-top': headerHeight,

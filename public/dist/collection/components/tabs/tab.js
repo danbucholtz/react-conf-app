@@ -1,4 +1,4 @@
-var Tab = (function () {
+var Tab = /** @class */ (function () {
     function Tab() {
         /**
          * @prop {boolean} If true, the tab is selected

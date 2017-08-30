@@ -1,4 +1,4 @@
-var Chip = (function () {
+var Chip = /** @class */ (function () {
     function Chip() {
     }
     Chip.prototype.render = function () {

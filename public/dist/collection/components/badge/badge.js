@@ -1,4 +1,4 @@
-var Badge = (function () {
+var Badge = /** @class */ (function () {
     function Badge() {
     }
     Badge.prototype.render = function () {

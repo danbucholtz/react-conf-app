@@ -1,4 +1,4 @@
-var Segment = (function () {
+var Segment = /** @class */ (function () {
     function Segment() {
         this.disabled = false;
     }
@@ -21,6 +21,10 @@ var Segment = (function () {
         var selectedButton = ev.detail.segmentButton;
         this.value = selectedButton.value;
         this.selectButton(this.value);
+        var event = {
+            'segment': this
+        };
+        this.ionChange.emit(event);
     };
     Segment.prototype.selectButton = function (val) {
         for (var i = 0; i < this.buttons.length; i++) {

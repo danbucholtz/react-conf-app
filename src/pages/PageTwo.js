@@ -23,45 +23,46 @@ export default class PageTwo extends Component {
   }
 
   componentDidMount() {
-    setInterval(() => {
+    /*setInterval(() => {
       this.setState({ content: 'page two - ' + Math.random() * 1000});
     }, 1000);
+    */
   }
 
   goToNext() {
-    const nav = this.element.closest('ion-nav');
+    const page = this.element.closest('ion-page');
+    const nav = page.closest('ion-nav');
     nav.push(PageThree, { paramOne: 'Michael Scott'});
   }
 
   goBack() {
-    const nav = this.element.closest('ion-nav');
+    const page = this.element.closest('ion-page');
+    const nav = page.closest('ion-nav');
     nav.pop();
   }
 
   render() {
     return [
-      <ion-page style={this.style} ref={(element) => this.element = element}>
-        <ion-header>
-          <ion-navbar>
-            <ion-title>Page Two</ion-title>
-          </ion-navbar>
-        </ion-header>
-        <ion-content>
-          Page Two
-          <div>
-            <ion-button onClick={() => this.goToNext()}>Go to Page Three</ion-button>
-          </div>
-          <div>
-            <ion-button onClick={() => this.goBack()}>Go Back</ion-button>
-          </div>
-          <div>
-            Some random content: {this.state.content}
-          </div>
-          <div>
-            Props : {this.props.paramOne}
-          </div>
-        </ion-content>
-      </ion-page>
+      <ion-header ref={(element) => this.element = element}>
+        <ion-navbar>
+          <ion-title>Page Two</ion-title>
+        </ion-navbar>
+      </ion-header>,
+      <ion-content>
+        Page Two
+        <div>
+          <ion-button onClick={() => this.goToNext()}>Go to Page Three</ion-button>
+        </div>
+        <div>
+          <ion-button onClick={() => this.goBack()}>Go Back</ion-button>
+        </div>
+        <div>
+          Some random content: {this.state.content}
+        </div>
+        <div>
+          Props : {this.props.paramOne}
+        </div>
+      </ion-content>
     ];
   }
 }

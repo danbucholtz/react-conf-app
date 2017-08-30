@@ -6,7 +6,7 @@ var ITEM_SIDE_FLAG_NONE = 0;
 var ITEM_SIDE_FLAG_LEFT = 1 << 0;
 var ITEM_SIDE_FLAG_RIGHT = 1 << 1;
 var ITEM_SIDE_FLAG_BOTH = ITEM_SIDE_FLAG_LEFT | ITEM_SIDE_FLAG_RIGHT;
-var ItemSliding = (function () {
+var ItemSliding = /** @class */ (function () {
     function ItemSliding() {
         this.openAmount = 0;
         this.startX = 0;
@@ -173,10 +173,10 @@ var ItemSliding = (function () {
      */
     ItemSliding.prototype.fireSwipeEvent = function () {
         if (this.state & 32 /* SwipeRight */) {
-            this.rightOptions.ionSwipe(this);
+            this.rightOptions.ionSwipe.emit(this);
         }
         else if (this.state & 64 /* SwipeLeft */) {
-            this.leftOptions.ionSwipe(this);
+            this.leftOptions.ionSwipe.emit(this);
         }
     };
     /**

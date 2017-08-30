@@ -127,13 +127,13 @@ ion-spinner.spinner-paused svg {
 .spinner-ios-primary.spinner-lines line,
 .spinner-ios-primary.spinner-lines-sm line,
 .spinner-ios-primary.spinner-crescent circle {
-  stroke: #327eff;
+  stroke: #488aff;
 }
 
 .spinner-ios-primary.spinner-bubbles circle,
 .spinner-ios-primary.spinner-circles circle,
 .spinner-ios-primary.spinner-dots circle {
-  fill: #327eff;
+  fill: #488aff;
 }
 
 .spinner-ios-secondary.spinner-lines line,

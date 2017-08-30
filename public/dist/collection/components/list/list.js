@@ -1,4 +1,4 @@
-var List = (function () {
+var List = /** @class */ (function () {
     function List() {
     }
     List.prototype.render = function () {

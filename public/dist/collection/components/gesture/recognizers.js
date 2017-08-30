@@ -1,4 +1,4 @@
-var PanRecognizer = (function () {
+var PanRecognizer = /** @class */ (function () {
     function PanRecognizer(direction, threshold, maxAngle) {
         this.direction = direction;
         this.dirty = false;

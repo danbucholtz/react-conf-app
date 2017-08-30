@@ -15,13 +15,15 @@ var __extends = (this && this.__extends) || (function () {
  * type will provide their own animations for open and close
  * and registers itself with Menu.
  */
-var MenuType = (function () {
+var MenuType = /** @class */ (function () {
     function MenuType() {
-        this.ani = new Ionic.Animation();
-        this.ani
-            .easing('cubic-bezier(0.0, 0.0, 0.2, 1)')
-            .easingReverse('cubic-bezier(0.4, 0.0, 0.6, 1)')
-            .duration(280);
+        // Ionic.createAnimation().then(Animation => {
+        //   this.ani = new Animation();
+        // });;
+        // this.ani
+        //   .easing('cubic-bezier(0.0, 0.0, 0.2, 1)')
+        //   .easingReverse('cubic-bezier(0.4, 0.0, 0.6, 1)')
+        //   .duration(280);
     }
     MenuType.prototype.setOpen = function (shouldOpen, animated, done) {
         var ani = this.ani
@@ -73,15 +75,10 @@ export { MenuType };
  * The content slides over to reveal the menu underneath.
  * The menu itself, which is under the content, does not move.
  */
-var MenuRevealType = (function (_super) {
+var MenuRevealType = /** @class */ (function (_super) {
     __extends(MenuRevealType, _super);
-    function MenuRevealType(menu) {
-        var _this = _super.call(this) || this;
-        var openedX = (menu.width() * (menu.isRightSide ? -1 : 1)) + 'px';
-        var contentOpen = new Ionic.Animation(menu.getContentElement());
-        contentOpen.fromTo('translateX', '0px', openedX);
-        _this.ani.add(contentOpen);
-        return _this;
+    function MenuRevealType() {
+        return _super !== null && _super.apply(this, arguments) || this;
     }
     return MenuRevealType;
 }(MenuType));
@@ -92,30 +89,10 @@ export { MenuRevealType };
  * The content slides over to reveal the menu underneath.
  * The menu itself also slides over to reveal its bad self.
  */
-var MenuPushType = (function (_super) {
+var MenuPushType = /** @class */ (function (_super) {
     __extends(MenuPushType, _super);
-    function MenuPushType(menu) {
-        var _this = _super.call(this) || this;
-        var contentOpenedX, menuClosedX, menuOpenedX;
-        var width = menu.width();
-        if (menu.isRightSide) {
-            // right side
-            contentOpenedX = -width + 'px';
-            menuClosedX = width + 'px';
-            menuOpenedX = '0px';
-        }
-        else {
-            contentOpenedX = width + 'px';
-            menuOpenedX = '0px';
-            menuClosedX = -width + 'px';
-        }
-        var menuAni = new Ionic.Animation(menu.getMenuElement());
-        menuAni.fromTo('translateX', menuClosedX, menuOpenedX);
-        _this.ani.add(menuAni);
-        var contentApi = new Ionic.Animation(menu.getContentElement());
-        contentApi.fromTo('translateX', '0px', contentOpenedX);
-        _this.ani.add(contentApi);
-        return _this;
+    function MenuPushType() {
+        return _super !== null && _super.apply(this, arguments) || this;
     }
     return MenuPushType;
 }(MenuType));
@@ -126,29 +103,10 @@ export { MenuPushType };
  * The menu slides over the content. The content
  * itself, which is under the menu, does not move.
  */
-var MenuOverlayType = (function (_super) {
+var MenuOverlayType = /** @class */ (function (_super) {
     __extends(MenuOverlayType, _super);
-    function MenuOverlayType(menu) {
-        var _this = _super.call(this) || this;
-        var closedX, openedX;
-        var width = menu.width();
-        if (menu.isRightSide) {
-            // right side
-            closedX = 8 + width + 'px';
-            openedX = '0px';
-        }
-        else {
-            // left side
-            closedX = -(8 + width) + 'px';
-            openedX = '0px';
-        }
-        var menuAni = new Ionic.Animation(menu.getMenuElement());
-        menuAni.fromTo('translateX', closedX, openedX);
-        _this.ani.add(menuAni);
-        var backdropApi = new Ionic.Animation(menu.getBackdropElement());
-        backdropApi.fromTo('opacity', 0.01, 0.35);
-        _this.ani.add(backdropApi);
-        return _this;
+    function MenuOverlayType() {
+        return _super !== null && _super.apply(this, arguments) || this;
     }
     return MenuOverlayType;
 }(MenuType));

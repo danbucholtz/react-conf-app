@@ -1,4 +1,4 @@
-var FabContainer = (function () {
+var FabContainer = /** @class */ (function () {
     function FabContainer() {
     }
     /**

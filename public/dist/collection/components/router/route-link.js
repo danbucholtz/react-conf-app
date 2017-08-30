@@ -1,4 +1,4 @@
-var RouteLink = (function () {
+var RouteLink = /** @class */ (function () {
     function RouteLink() {
     }
     RouteLink.prototype.handleClick = function (e) {

@@ -1,4 +1,4 @@
-var CardHeader = (function () {
+var CardHeader = /** @class */ (function () {
     function CardHeader() {
     }
     CardHeader.prototype.render = function () {

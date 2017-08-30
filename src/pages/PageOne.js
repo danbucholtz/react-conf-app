@@ -31,34 +31,34 @@ export default class PageOne extends Component {
   }
 
   goToPageTwo() {
-    const nav = this.element.closest('ion-nav');
+    const page = this.element.closest('ion-page');
+    const nav = page.closest('ion-nav');
     nav.push(PageTwo, { paramOne: 'Tobey Flenderson'});
   }
 
   componentDidMount() {
-    setInterval(() => {
+    /*setInterval(() => {
       this.setState({ content: Math.random() * 1000});
     }, 1000);
+    */
   }
 
   render() {
     return [
-      <ion-page style={this.style} ref={(element) => this.element = element}>
-        <ion-header>
-          <ion-navbar>
-            <ion-title>Page One</ion-title>
-          </ion-navbar>
-        </ion-header>
-        <ion-content>
-          Page One
-          <div>
-            <ion-button onClick={() => this.goToPageTwo()}>Go to Page Two</ion-button>
-          </div>
-          <div>
-            Some random content: {this.state.content}
-          </div>
-        </ion-content>
-      </ion-page>
+      <ion-header ref={(element) => this.element = element}>
+        <ion-navbar>
+          <ion-title>Page One</ion-title>
+        </ion-navbar>
+      </ion-header>,
+      <ion-content>
+        Page One
+        <div>
+          <ion-button onClick={() => this.goToPageTwo()}>Go to Page Two</ion-button>
+        </div>
+        <div>
+          Some random content: {this.state.content}
+        </div>
+      </ion-content>
     ];
   }
 }

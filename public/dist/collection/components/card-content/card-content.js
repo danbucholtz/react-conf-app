@@ -1,4 +1,4 @@
-var CardContent = (function () {
+var CardContent = /** @class */ (function () {
     function CardContent() {
     }
     CardContent.prototype.render = function () {

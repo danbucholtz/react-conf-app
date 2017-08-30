@@ -1,4 +1,4 @@
-var SkeletonText = (function () {
+var SkeletonText = /** @class */ (function () {
     function SkeletonText() {
         this.width = '100%';
     }

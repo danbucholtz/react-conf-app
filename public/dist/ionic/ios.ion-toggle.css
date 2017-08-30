@@ -78,7 +78,7 @@ ion-toggle ion-gesture {
 }
 
 .toggle-ios.toggle-checked .toggle-icon {
-  background-color: #327eff;
+  background-color: #488aff;
 }
 
 .toggle-ios.toggle-activated .toggle-icon::before,
@@ -118,7 +118,7 @@ ion-toggle ion-gesture {
 }
 
 .toggle-ios-primary.toggle-checked .toggle-icon {
-  background-color: #327eff;
+  background-color: #488aff;
 }
 
 .toggle-ios-secondary.toggle-checked .toggle-icon {

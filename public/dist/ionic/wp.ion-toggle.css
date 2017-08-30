@@ -65,8 +65,8 @@ ion-toggle ion-gesture {
 }
 
 .toggle-wp.toggle-checked .toggle-icon {
-  border-color: #327eff;
-  background-color: #327eff;
+  border-color: #488aff;
+  background-color: #488aff;
 }
 
 .toggle-wp.toggle-checked .toggle-inner {
@@ -99,8 +99,8 @@ ion-toggle ion-gesture {
 }
 
 .toggle-wp-primary.toggle-checked .toggle-icon {
-  border-color: #327eff;
-  background-color: #327eff;
+  border-color: #488aff;
+  background-color: #488aff;
 }
 
 .toggle-wp-primary.toggle-checked .toggle-inner {

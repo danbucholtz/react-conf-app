@@ -1,4 +1,4 @@
-var TabHighlight = (function () {
+var TabHighlight = /** @class */ (function () {
     function TabHighlight() {
     }
     TabHighlight.prototype.render = function () {

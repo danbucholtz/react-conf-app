@@ -8,9 +8,11 @@ export default class AppStart extends Component {
 
   render() {
     return [
-      <ion-nav ref={wc({},{
-        root: PageOne,
+      <ion-nav-controller ref={wc({}, {
         delegate: Delegate
+      })}></ion-nav-controller>,
+      <ion-nav ref={wc({},{
+        root: PageOne
       })}></ion-nav>
     ];
   }

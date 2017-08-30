@@ -1,5 +1,5 @@
 import { Swiper } from './vendor/swiper';
-var Slides = (function () {
+var Slides = /** @class */ (function () {
     function Slides() {
         /**
          * @input {string} The animation effect of the slides.
