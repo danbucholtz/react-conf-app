@@ -31,9 +31,11 @@ export default class PageOne extends Component {
   }
 
   goToPageTwo() {
-    const page = this.element.closest('ion-page');
-    const nav = page.closest('ion-nav');
+    //const page = this.element.closest('ion-page');
+    const nav = this.element.closest('ion-nav');
     nav.push(PageTwo, { paramOne: 'Tobey Flenderson'});
+
+    Nav.push(PageTwo, this.element);
   }
 
   componentDidMount() {
