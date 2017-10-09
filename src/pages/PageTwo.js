@@ -23,10 +23,9 @@ export default class PageTwo extends Component {
   }
 
   componentDidMount() {
-    /*setInterval(() => {
+    setInterval(() => {
       this.setState({ content: 'page two - ' + Math.random() * 1000});
     }, 1000);
-    */
   }
 
   goToNext() {

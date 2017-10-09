@@ -23,10 +23,9 @@ export default class PageThree extends Component {
   }
 
   componentDidMount() {
-    /*setInterval(() => {
+    setInterval(() => {
       this.setState({ content: 'page three - ' + Math.random() * 1000});
     }, 1000);
-    */
   }
 
 

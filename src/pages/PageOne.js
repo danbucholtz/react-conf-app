@@ -37,10 +37,10 @@ export default class PageOne extends Component {
   }
 
   componentDidMount() {
-    /*setInterval(() => {
+    setInterval(() => {
       this.setState({ content: Math.random() * 1000});
     }, 1000);
-    */
+
   }
 
   render() {
