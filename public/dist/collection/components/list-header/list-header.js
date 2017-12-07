@@ -1,9 +1,5 @@
-var ListHeader = /** @class */ (function () {
-    function ListHeader() {
+export class ListHeader {
+    render() {
+        return h("slot", null);
     }
-    ListHeader.prototype.render = function () {
-        return h(0, 0);
-    };
-    return ListHeader;
-}());
-export { ListHeader };
+}

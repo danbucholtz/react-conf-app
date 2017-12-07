@@ -1,111 +1,110 @@
-import iOSEnterAnimation from './animations/ios.enter';
-import iOSLeaveAnimation from './animations/ios.leave';
-var Toast = /** @class */ (function () {
-    function Toast() {
+import { EventEmitter } from '@stencil/core';
+import { Animation, AnimationBuilder, AnimationController, Config, CssClassMap, OverlayDismissEvent, OverlayDismissEventDetail } from '../../index';
+import { domControllerAsync, playAnimationAsync } from '../../utils/helpers';
+import { createThemedClasses } from '../../utils/theme';
+import iosEnterAnimation from './animations/ios.enter';
+import iosLeaveAnimation from './animations/ios.leave';
+import mdEnterAnimation from './animations/md.enter';
+import mdLeaveAnimation from './animations/md.leave';
+export class Toast {
+    constructor() {
+        this.translucent = false;
     }
-    Toast.prototype.present = function () {
-        var _this = this;
-        return new Promise(function (resolve) {
-            _this._present(resolve);
-        });
-    };
-    Toast.prototype._present = function (resolve) {
-        var _this = this;
+    present() {
         if (this.animation) {
             this.animation.destroy();
             this.animation = null;
         }
-        this.ionToastWillPresent.emit({ actionSheet: this });
+        this.ionToastWillPresent.emit();
         // get the user's animation fn if one was provided
-        var animationBuilder = this.enterAnimation;
-        if (!animationBuilder) {
-            // user did not provide a custom animation fn
-            // decide from the config which animation to use
-            animationBuilder = iOSEnterAnimation;
-        }
+        const animationBuilder = this.enterAnimation || this.config.get('toastEnter', this.mode === 'ios' ? iosEnterAnimation : mdEnterAnimation);
         // build the animation and kick it off
-        this.animationCtrl.create(animationBuilder, this.el, this.position).then(function (animation) {
-            _this.animation = animation;
-            animation.onFinish(function (a) {
-                a.destroy();
-                _this.ionViewDidEnter();
-                resolve();
-            }).play();
+        return this.animationCtrl.create(animationBuilder, this.el).then(animation => {
+            this.animation = animation;
+            if (!this.animate) {
+                // if the duration is 0, it won't actually animate I don't think
+                // TODO - validate this
+                this.animation = animation.duration(0);
+            }
+            return playAnimationAsync(animation);
+        }).then((animation) => {
+            animation.destroy();
+            this.componentDidEnter();
         });
-    };
-    Toast.prototype.dismiss = function () {
-        var _this = this;
+    }
+    dismiss(data, role) {
         if (this.animation) {
             this.animation.destroy();
             this.animation = null;
         }
-        return new Promise(function (resolve) {
-            _this.ionToastWillDismiss.emit({ toast: _this });
-            // get the user's animation fn if one was provided
-            var animationBuilder = _this.exitAnimation;
-            if (!animationBuilder) {
-                // user did not provide a custom animation fn
-                // decide from the config which animation to use
-                animationBuilder = iOSLeaveAnimation;
-            }
-            // build the animation and kick it off
-            _this.animationCtrl.create(animationBuilder, _this.el, _this.position).then(function (animation) {
-                _this.animation = animation;
-                animation.onFinish(function (a) {
-                    a.destroy();
-                    _this.ionToastDidDismiss.emit({ toast: _this });
-                    Context.dom.write(function () {
-                        _this.el.parentNode.removeChild(_this.el);
-                    });
-                    resolve();
-                }).play();
+        this.ionToastWillDismiss.emit({
+            data,
+            role
+        });
+        const animationBuilder = this.leaveAnimation || this.config.get('toastLeave', this.mode === 'ios' ? iosLeaveAnimation : mdLeaveAnimation);
+        return this.animationCtrl.create(animationBuilder, this.el).then(animation => {
+            this.animation = animation;
+            return playAnimationAsync(animation);
+        }).then((animation) => {
+            animation.destroy();
+            return domControllerAsync(Context.dom.write, () => {
+                this.el.parentNode.removeChild(this.el);
+            });
+        }).then(() => {
+            this.ionToastDidDismiss.emit({
+                data,
+                role
             });
         });
-    };
-    Toast.prototype["componentDidunload"] = function () {
-        this.ionToastDidUnload.emit({ toast: this });
-    };
-    Toast.prototype.onDismiss = function (ev) {
+    }
+    componentDidLoad() {
+        this.ionToastDidLoad.emit();
+    }
+    componentDidEnter() {
+        this.ionToastDidPresent.emit();
+        if (this.duration) {
+            setTimeout(() => {
+                this.dismiss();
+            }, this.duration);
+        }
+    }
+    componentDidUnload() {
+        this.ionToastDidUnload.emit();
+    }
+    onDismiss(ev) {
         ev.stopPropagation();
         ev.preventDefault();
         this.dismiss();
-    };
-    Toast.prototype["componentDidLoad"] = function () {
-        this.ionToastDidLoad.emit({ toast: this });
-    };
-    Toast.prototype.ionViewDidEnter = function () {
-        var _this = this;
-        this.ionToastDidPresent.emit({ toast: this });
-        if (this.duration) {
-            setTimeout(function () {
-                _this.dismiss();
-            }, this.duration);
-        }
-    };
-    Toast.prototype.render = function () {
-        var _this = this;
-        var userCssClass = 'toast-content';
-        if (this.cssClass) {
-            userCssClass += ' ' + this.cssClass;
-        }
-        return (h("div", { "c": this.wrapperClass() },
-            h("div", { "c": { "toast-container": true } },
-                this.message
-                    ? h("div", { "c": { "toast-message": true } }, this.message)
-                    : null,
-                this.showCloseButton
-                    ? h("ion-button", { "c": { "toast-button": true }, "o": { "click": function () { return _this.dismiss(); } }, "a": { "color": "light" }, "p": { "clear": true } }, this.closeButtonText || 'Close')
-                    : null)));
-    };
-    Toast.prototype.wrapperClass = function () {
-        var wrapperClass = !this.position
+    }
+    wrapperClass() {
+        let wrapperClass = !this.position
             ? ['toast-wrapper', 'toast-bottom']
-            : ["toast-wrapper", "toast-" + this.position];
-        return wrapperClass.reduce(function (prevValue, cssClass) {
+            : [`toast-wrapper`, `toast-${this.position}`];
+        return wrapperClass.reduce((prevValue, cssClass) => {
             prevValue[cssClass] = true;
             return prevValue;
         }, {});
-    };
-    return Toast;
-}());
-export { Toast };
+    }
+    hostData() {
+        const themedClasses = this.translucent ? createThemedClasses(this.mode, this.color, 'toast-translucent') : {};
+        const hostClasses = Object.assign({}, themedClasses);
+        return {
+            class: hostClasses
+        };
+    }
+    render() {
+        let userCssClass = 'toast-content';
+        if (this.cssClass) {
+            userCssClass += ' ' + this.cssClass;
+        }
+        return (h("div", { class: this.wrapperClass() },
+            h("div", { class: 'toast-container' },
+                this.message
+                    ? h("div", { class: 'toast-message' }, this.message)
+                    : null,
+                this.showCloseButton
+                    ? h("ion-button", { fill: 'clear', color: 'light', class: 'toast-button', onClick: () => this.dismiss() }, this.closeButtonText || 'Close')
+                    : null)));
+    }
+}
+export { iosEnterAnimation as iosToastEnterAnimation, iosLeaveAnimation as iosToastLeaveAnimation, mdEnterAnimation as mdToastEnterAnimation, mdLeaveAnimation as mdToastLeaveAnimation };

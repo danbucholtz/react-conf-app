@@ -1,9 +1,8 @@
+import { Animation, AnimationBuilder, AnimationController } from './animation-interface';
 import { Animator } from './animator';
-var AnimationControllerImpl = /** @class */ (function () {
-    function AnimationControllerImpl() {
-    }
-    AnimationControllerImpl.prototype.create = function (animationBuilder, baseElm, opts) {
-        return new Promise(function (resolve) {
+export class AnimationControllerImpl {
+    create(animationBuilder, baseElm, opts) {
+        return new Promise(resolve => {
             if (animationBuilder) {
                 resolve(animationBuilder(Animator, baseElm, opts));
             }
@@ -11,7 +10,5 @@ var AnimationControllerImpl = /** @class */ (function () {
                 resolve(new Animator());
             }
         });
-    };
-    return AnimationControllerImpl;
-}());
-export { AnimationControllerImpl };
+    }
+}

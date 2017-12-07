@@ -1,9 +1,5 @@
-var CardContent = /** @class */ (function () {
-    function CardContent() {
+export class CardContent {
+    render() {
+        return h("slot", null);
     }
-    CardContent.prototype.render = function () {
-        return h(0, 0);
-    };
-    return CardContent;
-}());
-export { CardContent };
+}

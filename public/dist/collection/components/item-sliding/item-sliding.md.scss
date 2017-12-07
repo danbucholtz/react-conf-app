@@ -1,25 +1,8 @@
-@import "../../themes/ionic.globals.md";
 @import "./item-sliding";
-
+@import "./item-sliding.md.vars";
 
 // Material Design Item Sliding
 // --------------------------------------------------
-
-/// @prop - Background for the sliding content
-$item-md-sliding-content-background:         $list-md-background-color !default;
-
-/// @prop - Font size of the sliding option button
-$item-md-sliding-button-font-size:           1.4rem !default;
-
-/// @prop - Background color of the sliding option button
-$item-md-sliding-button-background-color:    color($colors-md, primary) !default;
-
-/// @prop - Text color of the sliding option button
-$item-md-sliding-button-text-color:          color-contrast($colors-md, $item-md-sliding-button-background-color) !default;
-
-/// @prop - color of the sliding option button icon
-$item-md-sliding-button-icon-color:          color-contrast($colors-md, $item-md-sliding-button-background-color) !default;
-
 
 .list-md ion-item-sliding {
   background-color: $item-md-sliding-content-background;
@@ -29,13 +12,13 @@ $item-md-sliding-button-icon-color:          color-contrast($colors-md, $item-md
   border-bottom: 1px solid $list-md-border-color;
 }
 
-.item-option-button-md {
+.item-option-md {
   font-size: $item-md-sliding-button-font-size;
   color: $item-md-sliding-button-text-color;
   background-color: $item-md-sliding-button-background-color;
 }
 
-.item-option-button-md .icon {
+.item-option-md .icon {
   fill: $item-md-sliding-button-icon-color;
 }
 
@@ -52,12 +35,12 @@ $item-md-sliding-button-icon-color:          color-contrast($colors-md, $item-md
 
 @each $color-name, $color-base, $color-contrast in get-colors($colors-md) {
 
-  .item-option-button-md-#{$color-name} {
+  .item-option-md-#{$color-name} {
     color: $color-contrast;
     background-color: $color-base;
   }
 
-  .item-option-button-md-#{$color-name} .icon {
+  .item-option-md-#{$color-name} .icon {
     fill: $color-contrast;
   }
 

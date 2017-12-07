@@ -1,9 +1,4 @@
-
-// Globals
-// --------------------------------------------------
-@import "../../themes/ionic.globals";
-@import "../../themes/ionic.mixins";
-
+@import "./app.vars";
 
 // Normalize
 // --------------------------------------------------
@@ -13,71 +8,6 @@
 // Util
 // --------------------------------------------------
 @import "../../themes/util";
-
-
-// App
-// --------------------------------------------------
-// All font sizes use rem units
-// By default, 1rem equals 10px. For example, 1.4rem  === 14px
-// $font-size-root value, which is on the <html> element
-// is what can scale all fonts
-
-/// @prop - Font size of the root html
-$font-size-root:               62.5% !default;
-
-/// @prop - Font weight of all headings
-$headings-font-weight:         500 !default;
-
-/// @prop - Line height of all headings
-$headings-line-height:         1.2 !default;
-
-/// @prop - Font size of heading level 1
-$h1-font-size:                 2.6rem !default;
-
-/// @prop - Font size of heading level 2
-$h2-font-size:                 2.4rem !default;
-
-/// @prop - Font size of heading level 3
-$h3-font-size:                 2.2rem !default;
-
-/// @prop - Font size of heading level 4
-$h4-font-size:                 2rem !default;
-
-/// @prop - Font size of heading level 5
-$h5-font-size:                 1.8rem !default;
-
-/// @prop - Font size of heading level 6
-$h6-font-size:                 1.6rem !default;
-
-
-// Responsive Utilities
-// --------------------------------------------------
-
-/// @prop - Whether to include all of the responsive utility attributes
-$include-responsive-utilities:          true !default;
-
-/// @prop - Whether to include all of the responsive text alignment attributes
-$include-text-alignment-utilities:      $include-responsive-utilities !default;
-
-/// @prop - Whether to include all of the responsive text transform attributes
-$include-text-transform-utilities:      $include-responsive-utilities !default;
-
-/// @prop - Whether to include all of the responsive float attributes
-$include-float-element-utilities:       $include-responsive-utilities !default;
-
-
-// Screen Breakpoints
-// --------------------------------------------------
-
-/// @prop - The minimum dimensions at which your layout will change,
-/// adapting to different screen sizes, for use in media queries
-$screen-breakpoints: (
-  xs: 0,
-  sm: 576px,
-  md: 768px,
-  lg: 992px,
-  xl: 1200px
-) !default;
 
 
 // App Structure
@@ -225,95 +155,73 @@ sub {
 
 ion-app,
 ion-nav,
-ion-tab,
-ion-tabs {
+ion-tabs,
+ion-page,
+.ion-page {
   @include position(0, null, null, 0);
 
   position: absolute;
   z-index: $z-index-page-container;
-  display: block;
 
   width: 100%;
   height: 100%;
-}
 
-ion-nav,
-ion-tab,
-ion-tabs {
-  overflow: hidden;
+  contain: layout size style;
 }
-
-ion-tab {
-  display: none;
-}
-
-ion-tab.show-tab {
-  display: block;
-}
-
-ion-app,
-ion-nav,
-ion-tab,
-ion-tabs,
-ion-page {
-  contain: strict;
-}
-
 
 // Page Container Structure
 // --------------------------------------------------
 
-ion-page {
-  @include position(0, null, null, 0);
+ion-page,
+.ion-page,
+.page-inner {
+  display: flex;
 
-  position: absolute;
-  display: block;
-
-  width: 100%;
-  height: 100%;
-
-  // do not show, but still render so we can get dimensions
-  // opacity: 0;
+  flex-direction: column;
+  justify-content: space-between;
 }
 
-ion-page.show-page {
-  // show the page now that it's ready
-  // opacity: 1;
+.hide-page {
+  opacity: 0;
 }
-
 
 // Toolbar Container Structure
 // --------------------------------------------------
 
-ion-header {
-  @include position(0, null, null, 0);
-
-  position: absolute;
+ion-header,
+ion-footer {
+  position: relative;
   z-index: $z-index-toolbar;
   display: block;
+
+  order: 1;
 
   width: 100%;
 }
 
-ion-footer {
-  @include position(null, null, 0, 0);
-
-  position: absolute;
-  z-index: $z-index-toolbar;
-  display: block;
-
-  width: 100%;
+ion-header {
+  order: -1;
 }
 
 
 // Misc
 // --------------------------------------------------
 
+ion-route,
+ion-route-controller,
+ion-animation-controller,
+ion-nav-controller,
+ion-menu-controller,
+ion-action-sheet-controller,
+ion-alert-controller,
+ion-loading-controller,
+ion-modal-controller,
+ion-picker-controller,
+ion-toast-controller,
 [app-viewport],
 [overlay-portal],
 [nav-viewport],
-[tab-portal],
-.nav-decor {
+[tab-portal] {
   display: none;
 }
 

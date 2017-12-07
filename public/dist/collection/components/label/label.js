@@ -1,42 +1,40 @@
-var Label = /** @class */ (function () {
-    function Label() {
+import { EventEmitter } from '@stencil/core';
+export class Label {
+    constructor() {
         /**
-         * @output {event} If true, the label will sit alongside an input. Defaults to `false`.
+         * @output {Event} If true, the label will sit alongside an input. Defaults to `false`.
          */
         this.fixed = false;
         /**
-         * @output {event} If true, the label will float above an input when the value is empty or the input is focused. Defaults to `false`.
+         * @output {Event} If true, the label will float above an input when the value is empty or the input is focused. Defaults to `false`.
          */
         this.floating = false;
         /**
-         * @output {event} If true, the label will be stacked above an input. Defaults to `false`.
+         * @output {Event} If true, the label will be stacked above an input. Defaults to `false`.
          */
         this.stacked = false;
     }
     /**
      * @hidden
      */
-    Label.prototype.getText = function () {
+    getText() {
         return this.el.textContent || '';
-    };
-    Label.prototype["componentDidLoad"] = function () {
+    }
+    componentDidLoad() {
         this.emitStyle();
-    };
-    Label.prototype.emitStyle = function () {
-        var _this = this;
+    }
+    emitStyle() {
         clearTimeout(this.styleTmr);
-        var styles = {
+        let styles = {
             'label-fixed': this.fixed,
             'label-floating': this.floating,
             'label-stacked': this.stacked
         };
-        this.styleTmr = setTimeout(function () {
-            _this.ionStyle.emit(styles);
+        this.styleTmr = setTimeout(() => {
+            this.ionStyle.emit(styles);
         });
-    };
-    Label.prototype.render = function () {
-        return h(0, 0);
-    };
-    return Label;
-}());
-export { Label };
+    }
+    render() {
+        return h("slot", null);
+    }
+}

@@ -1,0 +1,37 @@
+@import "./card-subtitle";
+@import "./card-subtitle.md.vars";
+
+// Material Design Card Subtitle
+// --------------------------------------------------
+
+.card-subtitle-md {
+  @include padding($card-md-subtitle-padding-top, $card-md-subtitle-padding-end, $card-md-subtitle-padding-bottom, $card-md-subtitle-padding-start);
+
+  font-size: $card-md-subtitle-font-size;
+  color: $card-md-subtitle-color;
+}
+
+
+// Generate Material Design Card subtitle Colors
+// --------------------------------------------------
+
+@each $color-name, $color-base, $color-contrast in get-colors($colors-md) {
+
+  .card-md-#{$color-name} {
+
+    .card-subtitle-md {
+      color: $color-contrast;
+    }
+
+    @each $color-name, $color-base, $color-contrast in get-colors($colors-md) {
+      .card-subtitle-md-#{$color-name} {
+        color: $color-base;
+      }
+    }
+  }
+
+  .card-subtitle-md-#{$color-name} {
+    color: $color-base;
+  }
+
+}

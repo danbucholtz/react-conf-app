@@ -1,6 +1,7 @@
-import { Swiper } from './vendor/swiper';
-var Slides = /** @class */ (function () {
-    function Slides() {
+import { EventEmitter } from '@stencil/core';
+import { Swiper } from './vendor/swiper.js';
+export class Slides {
+    constructor() {
         /**
          * @input {string} The animation effect of the slides.
          * Possible values are: `slide`, `fade`, `cube`, `coverflow` or `flip`.
@@ -65,18 +66,21 @@ var Slides = /** @class */ (function () {
          * texts on usual resolution screens (if you have such)
          */
         this.roundLengths = false;
-        this.id = ++slidesId;
-        this.slideId = 'slides-' + this.id;
+        this.slidesId = ++slidesId;
+        this.slideId = 'slides-' + this.slidesId;
     }
-    Slides.prototype.render = function () {
-        return (h("div", { "c": { "swiper-container": true }, "a": { "data-dir": 'rtl' } },
-            h("div", { "c": { "swiper-wrapper": true } },
-                h(0, 0)),
-            h("div", { "c": { "swiper-pagination": true, "hide": !this.pager } })));
-    };
-    Slides.prototype._initSlides = function () {
+    render() {
+        return (h("div", { class: 'swiper-container', "data-dir": 'rtl' },
+            h("div", { class: 'swiper-wrapper' },
+                h("slot", null)),
+            h("div", { class: {
+                    'swiper-pagination': true,
+                    'hide': !this.pager
+                } })));
+    }
+    _initSlides() {
         if (!this._init) {
-            console.debug("ion-slides, init");
+            console.debug(`ion-slides, init`);
             this.container = this.el.children[0];
             var swiperOptions = {
                 height: this.height,
@@ -172,7 +176,7 @@ var Slides = /** @class */ (function () {
                 lastSlideMessage: 'This is the last slide',
                 onSlideChangeStart: this.ionSlideWillChange.emit,
                 onSlideChangeEnd: this.ionSlideDidChange.emit,
-                onSlideNextStart: this.ionSlideNextStarto.emit,
+                onSlideNextStart: this.ionSlideNextStart.emit,
                 onSlidePrevStart: this.ionSlidePrevStart.emit,
                 onSlideNextEnd: this.ionSlideNextEnd.emit,
                 onSlidePrevEnd: this.ionSlidePrevEnd.emit,
@@ -192,38 +196,35 @@ var Slides = /** @class */ (function () {
             }
             this._init = true;
         }
-    };
+    }
     /**
      * @hidden
      */
-    Slides.prototype["componentDidLoad"] = function () {
-        var _this = this;
+    componentDidLoad() {
         /**
-         * TODO: This should change because currently ionViewDidLoad fires independent of whether the
+         * TODO: This should change because currently componentDidLoad fires independent of whether the
          * child components are ready.
          */
-        setTimeout(function () {
-            _this._initSlides();
+        setTimeout(() => {
+            this._initSlides();
         }, 10);
-    };
+    }
     /**
      * Update the underlying slider implementation. Call this if you've added or removed
      * child slides.
      */
-    Slides.prototype.update = function (debounce) {
-        var _this = this;
-        if (debounce === void 0) { debounce = 300; }
+    update(debounce = 300) {
         if (this._init) {
             window.clearTimeout(this._tmr);
-            this._tmr = window.setTimeout(function () {
-                _this.swiper.update();
+            this._tmr = window.setTimeout(() => {
+                this.swiper.update();
                 // Don't allow pager to show with > 10 slides
-                if (_this.length() > 10) {
-                    _this.paginationType = undefined;
+                if (this.length() > 10) {
+                    this.paginationType = undefined;
                 }
             }, debounce);
         }
-    };
+    }
     /**
      * Transition to the specified slide.
      *
@@ -231,124 +232,122 @@ var Slides = /** @class */ (function () {
      * @param {number} [speed]  Transition duration (in ms).
      * @param {boolean} [runCallbacks] Whether or not to emit the `ionSlideWillChange`/`ionSlideDidChange` events. Default true.
      */
-    Slides.prototype.slideTo = function (index, speed, runCallbacks) {
+    slideTo(index, speed, runCallbacks) {
         this.swiper.slideTo(index, speed, runCallbacks);
-    };
+    }
     /**
      * Transition to the next slide.
      *
      * @param {number} [speed]  Transition duration (in ms).
      * @param {boolean} [runCallbacks]  Whether or not to emit the `ionSlideWillChange`/`ionSlideDidChange` events. Default true.
      */
-    Slides.prototype.slideNext = function (speed, runCallbacks) {
+    slideNext(speed, runCallbacks) {
         this.swiper.slideNext(runCallbacks, speed);
-    };
+    }
     /**
      * Transition to the previous slide.
      *
      * @param {number} [speed]  Transition duration (in ms).
      * @param {boolean} [runCallbacks]  Whether or not to emit the `ionSlideWillChange`/`ionSlideDidChange` events. Default true.
      */
-    Slides.prototype.slidePrev = function (speed, runCallbacks) {
+    slidePrev(speed, runCallbacks) {
         this.swiper.slidePrev(runCallbacks, speed);
-    };
+    }
     /**
      * Get the index of the active slide.
      *
      * @returns {number} The index number of the current slide.
      */
-    Slides.prototype.getActiveIndex = function () {
+    getActiveIndex() {
         return this.swiper.activeIndex;
-    };
+    }
     /**
      * Get the index of the previous slide.
      *
      * @returns {number} The index number of the previous slide.
      */
-    Slides.prototype.getPreviousIndex = function () {
+    getPreviousIndex() {
         return this.swiper.previousIndex;
-    };
+    }
     /**
      * Get the total number of slides.
      *
      * @returns {number} The total number of slides.
      */
-    Slides.prototype.length = function () {
+    length() {
         return this.swiper.slides.length;
-    };
+    }
     /**
      * Get whether or not the current slide is the last slide.
      *
      * @returns {boolean} If the slide is the last slide or not.
      */
-    Slides.prototype.isEnd = function () {
+    isEnd() {
         return this.isEnd();
-    };
+    }
     /**
      * Get whether or not the current slide is the first slide.
      *
      * @returns {boolean} If the slide is the first slide or not.
      */
-    Slides.prototype.isBeginning = function () {
+    isBeginning() {
         return this.isBeginning();
-    };
+    }
     /**
      * Start auto play.
      */
-    Slides.prototype.startAutoplay = function () {
+    startAutoplay() {
         this.swiper.startAutoplay();
-    };
+    }
     /**
      * Stop auto play.
      */
-    Slides.prototype.stopAutoplay = function () {
+    stopAutoplay() {
         this.swiper.stopAutoplay();
-    };
+    }
     /**
      * Lock or unlock the ability to slide to the next slides.
      */
-    Slides.prototype.lockSwipeToNext = function (shouldLockSwipeToNext) {
+    lockSwipeToNext(shouldLockSwipeToNext) {
         if (shouldLockSwipeToNext) {
             return this.swiper.lockSwipeToNext();
         }
         this.swiper.unlockSwipeToNext();
-    };
+    }
     /**
      * Lock or unlock the ability to slide to the previous slides.
      */
-    Slides.prototype.lockSwipeToPrev = function (shouldLockSwipeToPrev) {
+    lockSwipeToPrev(shouldLockSwipeToPrev) {
         if (shouldLockSwipeToPrev) {
             return this.swiper.lockSwipeToPrev();
         }
         this.swiper.unlockSwipeToPrev();
-    };
+    }
     /**
      * Lock or unlock the ability to slide to change slides.
      */
-    Slides.prototype.lockSwipes = function (shouldLockSwipes) {
+    lockSwipes(shouldLockSwipes) {
         if (shouldLockSwipes) {
             return this.swiper.lockSwipes();
         }
         this.swiper.unlockSwipes();
-    };
+    }
     /**
      * Enable or disable keyboard control.
      */
-    Slides.prototype.enableKeyboardControl = function (shouldEnableKeyboard) {
+    enableKeyboardControl(shouldEnableKeyboard) {
         if (shouldEnableKeyboard) {
             return this.swiper.enableKeyboardControl();
         }
         this.swiper.disableKeyboardControl();
-    };
+    }
     /**
      * @hidden
      */
-    Slides.prototype["componentDidunload"] = function () {
+    componentDidUnload() {
         this._init = false;
         this.swiper.destroy(true, true);
         this.enableKeyboardControl(false);
-    };
-    return Slides;
-}());
-export { Slides };
-var slidesId = -1;
+    }
+}
+let slidesId = -1;

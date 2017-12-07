@@ -1,113 +1,132 @@
-import iOSEnterAnimation from './animations/ios.enter';
-import iOSLeaveAnimation from './animations/ios.leave';
-var Alert = /** @class */ (function () {
-    function Alert() {
+import { CssClassMap, EventEmitter } from '@stencil/core';
+import { Animation, AnimationBuilder, AnimationController, Config, OverlayDismissEvent, OverlayDismissEventDetail } from '../../index';
+import { domControllerAsync, playAnimationAsync } from '../../utils/helpers';
+import { BACKDROP } from '../../utils/overlay-constants';
+import { createThemedClasses } from '../../utils/theme';
+import iosEnterAnimation from './animations/ios.enter';
+import iosLeaveAnimation from './animations/ios.leave';
+import mdEnterAnimation from './animations/md.enter';
+import mdLeaveAnimation from './animations/md.leave';
+export class Alert {
+    constructor() {
+        /**
+         * Array of buttons to be added to the alert. See AlertButton type for valid options
+         */
         this.buttons = [];
+        /**
+         * Array of input to show in the alert. See AlertInput type for valid options
+         */
         this.inputs = [];
+        /**
+         * If true, the alert will be dismissed when the backdrop is clicked.
+         */
         this.enableBackdropDismiss = true;
+        /**
+         * If true, alert will become translucent. Requires support for backdrop-filters.
+         */
+        this.translucent = false;
+        /**
+         * Enable alert animations. If false, alert will not animate in
+         */
+        this.animate = true;
     }
-    Alert.prototype.present = function () {
-        var _this = this;
-        return new Promise(function (resolve) {
-            _this._present(resolve);
-        });
-    };
-    Alert.prototype._present = function (resolve) {
-        var _this = this;
+    /**
+     * Present the alert after is has been created
+     */
+    present() {
         if (this.animation) {
             this.animation.destroy();
             this.animation = null;
         }
-        this.ionAlertWillPresent.emit({ alert: this });
+        this.ionAlertWillPresent.emit();
         // get the user's animation fn if one was provided
-        var animationBuilder = this.enterAnimation;
-        if (!animationBuilder) {
-            // user did not provide a custom animation fn
-            // decide from the config which animation to use
-            animationBuilder = iOSEnterAnimation;
-        }
+        const animationBuilder = this.enterAnimation || this.config.get('alertEnter', this.mode === 'ios' ? iosEnterAnimation : mdEnterAnimation);
         // build the animation and kick it off
-        this.animationCtrl.create(animationBuilder, this.el).then(function (animation) {
-            _this.animation = animation;
-            animation.onFinish(function (a) {
-                a.destroy();
-                _this.ionViewDidEnter();
-                resolve();
-            }).play();
+        return this.animationCtrl.create(animationBuilder, this.el).then(animation => {
+            this.animation = animation;
+            if (!this.animate) {
+                // if the duration is 0, it won't actually animate I don't think
+                // TODO - validate this
+                this.animation = animation.duration(0);
+            }
+            return playAnimationAsync(animation);
+        }).then((animation) => {
+            animation.destroy();
+            const firstInput = this.el.querySelector('[tabindex]');
+            if (firstInput) {
+                firstInput.focus();
+            }
+            this.ionAlertDidPresent.emit();
         });
-    };
-    Alert.prototype.dismiss = function () {
-        var _this = this;
+    }
+    /**
+     * Dismiss the alert programatically
+     */
+    dismiss(data, role) {
         if (this.animation) {
             this.animation.destroy();
             this.animation = null;
         }
-        return new Promise(function (resolve) {
-            _this.ionAlertWillDismiss.emit({ alert: _this });
-            // get the user's animation fn if one was provided
-            var animationBuilder = _this.exitAnimation;
-            if (!animationBuilder) {
-                // user did not provide a custom animation fn
-                // decide from the config which animation to use
-                animationBuilder = iOSLeaveAnimation;
-            }
-            // build the animation and kick it off
-            _this.animationCtrl.create(animationBuilder, _this.el).then(function (animation) {
-                _this.animation = animation;
-                animation.onFinish(function (a) {
-                    a.destroy();
-                    _this.ionAlertDidDismiss.emit({ alert: _this });
-                    Context.dom.write(function () {
-                        _this.el.parentNode.removeChild(_this.el);
-                    });
-                    resolve();
-                }).play();
+        this.ionAlertWillDismiss.emit({
+            data: data,
+            role: role
+        });
+        // get the user's animation fn if one was provided
+        const animationBuilder = this.leaveAnimation || this.config.get('alertLeave', this.mode === 'ios' ? iosLeaveAnimation : mdLeaveAnimation);
+        return this.animationCtrl.create(animationBuilder, this.el).then(animation => {
+            this.animation = animation;
+            return playAnimationAsync(animation);
+        }).then((animation) => {
+            animation.destroy();
+            return domControllerAsync(Context.dom.write, () => {
+                this.el.parentNode.removeChild(this.el);
+            });
+        }).then(() => {
+            this.ionAlertDidDismiss.emit({
+                data: data,
+                role: role
             });
         });
-    };
-    Alert.prototype["componentDidunload"] = function () {
-        this.ionAlertDidUnload.emit({ alert: this });
-    };
-    Alert.prototype.onDismiss = function (ev) {
-        ev.stopPropagation();
-        ev.preventDefault();
-        this.dismiss();
-    };
-    Alert.prototype["componentDidLoad"] = function () {
-        this.ionAlertDidLoad.emit({ alert: this });
-    };
-    Alert.prototype.ionViewDidEnter = function () {
-        this.ionAlertDidPresent.emit({ loading: this });
-    };
-    Alert.prototype.backdropClick = function () {
+    }
+    componentDidLoad() {
+        this.ionAlertDidLoad.emit();
+    }
+    componentDidEnter() {
+        this.ionAlertDidPresent.emit();
+    }
+    componentDidUnload() {
+        this.ionAlertDidUnload.emit();
+    }
+    backdropClick() {
         if (this.enableBackdropDismiss) {
-            // const opts: NavOptions = {
-            //   minClickBlockDuration: 400
-            // };
-            this.dismiss();
+            this.dismiss(null, BACKDROP);
         }
-    };
-    Alert.prototype.rbClick = function (button) {
-        this.inputs.forEach(function (input) {
-            input.checked = (button === input);
+    }
+    rbClick(inputIndex) {
+        this.inputs = this.inputs.map((input, index) => {
+            input.checked = (inputIndex === index);
             return input;
         });
-        this.activeId = button.id;
-        if (button.handler) {
-            button.handler(button);
+        const rbButton = this.inputs[inputIndex];
+        this.activeId = rbButton.id;
+        if (rbButton.handler) {
+            rbButton.handler(rbButton);
         }
-    };
-    Alert.prototype.cbClick = function (button) {
-        button.checked = !button.checked;
-        if (button.handler) {
-            button.handler(button);
+    }
+    cbClick(inputIndex) {
+        this.inputs = this.inputs.map((input, index) => {
+            if (inputIndex === index) {
+                input.checked = !input.checked;
+            }
+            return input;
+        });
+        const cbButton = this.inputs[inputIndex];
+        if (cbButton.handler) {
+            cbButton.handler(cbButton);
         }
-    };
-    Alert.prototype.btnClick = function (button) {
-        console.log('btnClick', button);
-        // TODO keep the time of the most recent button click
-        // this.lastClick = Date.now();
-        var shouldDismiss = true;
+    }
+    buttonClick(button) {
+        let shouldDismiss = true;
         if (button.handler) {
             // a handler has been provided, execute it
             // pass the handler the values from the inputs
@@ -117,22 +136,22 @@ var Alert = /** @class */ (function () {
             }
         }
         if (shouldDismiss) {
-            this.dismiss();
+            this.dismiss(this.getValues(), button.role);
         }
-    };
-    Alert.prototype.getValues = function () {
+    }
+    getValues() {
         if (this.inputType === 'radio') {
             // this is an alert with radio buttons (single value select)
             // return the one value which is checked, otherwise undefined
-            var checkedInput = this.inputs.find(function (i) { return i.checked; });
+            const checkedInput = this.inputs.find(i => i.checked);
             console.debug('returning', checkedInput ? checkedInput.value : undefined);
             return checkedInput ? checkedInput.value : undefined;
         }
         if (this.inputType === 'checkbox') {
             // this is an alert with checkboxes (multiple value select)
             // return an array of all the checked values
-            console.debug('returning', this.inputs.filter(function (i) { return i.checked; }).map(function (i) { return i.value; }));
-            return this.inputs.filter(function (i) { return i.checked; }).map(function (i) { return i.value; });
+            console.debug('returning', this.inputs.filter(i => i.checked).map(i => i.value));
+            return this.inputs.filter(i => i.checked).map(i => i.value);
         }
         if (this.inputs.length === 0) {
             // this is an alert without any options/inputs at all
@@ -141,72 +160,90 @@ var Alert = /** @class */ (function () {
         }
         // this is an alert with text inputs
         // return an object of all the values with the input name as the key
-        var values = {};
-        this.inputs.forEach(function (i) {
+        const values = {};
+        this.inputs.forEach(i => {
             values[i.name] = i.value;
         });
         console.debug('returning', values);
         return values;
-    };
-    Alert.prototype.buttonClass = function (button) {
-        var buttonClass = !button.cssClass
-            ? ['alert-button']
-            : ["alert-button", "" + button.cssClass];
-        return buttonClass.reduce(function (prevValue, cssClass) {
+    }
+    buttonClass(button) {
+        let buttonClass = ['alert-button'];
+        if (button.cssClass) {
+            let customClass = button.cssClass.split(' ').filter(b => b.trim() !== '').join(' ');
+            buttonClass.push(customClass);
+        }
+        return buttonClass.reduce((prevValue, cssClass) => {
             prevValue[cssClass] = true;
             return prevValue;
         }, {});
-    };
-    Alert.prototype.renderCheckbox = function (inputs) {
-        var _this = this;
+    }
+    renderCheckbox(inputs) {
         if (inputs.length === 0)
             return null;
-        return (h("div", { "c": { "alert-checkbox-group": true } }, inputs.map(function (i) { return (h("button", { "c": { "alert-tappable": true, "alert-checkbox": true, "alert-checkbox-button": true }, "o": { "click": function () { return _this.cbClick(i); } }, "a": { "aria-checked": i.checked, "disabled": i.disabled, "role": "checkbox" }, "p": { "id": i.id } },
-            h("div", { "c": { "button-inner": true } },
-                h("div", { "c": { "alert-checkbox-icon": true } },
-                    h("div", { "c": { "alert-checkbox-inner": true } })),
-                h("div", { "c": { "alert-checkbox-label": true } }, i.label)))); })));
-    };
-    Alert.prototype.renderRadio = function (inputs) {
-        var _this = this;
-        var hdrId = 'TODO';
+        return (h("div", { class: 'alert-checkbox-group' }, inputs.map((i, index) => (h("button", { onClick: () => this.cbClick(index), "aria-checked": i.checked, id: i.id, disabled: i.disabled, tabIndex: 0, role: 'checkbox', class: 'alert-tappable alert-checkbox alert-checkbox-button' },
+            h("div", { class: 'button-inner' },
+                h("div", { class: 'alert-checkbox-icon' },
+                    h("div", { class: 'alert-checkbox-inner' })),
+                h("div", { class: 'alert-checkbox-label' }, i.label)))))));
+    }
+    renderRadio(inputs) {
         if (inputs.length === 0)
             return null;
-        return (h("div", { "c": { "alert-radio-group": true }, "a": { "role": "radiogroup", "aria-labelledby": hdrId, "aria-activedescendant": this.activeId } }, inputs.map(function (i) { return (h("button", { "c": { "alert-radio-button": true, "alert-tappable": true, "alert-radio": true }, "o": { "click": function () { return _this.rbClick(i); } }, "a": { "aria-checked": i.checked, "disabled": i.disabled, "role": "radio" }, "p": { "id": i.id } },
-            h("div", { "c": { "button-inner": true } },
-                h("div", { "c": { "alert-radio-icon": true } },
-                    h("div", { "c": { "alert-radio-inner": true } })),
-                h("div", { "c": { "alert-radio-label": true } }, i.label)))); })));
-    };
-    Alert.prototype.renderInput = function (inputs) {
+        return (h("div", { class: 'alert-radio-group', role: 'radiogroup', "aria-labelledby": this.hdrId, "aria-activedescendant": this.activeId }, inputs.map((i, index) => (h("button", { onClick: () => this.rbClick(index), "aria-checked": i.checked, disabled: i.disabled, id: i.id, tabIndex: 0, class: 'alert-radio-button alert-tappable alert-radio', role: 'radio' },
+            h("div", { class: 'button-inner' },
+                h("div", { class: 'alert-radio-icon' },
+                    h("div", { class: 'alert-radio-inner' })),
+                h("div", { class: 'alert-radio-label' }, i.label)))))));
+    }
+    renderInput(inputs) {
         if (inputs.length === 0)
             return null;
-        return (h("div", { "c": { "alert-input-group": true } }, inputs.map(function (i) { return (h("div", { "c": { "alert-input-wrapper": true } },
-            h("input", { "c": { "alert-input": true }, "p": { "placeholder": i.placeholder, "value": i.value, "type": i.type, "min": i.min, "max": i.max, "id": i.id } }))); })));
-    };
-    Alert.prototype.render = function () {
-        var _this = this;
-        var hdrId = 'TODO';
-        var subHdrId = 'TODO';
-        var msgId = 'TODO';
-        var alertButtonGroupClass = {
+        return (h("div", { class: 'alert-input-group' }, inputs.map(i => (h("div", { class: 'alert-input-wrapper' },
+            h("input", { placeholder: i.placeholder, value: i.value, type: i.type, min: i.min, max: i.max, id: i.id, disabled: i.disabled, tabIndex: 0, class: 'alert-input' }))))));
+    }
+    hostData() {
+        const themedClasses = this.translucent ? createThemedClasses(this.mode, this.color, 'alert-translucent') : {};
+        const hostClasses = Object.assign({}, themedClasses);
+        return {
+            class: hostClasses,
+            id: this.alertId
+        };
+    }
+    render() {
+        const hdrId = `${this.alertId}-hdr`;
+        const subHdrId = `${this.alertId}-sub-hdr`;
+        const msgId = `${this.alertId}-msg`;
+        if (this.cssClass) {
+            this.cssClass.split(' ').forEach(cssClass => {
+                if (cssClass.trim() !== '')
+                    this.el.classList.add(cssClass);
+            });
+        }
+        if (this.title || !this.subTitle) {
+            this.hdrId = hdrId;
+        }
+        else if (this.subTitle) {
+            this.hdrId = subHdrId;
+        }
+        const alertButtonGroupClass = {
             'alert-button-group': true,
             'alert-button-group-vertical': this.buttons.length > 2
         };
-        var buttons = this.buttons
-            .map(function (b) {
+        const buttons = this.buttons
+            .map(b => {
             if (typeof b === 'string') {
                 b = { text: b };
             }
             return b;
         })
-            .filter(function (b) { return b !== null; });
+            .filter(b => b !== null);
         // An alert can be created with several different inputs. Radios,
         // checkboxes and inputs are all accepted, but they cannot be mixed.
-        var inputTypes = [];
+        const inputTypes = [];
         this.inputs = this.inputs
-            .map(function (i, index) {
-            var r = {
+            .map((i, index) => {
+            let r = {
                 type: i.type || 'text',
                 name: i.name ? i.name : index + '',
                 placeholder: i.placeholder ? i.placeholder : '',
@@ -214,52 +251,47 @@ var Alert = /** @class */ (function () {
                 label: i.label,
                 checked: !!i.checked,
                 disabled: !!i.disabled,
-                id: i.id ? i.id : "alert-input-" + _this.id + "-" + index,
+                id: i.id ? i.id : `alert-input-${this.alertId}-${index}`,
                 handler: i.handler ? i.handler : null,
                 min: i.min ? i.min : null,
                 max: i.max ? i.max : null
             };
             return r;
         })
-            .filter(function (i) { return i !== null; });
-        this.inputs.forEach(function (i) {
+            .filter(i => i !== null);
+        this.inputs.forEach(i => {
             if (inputTypes.indexOf(i.type) < 0) {
                 inputTypes.push(i.type);
             }
         });
         if (inputTypes.length > 1 && (inputTypes.indexOf('checkbox') > -1 || inputTypes.indexOf('radio') > -1)) {
-            console.warn("Alert cannot mix input types: " + (inputTypes.join('/')) + ". Please see alert docs for more info.");
+            console.warn(`Alert cannot mix input types: ${(inputTypes.join('/'))}. Please see alert docs for more info.`);
         }
         this.inputType = inputTypes.length ? inputTypes[0] : null;
         return [
-            h("ion-backdrop", { "c": { "alert-backdrop": true }, "o": { "click": this.backdropClick.bind(this) } }),
-            h("div", { "c": { "alert-wrapper": true } },
-                h("div", { "c": { "alert-head": true } },
+            h("ion-backdrop", { onClick: this.backdropClick.bind(this), class: 'alert-backdrop' }),
+            h("div", { class: 'alert-wrapper' },
+                h("div", { class: 'alert-head' },
                     this.title
-                        ? h("h2", { "c": { "alert-title": true }, "p": { "id": hdrId } }, this.title)
+                        ? h("h2", { id: hdrId, class: 'alert-title' }, this.title)
                         : null,
                     this.subTitle
-                        ? h("h2", { "c": { "alert-sub-title": true }, "p": { "id": subHdrId } }, this.subTitle)
+                        ? h("h2", { id: subHdrId, class: 'alert-sub-title' }, this.subTitle)
                         : null),
-                h("div", { "c": { "alert-message": true }, "p": { "id": msgId, "innerHTML": this.message } }),
-                (function () {
-                    switch (_this.inputType) {
+                h("div", { id: msgId, class: 'alert-message', innerHTML: this.message }),
+                (() => {
+                    switch (this.inputType) {
                         case 'checkbox':
-                            return _this.renderCheckbox(_this.inputs);
+                            return this.renderCheckbox(this.inputs);
                         case 'radio':
-                            return _this.renderRadio(_this.inputs);
+                            return this.renderRadio(this.inputs);
                         default:
-                            return _this.renderInput(_this.inputs);
+                            return this.renderInput(this.inputs);
                     }
-                    ;
                 })(),
-                h("div", { "c": alertButtonGroupClass }, buttons.map(function (b) {
-                    return h("button", { "c": _this.buttonClass(b), "o": { "click": function () { return _this.btnClick(b); } } },
-                        h("span", { "c": { "button-inner": true } }, b.text));
-                })))
+                h("div", { class: alertButtonGroupClass }, buttons.map(b => h("button", { class: this.buttonClass(b), tabIndex: 0, onClick: () => this.buttonClick(b) },
+                    h("span", { class: 'button-inner' }, b.text)))))
         ];
-    };
-    return Alert;
-}());
-export { Alert };
-;
+    }
+}
+export { iosEnterAnimation as iosAlertEnterAnimation, iosLeaveAnimation as iosAlertLeaveAnimation, mdEnterAnimation as mdAlertEnterAnimation, mdLeaveAnimation as mdAlertLeaveAnimation, };

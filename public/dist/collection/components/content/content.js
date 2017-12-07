@@ -1,16 +1,11 @@
-var __assign = (this && this.__assign) || Object.assign || function(t) {
-    for (var s, i = 1, n = arguments.length; i < n; i++) {
-        s = arguments[i];
-        for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
-            t[p] = s[p];
-    }
-    return t;
-};
+import { Config } from '../../index';
 import { createThemedClasses, getElementClassObject } from '../../utils/theme';
-import { getParentElement, getToolbarHeight } from '../../utils/helpers';
-var Content = /** @class */ (function () {
-    function Content() {
-        this.$scrollDetail = {};
+import { getPageElement } from '../../utils/helpers';
+export class Content {
+    constructor() {
+        this.cTop = 0;
+        this.cBottom = 0;
+        this.dirty = false;
         /**
          * @input {boolean} If true, the content will scroll behind the headers
          * and footers. This effect can easily be seen by setting the toolbar
@@ -18,61 +13,86 @@ var Content = /** @class */ (function () {
          */
         this.fullscreen = false;
     }
-    Content.prototype["componentDidunload"] = function () {
-        this.$fixed = this.$scroll = this.$siblingFooter = this.$siblingHeader = this.$scrollDetail = null;
-    };
-    Content.prototype.enableJsScroll = function () {
-        this.$scroll.jsScroll = true;
-    };
+    onNavChanged() {
+        this.resize();
+    }
+    componentDidLoad() {
+        this.scrollEl = this.el.querySelector('ion-scroll');
+        this.resize();
+    }
+    componentDidUnload() {
+        this.scrollEl = null;
+    }
+    hostData() {
+        return {
+            class: {
+                'statusbar-padding': this.config.getBoolean('statusbarPadding')
+            }
+        };
+    }
+    enableJsScroll() {
+        this.scrollEl.jsScroll = true;
+    }
     /**
      * Scroll to the top of the content component.
      *
      * @param {number} [duration]  Duration of the scroll animation in milliseconds. Defaults to `300`.
      * @returns {Promise} Returns a promise which is resolved when the scroll has completed.
      */
-    Content.prototype.scrollToTop = function (duration) {
-        if (duration === void 0) { duration = 300; }
-        return this.$scroll.scrollToTop(duration);
-    };
+    scrollToTop(duration = 300) {
+        return this.scrollEl.scrollToTop(duration);
+    }
     /**
      * Scroll to the bottom of the content component.
      *
      * @param {number} [duration]  Duration of the scroll animation in milliseconds. Defaults to `300`.
      * @returns {Promise} Returns a promise which is resolved when the scroll has completed.
      */
-    Content.prototype.scrollToBottom = function (duration) {
-        if (duration === void 0) { duration = 300; }
-        return this.$scroll.scrollToBottom(duration);
-    };
-    Content.prototype.render = function () {
-        var props = {};
-        var scrollStyle = {};
-        var pageChildren = getParentElement(this.el).children;
-        var headerHeight = getToolbarHeight('ION-HEADER', pageChildren, this.mode, '44px', '56px');
-        var footerHeight = getToolbarHeight('ION-FOOTER', pageChildren, this.mode, '50px', '48px');
+    scrollToBottom(duration = 300) {
+        return this.scrollEl.scrollToBottom(duration);
+    }
+    resize() {
+        if (!this.scrollEl) {
+            return;
+        }
         if (this.fullscreen) {
-            scrollStyle.paddingTop = headerHeight;
-            scrollStyle.paddingBottom = footerHeight;
+            Context.dom.raf(() => {
+                Context.dom.read(this.readDimensions.bind(this));
+                Context.dom.write(this.writeDimensions.bind(this));
+            });
         }
         else {
-            scrollStyle.marginTop = headerHeight;
-            scrollStyle.marginBottom = footerHeight;
+            this.cTop = this.cBottom = null;
+            Context.dom.write(() => this.scrollEl.removeAttribute('style'));
         }
-        if (this.ionScrollStart) {
-            props['ionScrollStart'] = this.ionScrollStart.bind(this);
+    }
+    readDimensions() {
+        const page = getPageElement(this.el);
+        const top = Math.max(this.el.offsetTop, 0);
+        const bottom = Math.max(page.offsetHeight - top - this.el.offsetHeight, 0);
+        this.dirty = top !== this.cTop || bottom !== this.cBottom;
+        this.cTop = top;
+        this.cBottom = bottom;
+    }
+    writeDimensions() {
+        if (this.dirty && this.scrollEl) {
+            const style = this.scrollEl.style;
+            style.paddingTop = this.cTop + 'px';
+            style.paddingBottom = this.cBottom + 'px';
+            style.top = -this.cTop + 'px';
+            style.bottom = -this.cBottom + 'px';
+            this.dirty = false;
         }
-        if (this.ionScroll) {
-            props['ionScroll'] = this.ionScroll.bind(this);
-        }
-        if (this.ionScrollEnd) {
-            props['ionScrollEnd'] = this.ionScrollEnd.bind(this);
-        }
-        var themedClasses = createThemedClasses(this.mode, this.color, 'content');
-        var hostClasses = getElementClassObject(this.el.classList);
-        var scrollClasses = __assign({}, themedClasses, hostClasses, { 'statusbar-padding': this.config.getBoolean('statusbarPadding') });
-        return (h("ion-scroll", { "s": scrollStyle, "p": props, "c": scrollClasses },
-            h(0, 0)));
-    };
-    return Content;
-}());
-export { Content };
+    }
+    render() {
+        const themedClasses = createThemedClasses(this.mode, this.color, 'content');
+        const hostClasses = getElementClassObject(this.el.classList);
+        const scrollClasses = Object.assign({}, themedClasses, hostClasses);
+        this.resize();
+        return [
+            h("ion-scroll", { class: scrollClasses },
+                h("slot", null)),
+            h("slot", { name: 'fixed' })
+        ];
+    }
+}

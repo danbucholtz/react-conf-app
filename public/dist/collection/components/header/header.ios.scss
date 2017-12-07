@@ -1,0 +1,9 @@
+@import "./header.ios.vars";
+
+// iOS Header
+// --------------------------------------------------
+
+.header-translucent-ios {
+  -webkit-backdrop-filter: $header-ios-translucent-filter;
+  backdrop-filter: $header-ios-translucent-filter;
+}

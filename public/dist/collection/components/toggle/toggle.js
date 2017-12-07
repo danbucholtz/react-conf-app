@@ -1,107 +1,139 @@
-var Toggle = /** @class */ (function () {
-    function Toggle() {
+import { BlurEvent, CheckboxInput, CheckedInputChangeEvent, FocusEvent, StyleEvent } from '../../utils/input-interfaces';
+import { EventEmitter } from '@stencil/core';
+import { GestureDetail } from '../../index';
+import { hapticSelection } from '../../utils/haptic';
+export class Toggle {
+    constructor() {
         this.activated = false;
-        this.hasFocus = false;
+        /**
+         * @input {boolean} If true, the toggle is selected. Defaults to `false`.
+         */
         this.checked = false;
+        /*
+         * @input {boolean} If true, the user cannot interact with the toggle. Default false.
+         */
         this.disabled = false;
+        this.gestureConfig = {
+            'onStart': this.onDragStart.bind(this),
+            'onMove': this.onDragMove.bind(this),
+            'onEnd': this.onDragEnd.bind(this),
+            'gestureName': 'toggle',
+            'gesturePriority': 30,
+            'type': 'pan',
+            'direction': 'x',
+            'threshold': 0,
+            'attachTo': 'parent'
+        };
     }
-    Toggle.prototype["componentWillLoad"] = function () {
+    componentWillLoad() {
+        this.inputId = 'ion-tg-' + (toggleIds++);
+        if (this.value === undefined) {
+            this.value = this.inputId;
+        }
         this.emitStyle();
-    };
-    Toggle.prototype.checkedChanged = function (val) {
-        this.ionChange.emit({ checked: val });
+    }
+    componentDidLoad() {
+        this.nativeInput.checked = this.checked;
+        this.didLoad = true;
+        const parentItem = this.nativeInput.closest('ion-item');
+        if (parentItem) {
+            const itemLabel = parentItem.querySelector('ion-label');
+            if (itemLabel) {
+                itemLabel.id = this.inputId + '-lbl';
+                this.nativeInput.setAttribute('aria-labelledby', itemLabel.id);
+            }
+        }
+    }
+    checkedChanged(isChecked) {
+        if (this.nativeInput.checked !== isChecked) {
+            // keep the checked value and native input `nync
+            this.nativeInput.checked = isChecked;
+        }
+        if (this.didLoad) {
+            this.ionChange.emit({
+                checked: isChecked,
+                value: this.value
+            });
+        }
         this.emitStyle();
-    };
-    Toggle.prototype.disabledChanged = function () {
+    }
+    disabledChanged(isDisabled) {
+        this.nativeInput.disabled = isDisabled;
         this.emitStyle();
-    };
-    Toggle.prototype.emitStyle = function () {
-        var _this = this;
+    }
+    emitStyle() {
         clearTimeout(this.styleTmr);
-        this.styleTmr = setTimeout(function () {
-            _this.ionStyle.emit({
-                'toggle-disabled': _this.disabled,
-                'toggle-checked': _this.checked,
-                'toggle-activated': _this.activated,
-                'toggle-focus': _this.hasFocus
+        this.styleTmr = setTimeout(() => {
+            this.ionStyle.emit({
+                'toggle-disabled': this.disabled,
+                'toggle-checked': this.checked,
+                'toggle-activated': this.activated
             });
         });
-    };
-    Toggle.prototype.canStart = function () {
-        return !this.disabled;
-    };
-    Toggle.prototype.onDragStart = function (detail) {
-        this.startX = detail.startX;
-        this.fireFocus();
-    };
-    Toggle.prototype.onDragMove = function (detail) {
-        if (this.checked) {
-            if (detail.currentX + 15 < this.startX) {
-                this.checked = false;
-                this.activated = true;
-                this.startX = detail.currentX;
-            }
+    }
+    onDragStart(detail) {
+        this.pivotX = detail.currentX;
+        this.activated = true;
+    }
+    onDragMove(detail) {
+        const currentX = detail.currentX;
+        if (shouldToggle(this.checked, currentX - this.pivotX, -15)) {
+            this.checked = !this.checked;
+            this.pivotX = currentX;
+            hapticSelection();
         }
-        else if (detail.currentX - 15 > this.startX) {
-            this.checked = true;
-            this.activated = (detail.currentX < this.startX + 5);
-            this.startX = detail.currentX;
-        }
-    };
-    Toggle.prototype.onDragEnd = function (detail) {
-        if (this.checked) {
-            if (detail.startX + 4 > detail.currentX) {
-                this.checked = false;
-            }
-        }
-        else if (detail.startX - 4 < detail.currentX) {
-            this.checked = true;
+    }
+    onDragEnd(detail) {
+        const delta = detail.currentX - this.pivotX;
+        if (shouldToggle(this.checked, delta, 4)) {
+            this.checked = !this.checked;
+            hapticSelection();
         }
         this.activated = false;
-        this.fireBlur();
-        this.startX = null;
-    };
-    Toggle.prototype.onSpace = function (ev) {
-        this.toggle();
-        ev.stopPropagation();
-        ev.preventDefault();
-    };
-    Toggle.prototype.toggle = function () {
-        if (!this.disabled) {
-            this.checked = !this.checked;
-            this.fireFocus();
-        }
-        return this.checked;
-    };
-    Toggle.prototype.fireFocus = function () {
-        if (!this.hasFocus) {
-            this.hasFocus = true;
-            this.ionFocus.emit();
-            this.emitStyle();
-        }
-    };
-    Toggle.prototype.fireBlur = function () {
-        if (this.hasFocus) {
-            this.hasFocus = false;
-            this.ionBlur.emit();
-            this.emitStyle();
-        }
-    };
-    Toggle.prototype.hostData = function () {
+        this.nativeInput.focus();
+    }
+    onChange() {
+        this.checked = !this.checked;
+    }
+    onKeyUp() {
+        this.keyFocus = true;
+    }
+    onFocus() {
+        this.ionFocus.emit();
+    }
+    onBlur() {
+        this.keyFocus = false;
+        this.ionBlur.emit();
+    }
+    hostData() {
         return {
             class: {
                 'toggle-activated': this.activated,
                 'toggle-checked': this.checked,
-                'toggle-disabled': this.disabled
+                'toggle-disabled': this.disabled,
+                'toggle-key': this.keyFocus
             }
         };
-    };
-    Toggle.prototype.render = function () {
-        return (h("ion-gesture", { "p": { "canStart": this.canStart.bind(this), "onStart": this.onDragStart.bind(this), "onMove": this.onDragMove.bind(this), "onEnd": this.onDragEnd.bind(this), "onPress": this.toggle.bind(this), "gestureName": 'toggle', "gesturePriority": 30, "type": 'pan,press', "direction": 'x', "threshold": 20, "attachTo": 'parent' } },
-            h("div", { "c": { "toggle-icon": true } },
-                h("div", { "c": { "toggle-inner": true } })),
-            h("div", { "c": { "toggle-cover": true }, "a": { "aria-checked": this.checked ? 'true' : false, "aria-disabled": this.disabled ? 'true' : false, "aria-labelledby": this.labelId, "role": 'checkbox' }, "p": { "id": this.id, "tabIndex": 0 } })));
-    };
-    return Toggle;
-}());
-export { Toggle };
+    }
+    render() {
+        return [
+            h("ion-gesture", Object.assign({}, this.gestureConfig, { enabled: !this.disabled, tabIndex: -1 }),
+                h("div", { class: 'toggle-icon' },
+                    h("div", { class: 'toggle-inner' })),
+                h("div", { class: 'toggle-cover' })),
+            h("input", { type: 'checkbox', onChange: this.onChange.bind(this), onFocus: this.onFocus.bind(this), onBlur: this.onBlur.bind(this), onKeyUp: this.onKeyUp.bind(this), id: this.inputId, name: this.name, value: this.value, disabled: this.disabled, ref: r => this.nativeInput = r })
+        ];
+    }
+}
+function shouldToggle(checked, deltaX, margin) {
+    const isRTL = document.dir === 'rtl';
+    if (checked) {
+        return (!isRTL && (margin > deltaX)) ||
+            (isRTL && (-margin < deltaX));
+    }
+    else {
+        return (!isRTL && (-margin < deltaX)) ||
+            (isRTL && (margin > deltaX));
+    }
+}
+let toggleIds = 0;

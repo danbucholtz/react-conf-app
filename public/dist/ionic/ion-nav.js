@@ -2,27 +2,35 @@
  * (C) Ionic http://ionicframework.com - MIT License
  * Built with http://stenciljs.com
  */
+
 Ionic.loadComponents(
 
 /**** module id (dev mode) ****/
 "ion-nav",
 
 /**** component modules ****/
-function importComponent(exports, h, t, Context, publicPath) {
+function importComponent(exports, h, Context, publicPath) {
+"use strict";
+// @stencil/core
+
 function isDef(v) { return v !== undefined && v !== null; }
 
 
 
 
-
+function isString(v) { return typeof v === 'string'; }
 function isNumber(v) { return typeof v === 'number'; }
 
+
+
+/** @hidden */
 
 function assert(bool, msg) {
     if (!bool) {
         console.error(msg);
     }
 }
+
 
 
 
@@ -44,11 +52,7 @@ function assert(bool, msg) {
 /** @hidden */
 
 function isReady(element) {
-    return new Promise(function (resolve) {
-        element.componentOnReady(function (elm) {
-            resolve(elm);
-        });
-    });
+    return element.componentOnReady();
 }
 
 /** @hidden */
@@ -61,26 +65,32 @@ function getActiveElement() {
     return getDocument()['activeElement'];
 }
 function focusOutActiveElement() {
-    var activeElement = getActiveElement();
+    const activeElement = getActiveElement();
     activeElement && activeElement.blur && activeElement.blur();
 }
 
-var STATE_NEW = 1;
-var STATE_INITIALIZED = 2;
-var STATE_ATTACHED = 3;
-var STATE_DESTROYED = 4;
-var INIT_ZINDEX = 100;
-
-var DIRECTION_BACK = 'back';
-var DIRECTION_FORWARD = 'forward';
 
 
+/**
+ * @private
+ */
 
-var NAV_ID_START = 1000;
-var VIEW_ID_START = 2000;
-var transitionIds = 0;
-var activeTransitions = new Map();
-var portalZindex = 9999;
+const STATE_NEW = 1;
+const STATE_INITIALIZED = 2;
+const STATE_ATTACHED = 3;
+const STATE_DESTROYED = 4;
+const INIT_ZINDEX = 100;
+
+const DIRECTION_BACK = 'back';
+const DIRECTION_FORWARD = 'forward';
+
+
+
+let NAV_ID_START = 1000;
+let VIEW_ID_START = 2000;
+let transitionIds = 0;
+let activeTransitions = new Map();
+let portalZindex = 9999;
 function isViewController(object) {
     return !!(object && object.didLoad && object.willUnload);
 }
@@ -88,6 +98,7 @@ function setZIndex(nav, enteringView, leavingView, direction) {
     if (enteringView) {
         if (nav.isPortal) {
             if (direction === DIRECTION_FORWARD) {
+                // TODO - fix typing
                 updateZIndex(enteringView, nav.zIndexOffset + portalZindex);
             }
             portalZindex++;
@@ -103,6 +114,7 @@ function setZIndex(nav, enteringView, leavingView, direction) {
             }
         }
         else {
+            // TODO - fix typing
             updateZIndex(enteringView, INIT_ZINDEX + nav.zIndexOffset);
         }
     }
@@ -125,7 +137,7 @@ function canNavGoBack(nav) {
     return !!nav.getPrevious();
 }
 function transitionFactory(animation) {
-    animation.registerTransitionStart = function (callback) {
+    animation.registerTransitionStart = (callback) => {
         animation.transitionStartFunction = callback;
     };
     animation.start = function () {
@@ -151,7 +163,7 @@ function transitionDestroyImpl(transition) {
 function getParentTransitionId(nav) {
     nav = nav.parent;
     while (nav) {
-        var transitionId = nav.transitionId;
+        const transitionId = nav.transitionId;
         if (isDef(transitionId)) {
             return transitionId;
         }
@@ -163,15 +175,15 @@ function getNextTransitionId() {
     return transitionIds++;
 }
 function destroyTransition(transitionId) {
-    var transition = activeTransitions.get(transitionId);
+    const transition = activeTransitions.get(transitionId);
     if (transition) {
         transition.destroy();
         activeTransitions.delete(transitionId);
     }
 }
 function getHydratedTransition(name, config, transitionId, emptyTransition, enteringView, leavingView, opts, defaultTransitionFactory) {
-    var transitionFactory = config.get(name) || defaultTransitionFactory;
-    var hydratedTransition = transitionFactory(emptyTransition, enteringView, leavingView, opts);
+    const transitionFactory = config.get(name) || defaultTransitionFactory;
+    const hydratedTransition = transitionFactory(emptyTransition, enteringView, leavingView, opts);
     hydratedTransition.transitionId = transitionId;
     if (!activeTransitions.has(transitionId)) {
         // sweet, this is the root transition
@@ -193,10 +205,6 @@ function getFirstView(nav) {
 function getViews(nav) {
     return nav.views ? nav.views : [];
 }
-function init(nav) {
-    nav.id = getNextNavId();
-    nav.views = [];
-}
 function getActiveImpl(nav) {
     return nav.views && nav.views.length > 0 ? nav.views[nav.views.length - 1] : null;
 }
@@ -209,71 +217,123 @@ function getPreviousImpl(nav, viewController) {
 function getNextNavId() {
     return navControllerIds++;
 }
-var navControllerIds = NAV_ID_START;
+function resolveRoute(nav, component) {
+    return nav.routes.find(r => r.id === component);
+}
+let navControllerIds = NAV_ID_START;
 
-var IonNav = /** @class */ (function () {
-    function IonNav() {
-        init(this);
+/* it is very important to keep this class in sync with ./nav-interface interface */
+class Nav {
+    constructor() {
+        this.init = false;
+        this.routes = [];
+        this.views = [];
+        this.navId = getNextNavId();
     }
-    IonNav.prototype.componentDidLoad = function () {
-        componentDidLoadImpl(this);
-    };
-    IonNav.prototype.getViews = function () {
+    componentWillLoad() {
+        this.routes = Array.from(this.element.querySelectorAll('ion-route'))
+            .map(child => child.getRoute());
+        this.useRouter = this.config.getBoolean('useRouter', false);
+    }
+    componentDidLoad() {
+        if (this.init) {
+            return;
+        }
+        this.init = true;
+        if (!this.useRouter) {
+            componentDidLoadImpl(this);
+        }
+    }
+    getViews() {
         return getViews(this);
-    };
-    IonNav.prototype.push = function (component, data, opts) {
+    }
+    push(component, data, opts) {
         return pushImpl(this, component, data, opts);
-    };
-    IonNav.prototype.pop = function (opts) {
+    }
+    pop(opts) {
         return popImpl(this, opts);
-    };
-    IonNav.prototype.setRoot = function (component, data, opts) {
+    }
+    setRoot(component, data, opts) {
         return setRootImpl(this, component, data, opts);
-    };
-    IonNav.prototype.insert = function (insertIndex, page, params, opts) {
+    }
+    insert(insertIndex, page, params, opts) {
         return insertImpl(this, insertIndex, page, params, opts);
-    };
-    IonNav.prototype.insertPages = function (insertIndex, insertPages, opts) {
+    }
+    insertPages(insertIndex, insertPages, opts) {
         return insertPagesImpl(this, insertIndex, insertPages, opts);
-    };
-    IonNav.prototype.popToRoot = function (opts) {
+    }
+    popToRoot(opts) {
         return popToRootImpl(this, opts);
-    };
-    IonNav.prototype.popTo = function (indexOrViewCtrl, opts) {
+    }
+    popTo(indexOrViewCtrl, opts) {
         return popToImpl(this, indexOrViewCtrl, opts);
-    };
-    IonNav.prototype.remove = function (startIndex, removeCount, opts) {
+    }
+    removeIndex(startIndex, removeCount, opts) {
         return removeImpl(this, startIndex, removeCount, opts);
-    };
-    IonNav.prototype.removeView = function (viewController, opts) {
+    }
+    removeView(viewController, opts) {
         return removeViewImpl(this, viewController, opts);
-    };
-    IonNav.prototype.setPages = function (componentDataPairs, opts) {
+    }
+    setPages(componentDataPairs, opts) {
         return setPagesImpl(this, componentDataPairs, opts);
-    };
-    IonNav.prototype.getActive = function () {
+    }
+    getActive() {
         return getActiveImpl(this);
-    };
-    IonNav.prototype.getPrevious = function (view) {
+    }
+    getPrevious(view) {
         return getPreviousImpl(this, view);
-    };
-    IonNav.prototype.canGoBack = function (nav) {
-        return nav.views && nav.views.length > 0;
-    };
-    IonNav.prototype.canSwipeBack = function () {
+    }
+    canGoBack() {
+        return canGoBackImpl(this);
+    }
+    canSwipeBack() {
         return true; // TODO, implement this for real
-    };
-    IonNav.prototype.getFirstView = function () {
+    }
+    getFirstView() {
         return getFirstView(this);
-    };
-    IonNav.prototype.navInitialized = function (event) {
+    }
+    resize() {
+        console.log('resize content');
+    }
+    navInitialized(event) {
         navInitializedImpl(this, event);
+    }
+    getState() {
+        assert(this.useRouter, 'routing is disabled');
+        return getState(this);
+    }
+    setRouteId(id, _ = {}) {
+        assert(this.useRouter, 'routing is disabled');
+        const active = this.getActive();
+        if (active && active.component === id) {
+            return Promise.resolve();
+        }
+        return this.setRoot(id);
+    }
+    getRoutes() {
+        assert(this.useRouter, 'routing is disabled');
+        return this.routes;
+    }
+    render() {
+        return h("slot", null);
+    }
+}
+function getState(nav) {
+    const active = getActiveImpl(nav);
+    if (!active) {
+        return null;
+    }
+    const component = active.component;
+    const route = resolveRoute(nav, component);
+    if (!route) {
+        console.error('cant reverse route by component', component);
+        return null;
+    }
+    return {
+        path: route.path,
+        focusNode: active.element
     };
-    IonNav.prototype.render = function () {
-        return h(0, 0);
-    };
-    return IonNav;
-}());
+}
 function componentDidLoadImpl(nav) {
     nav.navInit.emit(nav);
     if (nav.root) {
@@ -281,52 +341,52 @@ function componentDidLoadImpl(nav) {
     }
 }
 function pushImpl(nav, component, data, opts) {
-    return getNavController(nav).then(function () {
+    return getNavController(nav).then(() => {
         return nav.navController.push(nav, component, data, opts);
     });
 }
 function popImpl(nav, opts) {
-    return getNavController(nav).then(function () {
+    return getNavController(nav).then(() => {
         return nav.navController.pop(nav, opts);
     });
 }
 function setRootImpl(nav, component, data, opts) {
-    return getNavController(nav).then(function () {
+    return getNavController(nav).then(() => {
         return nav.navController.setRoot(nav, component, data, opts);
     });
 }
 function insertImpl(nav, insertIndex, page, params, opts) {
-    return getNavController(nav).then(function () {
+    return getNavController(nav).then(() => {
         return nav.navController.insert(nav, insertIndex, page, params, opts);
     });
 }
 function insertPagesImpl(nav, insertIndex, insertPages, opts) {
-    return getNavController(nav).then(function () {
+    return getNavController(nav).then(() => {
         return nav.navController.insertPages(nav, insertIndex, insertPages, opts);
     });
 }
 function popToRootImpl(nav, opts) {
-    return getNavController(nav).then(function () {
+    return getNavController(nav).then(() => {
         return nav.navController.popToRoot(nav, opts);
     });
 }
 function popToImpl(nav, indexOrViewCtrl, opts) {
-    return getNavController(nav).then(function () {
+    return getNavController(nav).then(() => {
         return nav.navController.popTo(nav, indexOrViewCtrl, opts);
     });
 }
 function removeImpl(nav, startIndex, removeCount, opts) {
-    return getNavController(nav).then(function () {
-        return nav.navController.remove(nav, startIndex, removeCount, opts);
+    return getNavController(nav).then(() => {
+        return nav.navController.removeIndex(nav, startIndex, removeCount, opts);
     });
 }
 function removeViewImpl(nav, viewController, opts) {
-    return getNavController(nav).then(function () {
+    return getNavController(nav).then(() => {
         return nav.navController.removeView(nav, viewController, opts);
     });
 }
 function setPagesImpl(nav, componentDataPairs, opts) {
-    return getNavController(nav).then(function () {
+    return getNavController(nav).then(() => {
         return nav.navController.setPages(nav, componentDataPairs, opts);
     });
 }
@@ -336,6 +396,9 @@ function getNavController(nav) {
     }
     nav.navController = document.querySelector('ion-nav-controller');
     return isReady(nav.navController);
+}
+function canGoBackImpl(nav) {
+    return nav.views && nav.views.length > 0;
 }
 function navInitializedImpl(potentialParent, event) {
     if (potentialParent.element !== event.target) {
@@ -350,8 +413,32 @@ function navInitializedImpl(potentialParent, event) {
     }
 }
 
-var ViewControllerImpl = /** @class */ (function () {
-    function ViewControllerImpl(component, data) {
+class DomFrameworkDelegate {
+    attachViewToDom(parentElement, tagOrElement, propsOrDataObj = {}, classesToAdd = []) {
+        return new Promise((resolve) => {
+            const usersElement = (isString(tagOrElement) ? document.createElement(tagOrElement) : tagOrElement);
+            Object.assign(usersElement, propsOrDataObj);
+            if (classesToAdd.length) {
+                for (const clazz of classesToAdd) {
+                    usersElement.classList.add(clazz);
+                }
+            }
+            parentElement.appendChild(usersElement);
+            resolve({
+                element: usersElement
+            });
+        });
+    }
+    removeViewFromDom(parentElement, childElement) {
+        parentElement.removeChild(childElement);
+        return Promise.resolve({
+            element: null
+        });
+    }
+}
+
+class ViewController {
+    constructor(component, data) {
         this.component = component;
         initializeNewViewController(this, data);
     }
@@ -362,44 +449,41 @@ var ViewControllerImpl = /** @class */ (function () {
      * @param {NavOptions} navOptions Options for the dismiss navigation.
      * @returns {any} data Returns the data passed in, if any.
      */
-    ViewControllerImpl.prototype.dismiss = function (data, role, navOptions) {
-        if (navOptions === void 0) { navOptions = {}; }
+    dismiss(data, role, navOptions = {}) {
         this.dismissProxy = {};
         return dismiss(this.nav, this.dismissProxy, data, role, navOptions);
-    };
-    ViewControllerImpl.prototype.willLeave = function (unload) {
+    }
+    willLeave(unload) {
         willLeaveImpl(unload, this);
-    };
-    ViewControllerImpl.prototype.didLeave = function () {
+    }
+    didLeave() {
         didLeaveImpl(this);
-    };
-    ViewControllerImpl.prototype.willEnter = function () {
+    }
+    willEnter() {
         callLifeCycleFunction(this.instance, 'ionViewWillEnter');
-    };
-    ViewControllerImpl.prototype.didEnter = function () {
+    }
+    didEnter() {
         didEnterImpl(this);
-    };
-    ViewControllerImpl.prototype.willLoad = function () {
+    }
+    willLoad() {
         willLoadImpl(this);
-    };
-    ViewControllerImpl.prototype.didLoad = function () {
+    }
+    didLoad() {
         didLoadImpl(this);
-    };
-    ViewControllerImpl.prototype.willUnload = function () {
+    }
+    willUnload() {
         willUnloadImpl(this);
-    };
-    ViewControllerImpl.prototype.destroy = function (delegate) {
+    }
+    destroy(delegate) {
         return destroy(this, delegate);
-    };
-    ViewControllerImpl.prototype.getTransitionName = function (_direction) {
+    }
+    getTransitionName(_direction) {
         // TODO
         return '';
-    };
-    return ViewControllerImpl;
-}());
+    }
+}
 
-function dismiss(navCtrl, dismissProxy, data, role, navOptions) {
-    if (navOptions === void 0) { navOptions = {}; }
+function dismiss(navCtrl, dismissProxy, data, role, navOptions = {}) {
     if (!navCtrl) {
         assert(this._state === STATE_DESTROYED, 'ViewController does not have a valid _nav');
         return Promise.resolve(false);
@@ -412,15 +496,12 @@ function dismiss(navCtrl, dismissProxy, data, role, navOptions) {
     }
     dismissProxy.data = data;
     dismissProxy.role = role;
-    var options = Object.assign({}, this._leavingOpts, navOptions);
-    return navCtrl.removeView(this, options).then(function () { return data; });
+    const options = Object.assign({}, this._leavingOpts, navOptions);
+    return navCtrl.removeView(this, options).then(() => data);
 }
 function destroy(viewController, delegate) {
     assert(viewController.state !== STATE_DESTROYED, 'view state must be attached');
-    return delegate ? delegate.removeViewFromDom(viewController.nav, viewController) : Promise.resolve().then(function () {
-        if (viewController.component) {
-            // TODO - consider removing classes and styles as thats what we do in ionic-angular
-        }
+    return delegate ? delegate.removeViewFromDom(viewController.nav.element, viewController.element) : Promise.resolve().then(() => {
         viewController.id = viewController.data = viewController.element = viewController.instance = viewController.nav = viewController.dismissProxy = null;
         viewController.state = STATE_DESTROYED;
     });
@@ -464,27 +545,27 @@ function initializeNewViewController(viewController, data) {
     viewController.data = data || {};
 }
 
-var DURATION = 500;
-var EASING = 'cubic-bezier(0.36,0.66,0.04,1)';
-var OPACITY = 'opacity';
-var TRANSFORM = 'transform';
-var TRANSLATEX = 'translateX';
-var CENTER = '0%';
-var OFF_OPACITY = 0.8;
-var SHOW_BACK_BTN_CSS = 'show-back-button';
+const DURATION = 500;
+const EASING = 'cubic-bezier(0.36,0.66,0.04,1)';
+const OPACITY = 'opacity';
+const TRANSFORM = 'transform';
+const TRANSLATEX = 'translateX';
+const CENTER = '0%';
+const OFF_OPACITY = 0.8;
+const SHOW_BACK_BTN_CSS = 'show-back-button';
 function buildIOSTransition(rootTransition, enteringView, leavingView, opts) {
     rootTransition.enteringView = enteringView;
     rootTransition.leavingView = leavingView;
-    var isRTL = document.dir === 'rtl';
-    var OFF_RIGHT = isRTL ? '-99.5%' : '99.5%';
-    var OFF_LEFT = isRTL ? '33%' : '-33%';
+    const isRTL = document.dir === 'rtl';
+    const OFF_RIGHT = isRTL ? '-99.5%' : '99.5%';
+    const OFF_LEFT = isRTL ? '33%' : '-33%';
     rootTransition.duration(isDef(opts.duration) ? opts.duration : DURATION);
     rootTransition.easing(isDef(opts.easing) ? opts.easing : EASING);
     rootTransition.addElement(enteringView.element);
-    rootTransition.beforeAddClass('show-page');
-    var backDirection = (opts.direction === 'back');
+    rootTransition.beforeRemoveClass('hide-page');
+    const backDirection = (opts.direction === 'back');
     if (enteringView) {
-        var enteringContent = rootTransition.create();
+        const enteringContent = rootTransition.create();
         enteringContent.addElement(enteringView.element.querySelectorAll('ion-header > *:not(ion-navbar),ion-footer > *'));
         rootTransition.add(enteringContent);
         if (backDirection) {
@@ -494,18 +575,18 @@ function buildIOSTransition(rootTransition, enteringView, leavingView, opts) {
             // entering content, forward direction
             enteringContent.beforeClearStyles([OPACITY]).fromTo(TRANSLATEX, OFF_RIGHT, CENTER, true);
         }
-        var enteringNavbarEle = enteringView.element.querySelector('ion-navbar');
+        const enteringNavbarEle = enteringView.element.querySelector('ion-navbar');
         if (enteringNavbarEle) {
-            var enteringNavBar = rootTransition.create();
+            const enteringNavBar = rootTransition.create();
             enteringNavBar.addElement(enteringNavbarEle);
             rootTransition.add(enteringNavBar);
-            var enteringTitle = rootTransition.create();
+            const enteringTitle = rootTransition.create();
             enteringTitle.addElement(enteringNavbarEle.querySelector('ion-title'));
-            var enteringNavbarItems = rootTransition.create();
+            const enteringNavbarItems = rootTransition.create();
             enteringNavbarItems.addElement(enteringNavbarEle.querySelectorAll('ion-buttons,[menuToggle]'));
-            var enteringNavbarBg = rootTransition.create();
+            const enteringNavbarBg = rootTransition.create();
             enteringNavbarBg.addElement(enteringNavbarEle.querySelector('.toolbar-background'));
-            var enteringBackButton = rootTransition.create();
+            const enteringBackButton = rootTransition.create();
             enteringBackButton.addElement(enteringNavbarEle.querySelector('.back-button'));
             enteringNavBar
                 .add(enteringTitle)
@@ -528,7 +609,7 @@ function buildIOSTransition(rootTransition, enteringView, leavingView, opts) {
                 if (canNavGoBack(enteringView.nav)) {
                     // forward direction, entering page has a back button
                     enteringBackButton.beforeAddClass(SHOW_BACK_BTN_CSS).fromTo(OPACITY, 0.01, 1, true);
-                    var enteringBackBtnText = rootTransition.create();
+                    const enteringBackBtnText = rootTransition.create();
                     enteringBackBtnText.addElement(enteringNavbarEle.querySelector('.back-button-text'));
                     enteringBackBtnText.fromTo(TRANSLATEX, (isRTL ? '-100px' : '100px'), '0px');
                     enteringNavBar.add(enteringBackBtnText);
@@ -541,7 +622,7 @@ function buildIOSTransition(rootTransition, enteringView, leavingView, opts) {
     }
     // setup leaving view
     if (leavingView) {
-        var leavingContent = rootTransition.create();
+        const leavingContent = rootTransition.create();
         leavingContent.addElement(leavingView.element);
         leavingContent.addElement(leavingView.element.querySelectorAll('ion-header > *:not(ion-navbar),ion-footer > *'));
         rootTransition.add(leavingContent);
@@ -556,17 +637,17 @@ function buildIOSTransition(rootTransition, enteringView, leavingView, opts) {
                 .fromTo(OPACITY, 1, OFF_OPACITY)
                 .afterClearStyles([TRANSFORM, OPACITY]);
         }
-        var leavingNavbarEle = leavingView.element.querySelector('ion-navbar');
+        const leavingNavbarEle = leavingView.element.querySelector('ion-navbar');
         if (leavingNavbarEle) {
-            var leavingNavBar = rootTransition.create();
+            const leavingNavBar = rootTransition.create();
             leavingNavBar.addElement(leavingNavbarEle);
-            var leavingTitle = rootTransition.create();
+            const leavingTitle = rootTransition.create();
             leavingTitle.addElement(leavingNavbarEle.querySelector('ion-title'));
-            var leavingNavbarItems = rootTransition.create();
+            const leavingNavbarItems = rootTransition.create();
             leavingNavbarItems.addElement(leavingNavbarEle.querySelectorAll('ion-buttons,[menuToggle]'));
-            var leavingNavbarBg = rootTransition.create();
+            const leavingNavbarBg = rootTransition.create();
             leavingNavbarBg.addElement(leavingNavbarEle.querySelector('.toolbar-background'));
-            var leavingBackButton = rootTransition.create();
+            const leavingBackButton = rootTransition.create();
             leavingBackButton.addElement(leavingNavbarEle.querySelector('.back-button'));
             leavingNavBar
                 .add(leavingTitle)
@@ -586,7 +667,7 @@ function buildIOSTransition(rootTransition, enteringView, leavingView, opts) {
                 leavingNavbarBg
                     .beforeClearStyles([OPACITY])
                     .fromTo(TRANSLATEX, CENTER, (isRTL ? '-100%' : '100%'));
-                var leavingBackBtnText = rootTransition.create();
+                const leavingBackBtnText = rootTransition.create();
                 leavingBackBtnText.addElement(leavingNavbarEle.querySelector('.back-button-text'));
                 leavingBackBtnText.fromTo(TRANSLATEX, CENTER, (isRTL ? -300 : 300) + 'px');
                 leavingNavBar.add(leavingBackBtnText);
@@ -605,16 +686,16 @@ function buildIOSTransition(rootTransition, enteringView, leavingView, opts) {
     return rootTransition;
 }
 
-var TRANSLATEY = 'translateY';
-var OFF_BOTTOM = '40px';
-var CENTER$1 = '0px';
-var SHOW_BACK_BTN_CSS$1 = 'show-back-button';
+const TRANSLATEY = 'translateY';
+const OFF_BOTTOM = '40px';
+const CENTER$1 = '0px';
+const SHOW_BACK_BTN_CSS$1 = 'show-back-button';
 function buildMdTransition(rootTransition, enteringView, leavingView, opts) {
     rootTransition.enteringView = enteringView;
     rootTransition.leavingView = leavingView;
     rootTransition.addElement(enteringView.element);
-    rootTransition.beforeAddClass('show-page');
-    var backDirection = (opts.direction === 'back');
+    rootTransition.beforeRemoveClass('hide-page');
+    const backDirection = (opts.direction === 'back');
     if (enteringView) {
         if (backDirection) {
             rootTransition.duration(isDef(opts.duration) ? opts.duration : 200).easing('cubic-bezier(0.47,0,0.745,0.715)');
@@ -625,12 +706,12 @@ function buildMdTransition(rootTransition, enteringView, leavingView, opts) {
                 .fromTo(TRANSLATEY, OFF_BOTTOM, CENTER$1, true)
                 .fromTo('opacity', 0.01, 1, true);
         }
-        var enteringNavbarEle = enteringView.element.querySelector('ion-navbar');
+        const enteringNavbarEle = enteringView.element.querySelector('ion-navbar');
         if (enteringNavbarEle) {
-            var enteringNavBar = rootTransition.create();
+            const enteringNavBar = rootTransition.create();
             enteringNavBar.addElement(enteringNavbarEle);
             rootTransition.add(enteringNavBar);
-            var enteringBackButton = rootTransition.create();
+            const enteringBackButton = rootTransition.create();
             enteringBackButton.addElement(enteringNavbarEle.querySelector('.back-button'));
             rootTransition.add(enteringBackButton);
             if (canNavGoBack(enteringView.nav)) {
@@ -645,14 +726,14 @@ function buildMdTransition(rootTransition, enteringView, leavingView, opts) {
     if (leavingView && backDirection) {
         // leaving content
         rootTransition.duration(opts.duration || 200).easing('cubic-bezier(0.47,0,0.745,0.715)');
-        var leavingPage = rootTransition.create();
+        const leavingPage = rootTransition.create();
         leavingPage.addElement(leavingView.element);
         rootTransition.add(leavingPage.fromTo(TRANSLATEY, CENTER$1, OFF_BOTTOM).fromTo('opacity', 1, 0));
     }
     return rootTransition;
 }
 
-var queueMap = new Map();
+const queueMap = new Map();
 // public api
 function push(nav, delegate, animation, component, data, opts, done) {
     return queueTransaction({
@@ -661,7 +742,7 @@ function push(nav, delegate, animation, component, data, opts, done) {
         opts: opts,
         nav: nav,
         delegate: delegate,
-        id: nav.id,
+        id: nav.navId,
         animation: animation
     }, done);
 }
@@ -672,7 +753,7 @@ function insert(nav, delegate, animation, insertIndex, page, params, opts, done)
         opts: opts,
         nav: nav,
         delegate: delegate,
-        id: nav.id,
+        id: nav.navId,
         animation: animation
     }, done);
 }
@@ -683,7 +764,7 @@ function insertPages(nav, delegate, animation, insertIndex, insertPages, opts, d
         opts: opts,
         nav: nav,
         delegate: delegate,
-        id: nav.id,
+        id: nav.navId,
         animation: animation
     }, done);
 }
@@ -694,7 +775,7 @@ function pop(nav, delegate, animation, opts, done) {
         opts: opts,
         nav: nav,
         delegate: delegate,
-        id: nav.id,
+        id: nav.navId,
         animation: animation
     }, done);
 }
@@ -705,18 +786,18 @@ function popToRoot(nav, delegate, animation, opts, done) {
         opts: opts,
         nav: nav,
         delegate: delegate,
-        id: nav.id,
+        id: nav.navId,
         animation: animation
     }, done);
 }
 function popTo(nav, delegate, animation, indexOrViewCtrl, opts, done) {
-    var config = {
+    const config = {
         removeStart: -1,
         removeCount: -1,
         opts: opts,
         nav: nav,
         delegate: delegate,
-        id: nav.id,
+        id: nav.navId,
         animation: animation
     };
     if (isViewController(indexOrViewCtrl)) {
@@ -728,15 +809,14 @@ function popTo(nav, delegate, animation, indexOrViewCtrl, opts, done) {
     }
     return queueTransaction(config, done);
 }
-function remove(nav, delegate, animation, startIndex, removeCount, opts, done) {
-    if (removeCount === void 0) { removeCount = 1; }
+function remove(nav, delegate, animation, startIndex, removeCount = 1, opts, done) {
     return queueTransaction({
         removeStart: startIndex,
         removeCount: removeCount,
         opts: opts,
         nav: nav,
         delegate: delegate,
-        id: nav.id,
+        id: nav.navId,
         animation: animation
     }, done);
 }
@@ -748,7 +828,7 @@ function removeView(nav, delegate, animation, viewController, opts, done) {
         opts: opts,
         nav: nav,
         delegate: delegate,
-        id: nav.id,
+        id: nav.navId,
         animation: animation
     }, done);
 }
@@ -770,13 +850,13 @@ function setPages(nav, delegate, animation, componentDataPars, opts, done) {
         opts: opts,
         nav: nav,
         delegate: delegate,
-        id: nav.id,
+        id: nav.navId,
         animation: animation
     }, done);
 }
 // private api, exported for testing
 function queueTransaction(ti, done) {
-    var promise = new Promise(function (resolve, reject) {
+    const promise = new Promise((resolve, reject) => {
         ti.resolve = resolve;
         ti.reject = reject;
     });
@@ -800,27 +880,27 @@ function nextTransaction(nav) {
     if (nav.transitioning) {
         return Promise.resolve();
     }
-    var topTransaction = getTopTransaction(nav.id);
+    const topTransaction = getTopTransaction(nav.navId);
     if (!topTransaction) {
         return Promise.resolve();
     }
-    var enteringView;
-    var leavingView;
-    return initializeViewBeforeTransition(topTransaction).then(function (_a) {
-        var _enteringView = _a[0], _leavingView = _a[1];
+    let enteringView;
+    let leavingView;
+    return initializeViewBeforeTransition(nav, topTransaction).then(([_enteringView, _leavingView]) => {
         enteringView = _enteringView;
         leavingView = _leavingView;
         return attachViewToDom(nav, enteringView, topTransaction.delegate);
-    }).then(function () {
+    }).then(() => {
         return loadViewAndTransition(nav, enteringView, leavingView, topTransaction);
-    }).then(function (result) {
+    }).then((result) => {
+        nav.ionNavChanged.emit({ isPop: false });
         return successfullyTransitioned(result, topTransaction);
-    }).catch(function (err) {
+    }).catch((err) => {
         return transitionFailed(err, topTransaction);
     });
 }
 function successfullyTransitioned(result, ti) {
-    var queue = getQueue(ti.id);
+    const queue = getQueue(ti.id);
     if (!queue) {
         // TODO, make throw error in the future
         return fireError(new Error('Queue is null, the nav must have been destroyed'), ti);
@@ -837,13 +917,13 @@ function successfullyTransitioned(result, ti) {
     ti.resolve(result.hasCompleted);
 }
 function transitionFailed(error, ti) {
-    var queue = getQueue(ti.nav.id);
+    const queue = getQueue(ti.nav.navId);
     if (!queue) {
         // TODO, make throw error in the future
         return fireError(new Error('Queue is null, the nav must have been destroyed'), ti);
     }
     ti.nav.transitionId = null;
-    resetQueue(ti.nav.id);
+    resetQueue(ti.nav.navId);
     ti.nav.transitioning = false;
     // TODO - check if it's a swipe back
     // kick off next transition for this nav I guess
@@ -872,11 +952,11 @@ function loadViewAndTransition(nav, enteringView, leavingView, ti) {
             requiresTransition: false
         });
     }
-    var transition = null;
-    var transitionId = getParentTransitionId(nav);
+    let transition = null;
+    const transitionId = getParentTransitionId(nav);
     nav.transitionId = transitionId >= 0 ? transitionId : getNextTransitionId();
     // create the transition options
-    var animationOpts = {
+    const animationOpts = {
         animation: ti.opts.animation,
         direction: ti.opts.direction,
         duration: (ti.opts.animate === false ? 0 : ti.opts.duration),
@@ -884,7 +964,7 @@ function loadViewAndTransition(nav, enteringView, leavingView, ti) {
         isRTL: false,
         ev: ti.opts.event,
     };
-    var emptyTransition = transitionFactory(ti.animation);
+    const emptyTransition = transitionFactory(ti.animation);
     transition = getHydratedTransition(animationOpts.animation, nav.config, nav.transitionId, emptyTransition, enteringView, leavingView, animationOpts, getDefaultTransition(nav.config));
     if (nav.swipeToGoBackTransition) {
         nav.swipeToGoBackTransition.destroy();
@@ -909,8 +989,8 @@ function executeAsyncTransition(nav, transition, enteringView, leavingView, dele
     // always ensure the leaving view is viewable
     // ******** DOM WRITE ****************
     leavingView && toggleHidden(leavingView.element, true, true);
-    var isFirstPage = !nav.isViewInitialized && nav.views.length === 1;
-    var shouldNotAnimate = isFirstPage && !nav.isPortal;
+    const isFirstPage = !nav.isViewInitialized && nav.views.length === 1;
+    const shouldNotAnimate = isFirstPage && !nav.isPortal;
     if (configShouldAnimate || shouldNotAnimate) {
         opts.animate = false;
     }
@@ -918,22 +998,16 @@ function executeAsyncTransition(nav, transition, enteringView, leavingView, dele
         // if it was somehow set to not animation, then make the duration zero
         transition.duration(0);
     }
-    transition.beforeAddRead(function () {
+    transition.beforeAddRead(() => {
         fireViewWillLifecycles(enteringView, leavingView);
     });
     // get the set duration of this transition
-    var duration = transition.getDuration();
+    const duration = transition.getDuration();
     // create a callback for when the animation is done
-    var transitionCompletePromise = new Promise(function (resolve) {
+    const transitionCompletePromise = new Promise(resolve => {
         transition.onFinish(resolve);
     });
     if (transition.isRoot()) {
-        if (duration > DISABLE_APP_MINIMUM_DURATION && opts.disableApp !== false) {
-            // if this transition has a duration and this is the root transition
-            // then set that the app is actively disabled
-            //this._app.setEnabled(false, duration + ACTIVE_TRANSITION_OFFSET, opts.minClickBlockDuration);
-            // TODO - figure out how to disable the app
-        }
         if (opts.progressAnimation) {
             // this is a swipe to go back, just get the transition progress ready
             // kick off the swipe animation start
@@ -946,12 +1020,12 @@ function executeAsyncTransition(nav, transition, enteringView, leavingView, dele
             transition.play();
         }
     }
-    return transitionCompletePromise.then(function () {
+    return transitionCompletePromise.then(() => {
         return transitionFinish(nav, transition, delegate, opts);
     });
 }
 function transitionFinish(nav, transition, delegate, opts) {
-    var promise = null;
+    let promise = null;
     if (transition.hasCompleted) {
         transition.enteringView && transition.enteringView.didEnter();
         transition.leavingView && transition.leavingView.didLeave();
@@ -960,7 +1034,7 @@ function transitionFinish(nav, transition, delegate, opts) {
     else {
         promise = cleanUpView(nav, delegate, transition.leavingView);
     }
-    return promise.then(function () {
+    return promise.then(() => {
         if (transition.isRoot()) {
             destroyTransition(transition.transitionId);
             // TODO - enable app
@@ -981,10 +1055,10 @@ function cleanUpView(nav, delegate, activeViewController) {
     if (nav.destroyed) {
         return Promise.resolve();
     }
-    var activeIndex = nav.views.indexOf(activeViewController);
-    var promises = [];
-    for (var i = nav.views.length - 1; i >= 0; i--) {
-        var inactiveViewController = nav.views[i];
+    const activeIndex = nav.views.indexOf(activeViewController);
+    const promises = [];
+    for (let i = nav.views.length - 1; i >= 0; i--) {
+        const inactiveViewController = nav.views[i];
         if (i > activeIndex) {
             // this view comes after the active view
             inactiveViewController.willUnload();
@@ -1005,18 +1079,19 @@ function fireViewWillLifecycles(enteringView, leavingView) {
 }
 function attachViewToDom(nav, enteringView, delegate) {
     if (enteringView && enteringView.state === STATE_NEW) {
-        return delegate.attachViewToDom(nav, enteringView).then(function () {
+        return delegate.attachViewToDom(nav.element, enteringView.component, enteringView.data, ['ion-page']).then((mountingData) => {
+            Object.assign(enteringView, mountingData);
             enteringView.state = STATE_ATTACHED;
         });
     }
     // it's in the wrong state, so don't attach and just return
     return Promise.resolve();
 }
-function initializeViewBeforeTransition(ti) {
-    var leavingView = null;
-    var enteringView = null;
-    return startTransaction(ti).then(function () {
-        var viewControllers = convertComponentToViewController(ti);
+function initializeViewBeforeTransition(nav, ti) {
+    let leavingView = null;
+    let enteringView = null;
+    return startTransaction(ti).then(() => {
+        const viewControllers = convertComponentToViewController(nav, ti);
         ti.insertViews = viewControllers;
         leavingView = ti.nav.getActive();
         enteringView = getEnteringView(ti, ti.nav, leavingView);
@@ -1024,38 +1099,38 @@ function initializeViewBeforeTransition(ti) {
             return Promise.reject(new Error('No views in the stack to remove'));
         }
         // mark state as initialized
-        //enteringView.state = STATE_INITIALIZED;
+        // enteringView.state = STATE_INITIALIZED;
         ti.requiresTransition = (ti.enteringRequiresTransition || ti.leavingRequiresTransition) && enteringView !== leavingView;
         return testIfViewsCanLeaveAndEnter(enteringView, leavingView, ti);
-    }).then(function () {
+    }).then(() => {
         return updateNavStacks(enteringView, leavingView, ti);
-    }).then(function () {
+    }).then(() => {
         return [enteringView, leavingView];
     });
 }
 // called _postViewInit in old world
 function updateNavStacks(enteringView, leavingView, ti) {
-    return Promise.resolve().then(function () {
+    return Promise.resolve().then(() => {
         assert(!!(leavingView || enteringView), 'Both leavingView and enteringView are null');
         assert(!!ti.resolve, 'resolve must be valid');
         assert(!!ti.reject, 'reject must be valid');
-        var destroyQueue = [];
+        const destroyQueue = [];
         ti.opts = ti.opts || {};
         if (isDef(ti.removeStart)) {
             assert(ti.removeStart >= 0, 'removeStart can not be negative');
             assert(ti.removeStart >= 0, 'removeCount can not be negative');
-            for (var i = 0; i < ti.removeCount; i++) {
-                var view = ti.nav.views[i + ti.removeStart];
+            for (let i = 0; i < ti.removeCount; i++) {
+                const view = ti.nav.views[i + ti.removeStart];
                 if (view && view !== enteringView && view !== leavingView) {
                     destroyQueue.push(view);
                 }
             }
             ti.opts.direction = ti.opts.direction || DIRECTION_BACK;
         }
-        var finalBalance = ti.nav.views.length + (ti.insertViews ? ti.insertViews.length : 0) - (ti.removeCount ? ti.removeCount : 0);
+        const finalBalance = ti.nav.views.length + (ti.insertViews ? ti.insertViews.length : 0) - (ti.removeCount ? ti.removeCount : 0);
         assert(finalBalance >= 0, 'final balance can not be negative');
         if (finalBalance === 0 && !ti.nav.isPortal) {
-            console.warn("You can't remove all the pages in the navigation stack. nav.pop() is probably called too many times.");
+            console.warn(`You can't remove all the pages in the navigation stack. nav.pop() is probably called too many times.`);
             throw new Error('Navigation stack needs at least one root page');
         }
         // At this point the transition can not be rejected, any throw should be an error
@@ -1066,7 +1141,7 @@ function updateNavStacks(enteringView, leavingView, ti) {
                 enteringView.id = ti.opts.id;
             }
             // add the views to the stack
-            for (var i = 0; i < ti.insertViews.length; i++) {
+            for (let i = 0; i < ti.insertViews.length; i++) {
                 insertViewIntoNav(ti.nav, ti.insertViews[i], ti.insertStart + i);
             }
             if (ti.enteringRequiresTransition) {
@@ -1080,21 +1155,20 @@ function updateNavStacks(enteringView, leavingView, ti) {
         // batch all of lifecycles together
         if (destroyQueue && destroyQueue.length) {
             // TODO, figure out how the zone stuff should work in angular
-            for (var i = 0; i < destroyQueue.length; i++) {
-                var view = destroyQueue[i];
+            for (let i = 0; i < destroyQueue.length; i++) {
+                const view = destroyQueue[i];
                 view.willLeave(true);
                 view.didLeave();
                 view.willUnload();
             }
-            var destroyQueuePromises = [];
-            for (var _i = 0, destroyQueue_1 = destroyQueue; _i < destroyQueue_1.length; _i++) {
-                var viewController = destroyQueue_1[_i];
+            const destroyQueuePromises = [];
+            for (const viewController of destroyQueue) {
                 destroyQueuePromises.push(destroyView(ti.nav, ti.delegate, viewController));
             }
             return Promise.all(destroyQueuePromises);
         }
         return null;
-    }).then(function () {
+    }).then(() => {
         // set which animation it should use if it wasn't set yet
         if (ti.requiresTransition && !ti.opts.animation) {
             if (isDef(ti.removeStart)) {
@@ -1107,20 +1181,20 @@ function updateNavStacks(enteringView, leavingView, ti) {
     });
 }
 function destroyView(nav, delegate, viewController) {
-    return viewController.destroy(delegate).then(function () {
+    return viewController.destroy(delegate).then(() => {
         return removeViewFromList(nav, viewController);
     });
 }
 function removeViewFromList(nav, viewController) {
     assert(viewController.state === STATE_ATTACHED || viewController.state === STATE_DESTROYED, 'view state should be loaded or destroyed');
-    var index = nav.views.indexOf(viewController);
+    const index = nav.views.indexOf(viewController);
     assert(index > -1, 'view must be part of the stack');
     if (index >= 0) {
         nav.views.splice(index, 1);
     }
 }
 function insertViewIntoNav(nav, view, index) {
-    var existingIndex = nav.views.indexOf(view);
+    const existingIndex = nav.views.indexOf(view);
     if (existingIndex > -1) {
         // this view is already in the stack!!
         // move it to its new location
@@ -1135,7 +1209,7 @@ function insertViewIntoNav(nav, view, index) {
         // give this inserted view an ID
         viewIds++;
         if (!view.id) {
-            view.id = nav.id + "-" + viewIds;
+            view.id = `${nav.navId}-${viewIds}`;
         }
         // insert the entering view into the correct index in the stack
         nav.views.splice(index, 0, view);
@@ -1145,7 +1219,7 @@ function testIfViewsCanLeaveAndEnter(enteringView, leavingView, ti) {
     if (!ti.requiresTransition) {
         return Promise.resolve();
     }
-    var promises = [];
+    const promises = [];
     if (leavingView) {
         promises.push(lifeCycleTest(leavingView, 'Leave'));
     }
@@ -1156,35 +1230,35 @@ function testIfViewsCanLeaveAndEnter(enteringView, leavingView, ti) {
         return Promise.resolve();
     }
     // darn, async promises, gotta wait for them to resolve
-    return Promise.all(promises).then(function (values) {
-        if (values.some(function (result) { return result === false; })) {
+    return Promise.all(promises).then((values) => {
+        if (values.some(result => result === false)) {
             ti.reject = null;
             throw new Error('canEnter/Leave returned false');
         }
     });
 }
 function lifeCycleTest(viewController, enterOrLeave) {
-    var methodName = "ionViewCan" + enterOrLeave;
+    const methodName = `ionViewCan${enterOrLeave}`;
     if (viewController.instance && viewController.instance[methodName]) {
         try {
-            var result = viewController.instance[methodName];
+            const result = viewController.instance[methodName];
             if (result instanceof Promise) {
                 return result;
             }
             return Promise.resolve(result !== false);
         }
         catch (e) {
-            return Promise.reject(new Error("Unexpected error when calling " + methodName + ": " + e.message));
+            return Promise.reject(new Error(`Unexpected error when calling ${methodName}: ${e.message}`));
         }
     }
     return Promise.resolve(true);
 }
 function startTransaction(ti) {
-    var viewsLength = ti.nav.views ? ti.nav.views.length : 0;
+    const viewsLength = ti.nav.views ? ti.nav.views.length : 0;
     if (isDef(ti.removeView)) {
         assert(isDef(ti.removeStart), 'removeView needs removeStart');
         assert(isDef(ti.removeCount), 'removeView needs removeCount');
-        var index = ti.nav.views.indexOf(ti.removeView());
+        const index = ti.nav.views.indexOf(ti.removeView());
         if (index < 0) {
             return Promise.reject(new Error('The removeView was not found'));
         }
@@ -1218,7 +1292,7 @@ function getEnteringView(ti, nav, leavingView) {
     }
     if (isDef(ti.removeStart)) {
         var removeEnd = ti.removeStart + ti.removeCount;
-        for (var i = nav.views.length - 1; i >= 0; i--) {
+        for (let i = nav.views.length - 1; i >= 0; i--) {
             if ((i < ti.removeStart || i >= removeEnd) && nav.views[i] !== leavingView) {
                 return nav.views[i];
             }
@@ -1227,31 +1301,33 @@ function getEnteringView(ti, nav, leavingView) {
     return null;
 }
 function convertViewsToViewControllers(views) {
-    return views.map(function (view) {
+    return views.map(view => {
         if (view) {
             if (isViewController(view)) {
                 return view;
             }
-            return new ViewControllerImpl(view.page, view.params);
+            return new ViewController(view.page, view.params);
         }
         return null;
-    }).filter(function (view) { return !!view; });
+    }).filter(view => !!view);
 }
-function convertComponentToViewController(ti) {
+function convertComponentToViewController(nav, ti) {
     if (ti.insertViews) {
         assert(ti.insertViews.length > 0, 'length can not be zero');
-        var viewControllers = convertViewsToViewControllers(ti.insertViews);
+        const viewControllers = convertViewsToViewControllers(ti.insertViews);
         assert(ti.insertViews.length === viewControllers.length, 'lengths does not match');
         if (viewControllers.length === 0) {
             throw new Error('No views to insert');
         }
-        for (var _i = 0, viewControllers_1 = viewControllers; _i < viewControllers_1.length; _i++) {
-            var viewController = viewControllers_1[_i];
-            if (viewController.nav && viewController.nav.id !== ti.id) {
+        for (const viewController of viewControllers) {
+            if (viewController.nav && viewController.nav.navId !== ti.id) {
                 throw new Error('The view has already inserted into a different nav');
             }
             if (viewController.state === STATE_DESTROYED) {
                 throw new Error('The view has already been destroyed');
+            }
+            if (nav.useRouter && !resolveRoute(nav, viewController.component)) {
+                throw new Error('Route not specified for ' + viewController.component);
             }
         }
         return viewControllers;
@@ -1259,7 +1335,7 @@ function convertComponentToViewController(ti) {
     return [];
 }
 function addToQueue(ti) {
-    var list = queueMap.get(ti.id) || [];
+    const list = queueMap.get(ti.id) || [];
     list.push(ti);
     queueMap.set(ti.id, list);
 }
@@ -1270,90 +1346,78 @@ function resetQueue(id) {
     queueMap.set(id, []);
 }
 function getTopTransaction(id) {
-    var queue = getQueue(id);
+    const queue = getQueue(id);
     if (!queue.length) {
         return null;
     }
-    var tmp = queue.concat();
-    var toReturn = tmp.shift();
+    const tmp = queue.concat();
+    const toReturn = tmp.shift();
     queueMap.set(id, tmp);
     return toReturn;
 }
 function getDefaultTransition(config) {
     return config.get('mode') === 'md' ? buildMdTransition : buildIOSTransition;
 }
-var viewIds = VIEW_ID_START;
-var DISABLE_APP_MINIMUM_DURATION = 64;
+let viewIds = VIEW_ID_START;
 
-var defaultDelegate = null;
-var NavControllerImpl = /** @class */ (function () {
-    function NavControllerImpl() {
+let defaultDelegate = null;
+class NavController {
+    constructor() {
     }
-    NavControllerImpl.prototype.push = function (nav, component, data, opts) {
-        return hydrateDelegateAndAnimation(this).then(function (_a) {
-            var delegate = _a[0], animation = _a[1];
+    push(nav, component, data, opts) {
+        return hydrateDelegateAndAnimation(this).then(([delegate, animation]) => {
             return push(nav, delegate, animation, component, data, opts);
         });
-    };
-    NavControllerImpl.prototype.pop = function (nav, opts) {
-        return hydrateDelegateAndAnimation(this).then(function (_a) {
-            var delegate = _a[0], animation = _a[1];
+    }
+    pop(nav, opts) {
+        return hydrateDelegateAndAnimation(this).then(([delegate, animation]) => {
             return pop(nav, delegate, animation, opts);
         });
-    };
-    NavControllerImpl.prototype.setRoot = function (nav, component, data, opts) {
-        return hydrateDelegateAndAnimation(this).then(function (_a) {
-            var delegate = _a[0], animation = _a[1];
+    }
+    setRoot(nav, component, data, opts) {
+        return hydrateDelegateAndAnimation(this).then(([delegate, animation]) => {
             return setRoot(nav, delegate, animation, component, data, opts);
         });
-    };
-    NavControllerImpl.prototype.insert = function (nav, insertIndex, page, params, opts) {
-        return hydrateDelegateAndAnimation(this).then(function (_a) {
-            var delegate = _a[0], animation = _a[1];
+    }
+    insert(nav, insertIndex, page, params, opts) {
+        return hydrateDelegateAndAnimation(this).then(([delegate, animation]) => {
             return insert(nav, delegate, animation, insertIndex, page, params, opts);
         });
-    };
-    NavControllerImpl.prototype.insertPages = function (nav, insertIndex, insertPages$$1, opts) {
-        return hydrateDelegateAndAnimation(this).then(function (_a) {
-            var delegate = _a[0], animation = _a[1];
+    }
+    insertPages(nav, insertIndex, insertPages$$1, opts) {
+        return hydrateDelegateAndAnimation(this).then(([delegate, animation]) => {
             return insertPages(nav, delegate, animation, insertIndex, insertPages$$1, opts);
         });
-    };
-    NavControllerImpl.prototype.popToRoot = function (nav, opts) {
-        return hydrateDelegateAndAnimation(this).then(function (_a) {
-            var delegate = _a[0], animation = _a[1];
+    }
+    popToRoot(nav, opts) {
+        return hydrateDelegateAndAnimation(this).then(([delegate, animation]) => {
             return popToRoot(nav, delegate, animation, opts);
         });
-    };
-    NavControllerImpl.prototype.popTo = function (nav, indexOrViewCtrl, opts) {
-        return hydrateDelegateAndAnimation(this).then(function (_a) {
-            var delegate = _a[0], animation = _a[1];
+    }
+    popTo(nav, indexOrViewCtrl, opts) {
+        return hydrateDelegateAndAnimation(this).then(([delegate, animation]) => {
             return popTo(nav, delegate, animation, indexOrViewCtrl, opts);
         });
-    };
-    NavControllerImpl.prototype.remove = function (nav, startIndex, removeCount, opts) {
-        return hydrateDelegateAndAnimation(this).then(function (_a) {
-            var delegate = _a[0], animation = _a[1];
+    }
+    removeIndex(nav, startIndex, removeCount, opts) {
+        return hydrateDelegateAndAnimation(this).then(([delegate, animation]) => {
             return remove(nav, delegate, animation, startIndex, removeCount, opts);
         });
-    };
-    NavControllerImpl.prototype.removeView = function (nav, viewController, opts) {
-        return hydrateDelegateAndAnimation(this).then(function (_a) {
-            var delegate = _a[0], animation = _a[1];
+    }
+    removeView(nav, viewController, opts) {
+        return hydrateDelegateAndAnimation(this).then(([delegate, animation]) => {
             return removeView(nav, delegate, animation, viewController, opts);
         });
-    };
-    NavControllerImpl.prototype.setPages = function (nav, componentDataPairs, opts) {
-        return hydrateDelegateAndAnimation(this).then(function (_a) {
-            var delegate = _a[0], animation = _a[1];
+    }
+    setPages(nav, componentDataPairs, opts) {
+        return hydrateDelegateAndAnimation(this).then(([delegate, animation]) => {
             return setPages(nav, delegate, animation, componentDataPairs, opts);
         });
-    };
-    NavControllerImpl.prototype.render = function () {
-        return h(0, 0);
-    };
-    return NavControllerImpl;
-}());
+    }
+    render() {
+        return h("slot", null);
+    }
+}
 function hydrateDelegateAndAnimation(navController) {
     return Promise.all([hydrateDelegate(navController), hydrateAnimationController(navController.animationCtrl)]);
 }
@@ -1361,150 +1425,50 @@ function hydrateDelegate(navController) {
     if (navController.delegate) {
         return Promise.resolve(navController.delegate);
     }
-    // no delegate is set, so fall back to inserting the stencil-ion-nav-delegate
-    var element = document.createElement('stencil-ion-nav-delegate');
-    document.body.appendChild(element);
-    return isReady(element).then(function () {
-        defaultDelegate = element;
-        return defaultDelegate;
-    });
+    // no delegate is set, so fall back to using the DomFrameworkDelegate
+    defaultDelegate = new DomFrameworkDelegate();
+    return Promise.resolve(defaultDelegate);
 }
 function hydrateAnimationController(animationController) {
     return animationController.create();
 }
 
-var PageOne = /** @class */ (function () {
-    function PageOne() {
-    }
-    PageOne.prototype.ionViewDidEnter = function () {
-        console.log('page one did enter');
-    };
-    PageOne.prototype.nextPage = function () {
-        var nav = this.element.closest('ion-nav');
-        nav.push('page-two');
-    };
-    PageOne.prototype.render = function () {
-        var _this = this;
-        return [h("ion-header", 0,
-                h("ion-navbar", 0,
-                    h("ion-title", 0, t("Page One")))),
-            h("ion-content", 0, t("Page One Content"),
-                h("div", 0,
-                    h("ion-button", { "o": { "click": function () { return _this.nextPage(); } } }, t("Go to Page Two"))))
-        ];
-    };
-    return PageOne;
-}());
-
-var PageThree = /** @class */ (function () {
-    function PageThree() {
-    }
-    PageThree.prototype.ionViewDidEnter = function () {
-        console.log('page three did enter');
-    };
-    PageThree.prototype.pop = function () {
-        var nav = this.element.closest('ion-nav');
-        nav.pop();
-    };
-    PageThree.prototype.render = function () {
-        var _this = this;
-        return [h("ion-header", 0,
-                h("ion-navbar", 0,
-                    h("ion-title", 0, t("Page Three")))),
-            h("ion-content", 0, t("Page Three Content"),
-                h("div", 0,
-                    h("ion-button", { "o": { "click": function () { return _this.pop(); } } }, t("Go Back"))))
-        ];
-    };
-    return PageThree;
-}());
-
-var PageTwo = /** @class */ (function () {
-    function PageTwo() {
-    }
-    PageTwo.prototype.ionViewDidEnter = function () {
-        console.log('page two did enter');
-    };
-    PageTwo.prototype.nextPage = function () {
-        var nav = this.element.closest('ion-nav');
-        nav.push('page-three');
-    };
-    PageTwo.prototype.pop = function () {
-        var nav = this.element.closest('ion-nav');
-        nav.pop();
-    };
-    PageTwo.prototype.render = function () {
-        var _this = this;
-        return [h("ion-header", 0,
-                h("ion-navbar", 0,
-                    h("ion-title", 0, t("Page Two")))),
-            h("ion-content", 0, t("Page Two Content"),
-                h("div", 0,
-                    h("ion-button", { "o": { "click": function () { return _this.nextPage(); } } }, t("Go to Page Three"))),
-                h("div", 0,
-                    h("ion-button", { "o": { "click": function () { return _this.pop(); } } }, t("Go Back"))))
-        ];
-    };
-    return PageTwo;
-}());
-
-var StencilNavDelegate = /** @class */ (function () {
-    function StencilNavDelegate() {
-    }
-    StencilNavDelegate.prototype.attachViewToDom = function (nav, enteringView) {
-        return new Promise(function (resolve) {
-            var usersElement = document.createElement(enteringView.component);
-            var ionPage = document.createElement('ion-page');
-            enteringView.element = ionPage;
-            ionPage.appendChild(usersElement);
-            nav.element.appendChild(ionPage);
-            ionPage.componentOnReady(function () {
-                resolve();
-            });
-        });
-    };
-    StencilNavDelegate.prototype.removeViewFromDom = function (nav, leavingView) {
-        nav.element.removeChild(leavingView.element);
-        return Promise.resolve();
-    };
-    return StencilNavDelegate;
-}());
-
-exports['ION-NAV'] = IonNav;
-exports['ION-NAV-CONTROLLER'] = NavControllerImpl;
-exports['PAGE-ONE'] = PageOne;
-exports['PAGE-THREE'] = PageThree;
-exports['PAGE-TWO'] = PageTwo;
-exports['STENCIL-ION-NAV-DELEGATE'] = StencilNavDelegate;
+exports['ion-nav'] = Nav;
+exports['ion-nav-controller'] = NavController;
 },
 
 
 /***************** ion-nav *****************/
 [
 /** ion-nav: tag **/
-"ION-NAV",
+"ion-nav",
 
 /** ion-nav: members **/
 [
-  [ "canGoBack", /** method **/ 6 ],
-  [ "canSwipeBack", /** method **/ 6 ],
-  [ "config", /** prop context **/ 3, /** type any **/ 0, /** context ***/ "config" ],
-  [ "delegate", /** prop **/ 1 ],
-  [ "element", /** element ref **/ 7 ],
-  [ "getActive", /** method **/ 6 ],
-  [ "getFirstView", /** method **/ 6 ],
-  [ "getPrevious", /** method **/ 6 ],
-  [ "insert", /** method **/ 6 ],
-  [ "insertPages", /** method **/ 6 ],
-  [ "pop", /** method **/ 6 ],
-  [ "popTo", /** method **/ 6 ],
-  [ "popToRoot", /** method **/ 6 ],
-  [ "push", /** method **/ 6 ],
-  [ "remove", /** method **/ 6 ],
-  [ "removeView", /** method **/ 6 ],
-  [ "root", /** prop **/ 1 ],
-  [ "setPages", /** method **/ 6 ],
-  [ "setRoot", /** method **/ 6 ]
+  [ "canGoBack", /** method **/ 6, /** do not observe attribute **/ 0, /** type any **/ 1 ],
+  [ "canSwipeBack", /** method **/ 6, /** do not observe attribute **/ 0, /** type any **/ 1 ],
+  [ "config", /** prop context **/ 3, /** do not observe attribute **/ 0, /** type any **/ 1, /** context ***/ "config" ],
+  [ "delegate", /** prop **/ 1, /** observe attribute **/ 1, /** type any **/ 1 ],
+  [ "element", /** element ref **/ 7, /** do not observe attribute **/ 0, /** type any **/ 1 ],
+  [ "getActive", /** method **/ 6, /** do not observe attribute **/ 0, /** type any **/ 1 ],
+  [ "getFirstView", /** method **/ 6, /** do not observe attribute **/ 0, /** type any **/ 1 ],
+  [ "getPrevious", /** method **/ 6, /** do not observe attribute **/ 0, /** type any **/ 1 ],
+  [ "getRoutes", /** method **/ 6, /** do not observe attribute **/ 0, /** type any **/ 1 ],
+  [ "getState", /** method **/ 6, /** do not observe attribute **/ 0, /** type any **/ 1 ],
+  [ "insert", /** method **/ 6, /** do not observe attribute **/ 0, /** type any **/ 1 ],
+  [ "insertPages", /** method **/ 6, /** do not observe attribute **/ 0, /** type any **/ 1 ],
+  [ "mode", /** prop **/ 1, /** observe attribute **/ 1, /** type string **/ 2 ],
+  [ "pop", /** method **/ 6, /** do not observe attribute **/ 0, /** type any **/ 1 ],
+  [ "popTo", /** method **/ 6, /** do not observe attribute **/ 0, /** type any **/ 1 ],
+  [ "popToRoot", /** method **/ 6, /** do not observe attribute **/ 0, /** type any **/ 1 ],
+  [ "push", /** method **/ 6, /** do not observe attribute **/ 0, /** type any **/ 1 ],
+  [ "removeIndex", /** method **/ 6, /** do not observe attribute **/ 0, /** type any **/ 1 ],
+  [ "removeView", /** method **/ 6, /** do not observe attribute **/ 0, /** type any **/ 1 ],
+  [ "resize", /** method **/ 6, /** do not observe attribute **/ 0, /** type any **/ 1 ],
+  [ "root", /** prop **/ 1, /** observe attribute **/ 1, /** type any **/ 1 ],
+  [ "setPages", /** method **/ 6, /** do not observe attribute **/ 0, /** type any **/ 1 ],
+  [ "setRoot", /** method **/ 6, /** do not observe attribute **/ 0, /** type any **/ 1 ],
+  [ "setRouteId", /** method **/ 6, /** do not observe attribute **/ 0, /** type any **/ 1 ]
 ],
 
 /** ion-nav: host **/
@@ -1515,6 +1479,10 @@ exports['STENCIL-ION-NAV-DELEGATE'] = StencilNavDelegate;
   [
     /*****  ion-nav navInit ***** /
     /* event name ***/ "navInit"
+  ],
+  [
+    /*****  ion-nav ionNavChanged ***** /
+    /* event name ***/ "ionNavChanged"
   ]
 ]
 
@@ -1523,88 +1491,27 @@ exports['STENCIL-ION-NAV-DELEGATE'] = StencilNavDelegate;
 /***************** ion-nav-controller *****************/
 [
 /** ion-nav-controller: tag **/
-"ION-NAV-CONTROLLER",
+"ion-nav-controller",
 
 /** ion-nav-controller: members **/
 [
-  [ "animationCtrl", /** prop connect **/ 4, /** type any **/ 0, /** context ***/ "ion-animation-controller" ],
-  [ "delegate", /** prop **/ 1 ],
-  [ "element", /** element ref **/ 7 ],
-  [ "insert", /** method **/ 6 ],
-  [ "insertPages", /** method **/ 6 ],
-  [ "pop", /** method **/ 6 ],
-  [ "popTo", /** method **/ 6 ],
-  [ "popToRoot", /** method **/ 6 ],
-  [ "push", /** method **/ 6 ],
-  [ "remove", /** method **/ 6 ],
-  [ "removeView", /** method **/ 6 ],
-  [ "setPages", /** method **/ 6 ],
-  [ "setRoot", /** method **/ 6 ]
+  [ "animationCtrl", /** prop connect **/ 4, /** do not observe attribute **/ 0, /** type any **/ 1, /** context ***/ "ion-animation-controller" ],
+  [ "delegate", /** prop **/ 1, /** observe attribute **/ 1, /** type any **/ 1 ],
+  [ "element", /** element ref **/ 7, /** do not observe attribute **/ 0, /** type any **/ 1 ],
+  [ "insert", /** method **/ 6, /** do not observe attribute **/ 0, /** type any **/ 1 ],
+  [ "insertPages", /** method **/ 6, /** do not observe attribute **/ 0, /** type any **/ 1 ],
+  [ "pop", /** method **/ 6, /** do not observe attribute **/ 0, /** type any **/ 1 ],
+  [ "popTo", /** method **/ 6, /** do not observe attribute **/ 0, /** type any **/ 1 ],
+  [ "popToRoot", /** method **/ 6, /** do not observe attribute **/ 0, /** type any **/ 1 ],
+  [ "push", /** method **/ 6, /** do not observe attribute **/ 0, /** type any **/ 1 ],
+  [ "removeIndex", /** method **/ 6, /** do not observe attribute **/ 0, /** type any **/ 1 ],
+  [ "removeView", /** method **/ 6, /** do not observe attribute **/ 0, /** type any **/ 1 ],
+  [ "setPages", /** method **/ 6, /** do not observe attribute **/ 0, /** type any **/ 1 ],
+  [ "setRoot", /** method **/ 6, /** do not observe attribute **/ 0, /** type any **/ 1 ]
 ],
 
 /** ion-nav-controller: host **/
 {}
 
-],
-
-/***************** page-one *****************/
-[
-/** page-one: tag **/
-"PAGE-ONE",
-
-/** page-one: members **/
-[
-  [ "element", /** element ref **/ 7 ]
-],
-
-/** page-one: host **/
-{}
-
-],
-
-/***************** page-three *****************/
-[
-/** page-three: tag **/
-"PAGE-THREE",
-
-/** page-three: members **/
-[
-  [ "element", /** element ref **/ 7 ]
-],
-
-/** page-three: host **/
-{}
-
-],
-
-/***************** page-two *****************/
-[
-/** page-two: tag **/
-"PAGE-TWO",
-
-/** page-two: members **/
-[
-  [ "element", /** element ref **/ 7 ]
-],
-
-/** page-two: host **/
-{}
-
-],
-
-/***************** stencil-ion-nav-delegate *****************/
-[
-/** stencil-ion-nav-delegate: tag **/
-"STENCIL-ION-NAV-DELEGATE",
-
-/** stencil-ion-nav-delegate: members **/
-[
-  [ "attachViewToDom", /** method **/ 6 ],
-  [ "removeViewFromDom", /** method **/ 6 ]
-],
-
-/** stencil-ion-nav-delegate: host **/
-{}
-
 ]
-)
+);

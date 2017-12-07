@@ -1,6 +1,5 @@
-@import "../../themes/ionic.globals.md";
 @import "./content";
-
+@import "./content.md.vars";
 
 // Material Design Content
 // --------------------------------------------------
@@ -18,10 +17,10 @@
 // Material Design Content Padding
 // --------------------------------------------------
 
-@include content-padding('md', $content-md-padding);
+@include content-padding("md", $content-md-padding);
 
 
 // Material Design Content Margin
 // --------------------------------------------------
 
-@include content-margin('md', $content-md-margin);
+@include content-margin("md", $content-md-margin);

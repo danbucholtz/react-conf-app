@@ -1,15 +1,11 @@
-var ItemDivider = /** @class */ (function () {
-    function ItemDivider() {
-    }
-    ItemDivider.prototype.render = function () {
+export class ItemDivider {
+    render() {
         return [
-            h(0, { "a": { "name": 'start' } }),
-            h("div", { "c": { "item-inner": true } },
-                h("div", { "c": { "input-wrapper": true } },
-                    h(0, 0)),
-                h(0, { "a": { "name": 'end' } }))
+            h("slot", { name: 'start' }),
+            h("div", { class: 'item-inner' },
+                h("div", { class: 'input-wrapper' },
+                    h("slot", null)),
+                h("slot", { name: 'end' }))
         ];
-    };
-    return ItemDivider;
-}());
-export { ItemDivider };
+    }
+}

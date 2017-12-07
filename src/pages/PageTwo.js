@@ -29,13 +29,13 @@ export default class PageTwo extends Component {
   }
 
   goToNext() {
-    const page = this.element.closest('ion-page');
+    const page = this.element.closest('.ion-page');
     const nav = page.closest('ion-nav');
     nav.push(PageThree, { paramOne: 'Michael Scott'});
   }
 
   goBack() {
-    const page = this.element.closest('ion-page');
+    const page = this.element.closest('.ion-page');
     const nav = page.closest('ion-nav');
     nav.pop();
   }
@@ -43,9 +43,9 @@ export default class PageTwo extends Component {
   render() {
     return [
       <ion-header ref={(element) => this.element = element}>
-        <ion-navbar>
+        <ion-toolbar>
           <ion-title>Page Two</ion-title>
-        </ion-navbar>
+        </ion-toolbar>
       </ion-header>,
       <ion-content>
         Page Two

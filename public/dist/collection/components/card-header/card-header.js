@@ -1,9 +1,20 @@
-var CardHeader = /** @class */ (function () {
-    function CardHeader() {
+import { createThemedClasses } from '../../utils/theme';
+export class CardHeader {
+    constructor() {
+        /**
+         * @input {boolean} If true, adds transparency to the card header.
+         * Only affects `ios` mode. Defaults to `false`.
+         */
+        this.translucent = false;
     }
-    CardHeader.prototype.render = function () {
-        return h(0, 0);
-    };
-    return CardHeader;
-}());
-export { CardHeader };
+    hostData() {
+        const themedClasses = this.translucent ? createThemedClasses(this.mode, this.color, 'card-header-translucent') : {};
+        const hostClasses = Object.assign({}, themedClasses);
+        return {
+            class: hostClasses
+        };
+    }
+    render() {
+        return h("slot", null);
+    }
+}

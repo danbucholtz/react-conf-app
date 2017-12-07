@@ -1,124 +1,137 @@
-import iOSEnterAnimation from './animations/ios.enter';
-import iOSLeaveAnimation from './animations/ios.leave';
-var Loading = /** @class */ (function () {
-    function Loading() {
-        this.showSpinner = null;
+import { EventEmitter } from '@stencil/core';
+import { Animation, AnimationBuilder, AnimationController, Config, OverlayDismissEvent, OverlayDismissEventDetail } from '../../index';
+import { domControllerAsync, playAnimationAsync } from '../../utils/helpers';
+import { createThemedClasses } from '../../utils/theme';
+import iosEnterAnimation from './animations/ios.enter';
+import iosLeaveAnimation from './animations/ios.leave';
+import mdEnterAnimation from './animations/md.enter';
+import mdLeaveAnimation from './animations/md.leave';
+export class Loading {
+    constructor() {
+        /**
+         * Dismiss the loading indicator if the page is changed
+         */
         this.dismissOnPageChange = false;
+        /**
+         * If true, the background will be translucent. Browser support for backdrop-filter is required for the full effect
+         */
+        this.translucent = false;
+        /**
+         * Show the backdrop of not
+         */
         this.showBackdrop = true;
+        /**
+         * Toggles whether animation should occur or not
+         */
+        this.animate = true;
     }
-    Loading.prototype.present = function () {
-        var _this = this;
-        return new Promise(function (resolve) {
-            _this._present(resolve);
-        });
-    };
-    Loading.prototype._present = function (resolve) {
-        var _this = this;
+    /**
+     * Present a loading overlay after it has been created
+     */
+    present() {
         if (this.animation) {
             this.animation.destroy();
             this.animation = null;
         }
-        this.ionLoadingWillPresent.emit({ loading: this });
+        this.ionLoadingWillPresent.emit();
         // get the user's animation fn if one was provided
-        var animationBuilder = this.enterAnimation;
-        if (!animationBuilder) {
-            // user did not provide a custom animation fn
-            // decide from the config which animation to use
-            animationBuilder = iOSEnterAnimation;
-        }
+        const animationBuilder = this.enterAnimation || this.config.get('loadingEnter', this.mode === 'ios' ? iosEnterAnimation : mdEnterAnimation);
         // build the animation and kick it off
-        this.animationCtrl.create(animationBuilder, this.el).then(function (animation) {
-            _this.animation = animation;
-            animation.onFinish(function (a) {
-                a.destroy();
-                _this.ionViewDidEnter();
-                resolve();
-            }).play();
+        return this.animationCtrl.create(animationBuilder, this.el).then(animation => {
+            this.animation = animation;
+            if (!this.animate) {
+                // if the duration is 0, it won't actually animate I don't think
+                // TODO - validate this
+                this.animation = animation.duration(0);
+            }
+            return playAnimationAsync(animation);
+        }).then((animation) => {
+            animation.destroy();
+            this.componentDidEnter();
         });
-    };
-    Loading.prototype.dismiss = function () {
-        var _this = this;
+    }
+    /**
+     * Dismiss a loading indicator programatically
+     */
+    dismiss(data, role) {
         clearTimeout(this.durationTimeout);
         if (this.animation) {
             this.animation.destroy();
             this.animation = null;
         }
-        return new Promise(function (resolve) {
-            _this.ionLoadingWillDismiss.emit({ loading: _this });
-            // get the user's animation fn if one was provided
-            var animationBuilder = _this.exitAnimation;
-            if (!animationBuilder) {
-                // user did not provide a custom animation fn
-                // decide from the config which animation to use
-                animationBuilder = iOSLeaveAnimation;
-            }
-            // build the animation and kick it off
-            _this.animationCtrl.create(animationBuilder, _this.el).then(function (animation) {
-                _this.animation = animation;
-                animation.onFinish(function (a) {
-                    a.destroy();
-                    _this.ionLoadingDidDismiss.emit({ loading: _this });
-                    Context.dom.write(function () {
-                        _this.el.parentNode.removeChild(_this.el);
-                    });
-                    resolve();
-                }).play();
+        this.ionLoadingWillDismiss.emit({
+            data,
+            role
+        });
+        const animationBuilder = this.leaveAnimation || this.config.get('loadingLeave', this.mode === 'ios' ? iosLeaveAnimation : mdLeaveAnimation);
+        return this.animationCtrl.create(animationBuilder, this.el).then(animation => {
+            this.animation = animation;
+            return playAnimationAsync(animation);
+        }).then((animation) => {
+            animation.destroy();
+            return domControllerAsync(Context.dom.write, () => {
+                this.el.parentNode.removeChild(this.el);
+            });
+        }).then(() => {
+            this.ionLoadingDidDismiss.emit({
+                data,
+                role
             });
         });
-    };
-    Loading.prototype["componentDidunload"] = function () {
-        this.ionLoadingDidUnload.emit({ loading: this });
-    };
-    Loading.prototype.onDismiss = function (ev) {
-        ev.stopPropagation();
-        ev.preventDefault();
-        this.dismiss();
-    };
-    Loading.prototype["componentDidLoad"] = function () {
+    }
+    componentDidLoad() {
         if (!this.spinner) {
-            var defaultSpinner = 'lines';
-            if (this.mode === 'md') {
-                defaultSpinner = 'crescent';
-            }
-            else if (this.mode === 'wp') {
-                defaultSpinner = 'circles';
-            }
-            this.spinner = this.config.get('loadingSpinner') || defaultSpinner;
+            this.spinner = this.config.get('loadingSPinner', this.mode === 'ios' ? 'lines' : 'crescent');
         }
-        if (this.showSpinner === null || this.showSpinner === undefined) {
-            this.showSpinner = !!(this.spinner && this.spinner !== 'hide');
-        }
-        this.ionLoadingDidLoad.emit({ loading: this });
-    };
-    Loading.prototype.ionViewDidEnter = function () {
-        var _this = this;
+        this.ionLoadingDidLoad.emit();
+    }
+    componentDidEnter() {
         // blur the currently active element
-        var activeElement = document.activeElement;
+        const activeElement = document.activeElement;
         activeElement && activeElement.blur && activeElement.blur();
         // If there is a duration, dismiss after that amount of time
         if (typeof this.duration === 'number' && this.duration > 10) {
-            this.durationTimeout = setTimeout(function () { return _this.dismiss(); }, this.duration);
+            this.durationTimeout = setTimeout(() => this.dismiss(), this.duration);
         }
-        this.ionLoadingDidPresent.emit({ loading: this });
-    };
-    Loading.prototype.render = function () {
-        var userCssClass = 'loading-content';
+        this.ionLoadingDidPresent.emit();
+    }
+    componentDidUnload() {
+        this.ionLoadingDidUnload.emit();
+    }
+    onDismiss(ev) {
+        ev.stopPropagation();
+        ev.preventDefault();
+        this.dismiss();
+    }
+    hostData() {
+        const themedClasses = this.translucent ? createThemedClasses(this.mode, this.color, 'loading-translucent') : {};
+        const hostClasses = Object.assign({}, themedClasses);
+        return {
+            class: hostClasses
+        };
+    }
+    render() {
         if (this.cssClass) {
-            userCssClass += ' ' + this.cssClass;
+            this.cssClass.split(' ').forEach(cssClass => {
+                if (cssClass.trim() !== '')
+                    this.el.classList.add(cssClass);
+            });
         }
-        var loadingInner = [];
-        if (this.showSpinner) {
-            loadingInner.push(h("div", { "c": { "loading-spinner": true } },
-                h("ion-spinner", { "p": { "name": this.spinner } })));
+        const loadingInner = [];
+        if (this.spinner !== 'hide') {
+            loadingInner.push(h("div", { class: 'loading-spinner' },
+                h("ion-spinner", { name: this.spinner })));
         }
         if (this.content) {
-            loadingInner.push(h("div", { "c": { "loading-content": true } }, this.content));
+            loadingInner.push(h("div", { class: 'loading-content' }, this.content));
         }
         return [
-            h("ion-gesture", { "c": { "loading-backdrop": true, "hide-backdrop": !this.showBackdrop }, "p": { "attachTo": 'parent', "autoBlockAll": true } }),
-            h("div", { "c": { "loading-wrapper": true }, "a": { "role": 'dialog' } }, loadingInner)
+            h("ion-gesture", { attachTo: 'parent', autoBlockAll: true, class: {
+                    'loading-backdrop': true,
+                    'hide-backdrop': !this.showBackdrop
+                } }),
+            h("div", { class: 'loading-wrapper', role: 'dialog' }, loadingInner)
         ];
-    };
-    return Loading;
-}());
-export { Loading };
+    }
+}
+export { iosEnterAnimation as iosLoadingEnterAnimation, iosLeaveAnimation as iosLoadingLeaveAnimation, mdEnterAnimation as mdLoadingEnterAnimation, mdLeaveAnimation as mdLoadingLeaveAnimation };

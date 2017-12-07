@@ -1,364 +1,346 @@
-var Menu = /** @class */ (function () {
-    function Menu() {
-        this._init = false;
-        this._isPane = false;
-        /**
-         * @hidden
-         */
-        this.isOpen = false;
-        /**
-         * @hidden
-         */
+import { EventEmitter } from '@stencil/core';
+import { Animation, Config, GestureDetail, SplitPaneAlert, StencilElement } from '../../index';
+import { Side, assert, checkEdgeSide, isRightSide } from '../../utils/helpers';
+export class Menu {
+    constructor() {
+        this.isPane = false;
+        this._isOpen = false;
+        this.lastOnEnd = 0;
         this.isAnimating = false;
-        /**
-         * @hidden
-         */
         this.isRightSide = false;
+        this.width = null;
+        /**
+         * @input {string} The display type of the menu. Default varies based on the mode,
+         * see the `menuType` in the [config](../../config/Config). Available options:
+         * `"overlay"`, `"reveal"`, `"push"`.
+         */
+        this.type = 'overlay';
         /**
          * @input {string} Which side of the view the menu should be placed. Default `"start"`.
          */
         this.side = 'start';
         /**
+         * @input {boolean} If true, swiping the menu is enabled. Default `true`.
+         */
+        this.swipeEnabled = true;
+        /**
          * @input {boolean} If true, the menu will persist on child pages.
          */
         this.persistent = false;
+        /**
+         * @hidden
+         */
+        this.maxEdgeStart = 50;
     }
-    Menu.prototype.swipeEnabledChange = function (isEnabled) {
-        this.swipeEnable(isEnabled);
-    };
-    /**
-     * @hidden
-     */
-    Menu.prototype["componentDidLoad"] = function () {
-        var _this = this;
-        this._backdropElm = this.el.querySelector('.menu-backdrop');
-        this._init = true;
-        if (this.content) {
-            if ((this.content).tagName) {
-                this._cntElm = this.content;
-            }
-            else if (typeof this.content === 'string') {
-                this._cntElm = document.querySelector(this.content);
-            }
+    typeChanged(type) {
+        if (this.contentEl) {
+            this.contentEl.classList.remove('menu-content-' + this.type);
+            this.contentEl.classList.add('menu-content-' + type);
+            this.contentEl.removeAttribute('style');
         }
-        if (!this._cntElm || !this._cntElm.tagName) {
+        if (this.menuInnerEl) {
+            // Remove effects of previous animations
+            this.menuInnerEl.removeAttribute('style');
+        }
+        this.animation = null;
+    }
+    enabledChanged() {
+        this.updateState();
+    }
+    sideChanged() {
+        this.isRightSide = isRightSide(this.side);
+    }
+    swipeEnabledChanged() {
+        this.updateState();
+    }
+    componentWillLoad() {
+        return this.lazyMenuCtrl.componentOnReady().then(menu => {
+            this.menuCtrl = menu;
+        });
+    }
+    componentDidLoad() {
+        assert(!!this.menuCtrl, 'menucontroller was not initialized');
+        const el = this.el;
+        const contentQuery = (this.content)
+            ? '#' + this.content
+            : '[main]';
+        const parent = el.parentElement;
+        const content = this.contentEl = parent.querySelector(contentQuery);
+        if (!content || !content.tagName) {
             // requires content element
             return console.error('Menu: must have a "content" element to listen for drag events on.');
         }
+        this.menuInnerEl = el.querySelector('.menu-inner');
+        this.backdropEl = el.querySelector('.menu-backdrop');
         // add menu's content classes
-        this._cntElm.classList.add('menu-content');
-        this._cntElm.classList.add('menu-content-' + this.type);
-        var isEnabled = this.enabled;
+        content.classList.add('menu-content');
+        this.typeChanged(this.type);
+        this.sideChanged();
+        let isEnabled = this.enabled;
         if (isEnabled === true || typeof isEnabled === 'undefined') {
-            // check if more than one menu is on the same side
-            isEnabled = !this._ctrl.getMenus().some(function (m) {
-                return m.side === _this.side && m.enabled;
+            const menus = this.menuCtrl.getMenus();
+            isEnabled = !menus.some(m => {
+                return m.side === this.side && m.enabled;
             });
         }
         // register this menu with the app's menu controller
-        this._ctrl._register(this);
+        this.menuCtrl._register(this);
         // mask it as enabled / disabled
-        this.enable(isEnabled);
-    };
-    Menu.prototype.hostData = function () {
-        return {
-            attrs: {
-                'role': 'navigation',
-                'side': this.side,
-                'type': this.type
-            },
-            class: {
-                'menu-enabled': this.enabled
-            }
-        };
-    };
-    Menu.prototype.render = function () {
-        // normalize the "type"
-        if (!this.type) {
-            this.type = this.config.get('menuType', 'overlay');
+        this.enabled = isEnabled;
+    }
+    componentDidUnload() {
+        this.menuCtrl._unregister(this);
+        this.animation && this.animation.destroy();
+        this.menuCtrl = this.animation = null;
+        this.contentEl = this.backdropEl = this.menuInnerEl = null;
+    }
+    splitPaneChanged(ev) {
+        this.isPane = ev.detail.splitPane.isPane(this.el);
+        this.updateState();
+    }
+    onBackdropClick(ev) {
+        const el = ev.target;
+        if (!el.closest('.menu-inner') && this.lastOnEnd < (ev.timeStamp - 100)) {
+            ev.preventDefault();
+            ev.stopPropagation();
+            this.close();
         }
-        return [
-            h("div", { "c": { "menu-inner": true } },
-                h(0, 0)),
-            h("ion-gesture", { "p": { "gestureName": 'menu-swipe', "gesturePriority": 10, "type": 'pan', "direction": 'x', "threshold": 5, "attachTo": 'body', "disableScroll": true, "block": this._activeBlock }, "c": { "menu-backdrop": true } })
-        ];
-    };
-    /**
-     * @hidden
-     */
-    Menu.prototype.onBackdropClick = function (ev) {
-        ev.preventDefault();
-        ev.stopPropagation();
-        this._ctrl.close();
-    };
-    /**
-     * @hidden
-     */
-    Menu.prototype._getType = function () {
-        if (!this._type) {
-            this._type = this._ctrl.create(this.type, this);
-            if (this.config.getBoolean('animate') === false) {
-                this._type.ani.duration(0);
-            }
-        }
-        return this._type;
-    };
-    /**
-     * @hidden
-     */
-    Menu.prototype.setOpen = function (shouldOpen, animated) {
-        var _this = this;
-        if (animated === void 0) { animated = true; }
+    }
+    getElement() {
+        return this.el;
+    }
+    isOpen() {
+        return this._isOpen;
+    }
+    setOpen(shouldOpen, animated = true) {
         // If the menu is disabled or it is currenly being animated, let's do nothing
-        if ((shouldOpen === this.isOpen) || !this._canOpen() || this.isAnimating) {
-            return Promise.resolve(this.isOpen);
+        if (!this.isActive() || this.isAnimating || (shouldOpen === this._isOpen)) {
+            return Promise.resolve(this._isOpen);
         }
-        return new Promise(function (resolve) {
-            _this._before();
-            _this._getType().setOpen(shouldOpen, animated, function () {
-                _this._after(shouldOpen);
-                resolve(_this.isOpen);
-            });
+        this.beforeAnimation();
+        return this.loadAnimation()
+            .then(() => this.startAnimation(shouldOpen, animated))
+            .then(() => this.afterAnimation(shouldOpen));
+    }
+    open() {
+        return this.setOpen(true);
+    }
+    close() {
+        return this.setOpen(false);
+    }
+    toggle() {
+        return this.setOpen(!this._isOpen);
+    }
+    loadAnimation() {
+        // Menu swipe animation takes the menu's inner width as parameter,
+        // If `offsetWidth` changes, we need to create a new animation.
+        const width = this.menuInnerEl.offsetWidth;
+        if (width === this.width && this.animation !== null) {
+            return Promise.resolve();
+        }
+        // Destroy existing animation
+        this.animation && this.animation.destroy();
+        this.animation = null;
+        this.width = width;
+        // Create new animation
+        return this.menuCtrl.createAnimation(this.type, this).then(ani => {
+            this.animation = ani;
         });
-    };
-    Menu.prototype._forceClosing = function () {
-        var _this = this;
-        this.isAnimating = true;
-        this._getType().setOpen(false, false, function () {
-            _this._after(false);
-        });
-    };
-    /**
-     * @hidden
-     */
-    Menu.prototype.canSwipe = function () {
+    }
+    startAnimation(shouldOpen, animated) {
+        let done;
+        const promise = new Promise(resolve => done = resolve);
+        const ani = this.animation
+            .onFinish(done, { oneTimeCallback: true, clearExistingCallacks: true })
+            .reverse(!shouldOpen);
+        if (animated) {
+            ani.play();
+        }
+        else {
+            ani.syncPlay();
+        }
+        return promise;
+    }
+    isActive() {
+        return this.enabled && !this.isPane;
+    }
+    canSwipe() {
         return this.swipeEnabled &&
             !this.isAnimating &&
-            this._canOpen();
-        // TODO: && this._app.isEnabled();
-    };
-    Menu.prototype._swipeBeforeStart = function () {
+            this.isActive();
+    }
+    canStart(detail) {
         if (!this.canSwipe()) {
-            return;
+            return false;
         }
-        this._before();
-    };
-    Menu.prototype._swipeStart = function () {
+        if (this._isOpen) {
+            return true;
+        }
+        else if (this.menuCtrl.getOpen()) {
+            return false;
+        }
+        return checkEdgeSide(detail.currentX, this.isRightSide, this.maxEdgeStart);
+    }
+    onWillStart() {
+        this.beforeAnimation();
+        return this.loadAnimation();
+    }
+    onDragStart() {
+        assert(!!this.animation, '_type is undefined');
         if (!this.isAnimating) {
+            assert(false, 'isAnimating has to be true');
             return;
         }
-        this._getType().setProgressStart(this.isOpen);
-    };
-    Menu.prototype._swipeProgress = function (stepValue) {
+        // the cloned animation should not use an easing curve during seek
+        this.animation
+            .reverse(this._isOpen)
+            .progressStart();
+    }
+    onDragMove(detail) {
+        assert(!!this.animation, '_type is undefined');
         if (!this.isAnimating) {
+            assert(false, 'isAnimating has to be true');
             return;
         }
-        this._getType().setProgessStep(stepValue);
-        this.ionDrag.emit({ menu: this });
-    };
-    Menu.prototype._swipeEnd = function (shouldCompleteLeft, shouldCompleteRight, stepValue, velocity) {
-        var _this = this;
+        const delta = computeDelta(detail.deltaX, this._isOpen, this.isRightSide);
+        const stepValue = delta / this.width;
+        this.animation.progressStep(stepValue);
+    }
+    onDragEnd(detail) {
+        assert(!!this.animation, '_type is undefined');
         if (!this.isAnimating) {
+            assert(false, 'isAnimating has to be true');
             return;
         }
-        // user has finished dragging the menu
-        var isRightSide = this.isRightSide;
-        var opening = !this.isOpen;
-        var shouldComplete = (opening)
-            ? isRightSide ? shouldCompleteLeft : shouldCompleteRight
-            : isRightSide ? shouldCompleteRight : shouldCompleteLeft;
-        this._getType().setProgressEnd(shouldComplete, stepValue, velocity, function (isOpen) {
-            console.debug('menu, swipeEnd', _this.side);
-            _this._after(isOpen);
-        });
-    };
-    Menu.prototype._before = function () {
+        const isOpen = this._isOpen;
+        const isRightSide = this.isRightSide;
+        const delta = computeDelta(detail.deltaX, isOpen, isRightSide);
+        const width = this.width;
+        const stepValue = delta / width;
+        const velocity = detail.velocityX;
+        const z = width / 2.0;
+        const shouldCompleteRight = (velocity >= 0)
+            && (velocity > 0.2 || detail.deltaX > z);
+        const shouldCompleteLeft = (velocity <= 0)
+            && (velocity < -0.2 || detail.deltaX < -z);
+        const shouldComplete = (isOpen)
+            ? isRightSide ? shouldCompleteRight : shouldCompleteLeft
+            : isRightSide ? shouldCompleteLeft : shouldCompleteRight;
+        let shouldOpen = (!isOpen && shouldComplete);
+        if (isOpen && !shouldComplete) {
+            shouldOpen = true;
+        }
+        const missing = shouldComplete ? 1 - stepValue : stepValue;
+        const missingDistance = missing * width;
+        let realDur = 0;
+        if (missingDistance > 5) {
+            const dur = missingDistance / Math.abs(velocity);
+            realDur = Math.min(dur, 300);
+        }
+        this.lastOnEnd = detail.timeStamp;
+        this.animation
+            .onFinish(() => this.afterAnimation(shouldOpen), { clearExistingCallacks: true })
+            .progressEnd(shouldComplete, stepValue, realDur);
+    }
+    beforeAnimation() {
+        assert(!this.isAnimating, '_before() should not be called while animating');
         // this places the menu into the correct location before it animates in
         // this css class doesn't actually kick off any animations
-        this.el.classList.add('show-menu');
-        this._backdropElm.classList.add('show-backdrop');
-        this.resize();
-        // TODO: this._keyboard.close();
+        this.el.classList.add(SHOW_MENU);
+        this.backdropEl.classList.add(SHOW_BACKDROP);
         this.isAnimating = true;
-    };
-    Menu.prototype._after = function (isOpen) {
+    }
+    afterAnimation(isOpen) {
+        assert(this.isAnimating, '_before() should be called while animating');
         // TODO: this._app.setEnabled(false, 100);
-        var _this = this;
         // keep opening/closing the menu disabled for a touch more yet
         // only add listeners/css if it's enabled and isOpen
         // and only remove listeners/css if it's not open
         // emit opened/closed events
-        this.isOpen = isOpen;
+        this._isOpen = isOpen;
         this.isAnimating = false;
         // add/remove backdrop click listeners
-        this._backdropClick(isOpen);
+        Context.enableListener(this, 'body:click', isOpen);
         if (isOpen) {
             // disable swipe to go back gesture
-            this._activeBlock = GESTURE_BLOCKER;
+            this.gestureBlocker = GESTURE_BLOCKER;
             // add css class
-            Context.dom.write(function () {
-                _this._cntElm.classList.add('menu-content-open');
-            });
+            this.contentEl.classList.add(MENU_CONTENT_OPEN);
             // emit open event
             this.ionOpen.emit({ menu: this });
         }
         else {
             // enable swipe to go back gesture
-            this._activeBlock = null;
+            this.gestureBlocker = null;
             // remove css classes
-            Context.dom.write(function () {
-                _this._cntElm.classList.remove('menu-content-open');
-                _this._cntElm.classList.remove('show-menu');
-                _this._backdropElm.classList.remove('show-menu');
-            });
+            this.el.classList.remove(SHOW_MENU);
+            this.contentEl.classList.remove(MENU_CONTENT_OPEN);
+            this.backdropEl.classList.remove(SHOW_BACKDROP);
             // emit close event
             this.ionClose.emit({ menu: this });
         }
-    };
-    /**
-     * @hidden
-     */
-    Menu.prototype.open = function () {
-        return this.setOpen(true);
-    };
-    /**
-     * @hidden
-     */
-    Menu.prototype.close = function () {
-        return this.setOpen(false);
-    };
-    /**
-     * @hidden
-     */
-    Menu.prototype.resize = function () {
-        // TODO
-        // const content: Content | Nav = this.menuContent
-        //   ? this.menuContent
-        //   : this.menuNav;
-        // content && content.resize();
-    };
-    /**
-     * @hidden
-     */
-    Menu.prototype.toggle = function () {
-        return this.setOpen(!this.isOpen);
-    };
-    Menu.prototype._canOpen = function () {
-        return this.enabled && !this._isPane;
-    };
-    /**
-     * @hidden
-     */
-    Menu.prototype._updateState = function () {
-        var canOpen = this._canOpen();
+        return isOpen;
+    }
+    updateState() {
+        const isActive = this.isActive();
         // Close menu inmediately
-        if (!canOpen && this.isOpen) {
+        if (!isActive && this._isOpen) {
             // close if this menu is open, and should not be enabled
-            this._forceClosing();
+            this.forceClosing();
         }
-        if (this.enabled && this._ctrl) {
-            this._ctrl._setActiveMenu(this);
+        if (this.enabled && this.menuCtrl) {
+            this.menuCtrl._setActiveMenu(this);
         }
-        if (!this._init) {
-            return;
-        }
-        // TODO
-        // const gesture = this._gesture;
-        // // only listen/unlisten if the menu has initialized
-        // if (canOpen && this.swipeEnabled && !gesture.isListening) {
-        //   // should listen, but is not currently listening
-        //   console.debug('menu, gesture listen', this.side);
-        //   gesture.listen();
-        // } else if (gesture.isListening && (!canOpen || !this.swipeEnabled)) {
-        //   // should not listen, but is currently listening
-        //   console.debug('menu, gesture unlisten', this.side);
-        //   gesture.unlisten();
-        // }
-        if (this.isOpen || (this._isPane && this.enabled)) {
-            this.resize();
-        }
-    };
-    /**
-     * @hidden
-     */
-    Menu.prototype.enable = function (shouldEnable) {
-        this.enabled = shouldEnable;
-        this._updateState();
-        return this;
-    };
-    /**
-     * @internal
-     */
-    Menu.prototype.initPane = function () {
-        return false;
-    };
-    /**
-     * @internal
-     */
-    Menu.prototype.paneChanged = function (isPane) {
-        this._isPane = isPane;
-        this._updateState();
-    };
-    /**
-     * @hidden
-     */
-    Menu.prototype.swipeEnable = function (shouldEnable) {
-        this.swipeEnabled = shouldEnable;
-        this._updateState();
-        return this;
-    };
-    /**
-     * @hidden
-     */
-    Menu.prototype.getMenuElement = function () {
-        return this.el.querySelector('.menu-inner');
-    };
-    /**
-     * @hidden
-     */
-    Menu.prototype.getContentElement = function () {
-        return this._cntElm;
-    };
-    /**
-     * @hidden
-     */
-    Menu.prototype.getBackdropElement = function () {
-        return this._backdropElm;
-    };
-    /**
-     * @hidden
-     */
-    Menu.prototype.width = function () {
-        return this.getMenuElement().offsetWidth;
-    };
-    /**
-     * @hidden
-     */
-    Menu.prototype.getMenuController = function () {
-        return this._ctrl;
-    };
-    Menu.prototype._backdropClick = function (shouldAdd) {
-        var onBackdropClick = this.onBackdropClick.bind(this);
-        if (shouldAdd && !this._unregBdClick) {
-            this._unregBdClick = Context.addListener(this._cntElm, 'click', onBackdropClick, { capture: true });
-            this._unregCntClick = Context.addListener(this._cntElm, 'click', onBackdropClick, { capture: true });
-        }
-        else if (!shouldAdd && this._unregBdClick) {
-            this._unregBdClick();
-            this._unregCntClick();
-            this._unregBdClick = this._unregCntClick = null;
-        }
-    };
-    /**
-     * @hidden
-     */
-    Menu.prototype["componentDidunload"] = function () {
-        this._backdropClick(false);
-        this._ctrl._unregister(this);
-        this._type && this._type.destroy();
-        this._ctrl = this._type = this._cntElm = this._backdropElm = null;
-    };
-    return Menu;
-}());
-export { Menu };
-var GESTURE_BLOCKER = 'goback-swipe';
+        assert(!this.isAnimating, 'can not be animating');
+    }
+    forceClosing() {
+        assert(this._isOpen, 'menu cannot be closed');
+        this.isAnimating = true;
+        this.startAnimation(false, false);
+        this.afterAnimation(false);
+    }
+    hostData() {
+        const typeClass = 'menu-type-' + this.type;
+        return {
+            role: 'complementary',
+            class: {
+                'menu-enabled': this.enabled,
+                'menu-side-right': this.isRightSide,
+                'menu-side-left': !this.isRightSide,
+                [typeClass]: true,
+            }
+        };
+    }
+    render() {
+        return ([
+            h("div", { class: 'menu-inner page-inner' },
+                h("slot", null)),
+            h("ion-backdrop", { class: 'menu-backdrop' }),
+            h("ion-gesture", Object.assign({}, {
+                'canStart': this.canStart.bind(this),
+                'onWillStart': this.onWillStart.bind(this),
+                'onStart': this.onDragStart.bind(this),
+                'onMove': this.onDragMove.bind(this),
+                'onEnd': this.onDragEnd.bind(this),
+                'maxEdgeStart': this.maxEdgeStart,
+                'edge': this.side,
+                'enabled': this.isActive() && this.swipeEnabled,
+                'gestureName': 'menu-swipe',
+                'gesturePriority': 10,
+                'type': 'pan',
+                'direction': 'x',
+                'threshold': 10,
+                'attachTo': 'body',
+                'disableScroll': true,
+                'block': this.gestureBlocker
+            }))
+        ]);
+    }
+}
+function computeDelta(deltaX, isOpen, isRightSide) {
+    return Math.max(0, (isOpen !== isRightSide) ? -deltaX : deltaX);
+}
+const SHOW_MENU = 'show-menu';
+const SHOW_BACKDROP = 'show-backdrop';
+const MENU_CONTENT_OPEN = 'menu-content-open';
+const GESTURE_BLOCKER = 'goback-swipe';

@@ -1,16 +1,8 @@
-@import "../../themes/ionic.globals.ios";
 @import "./content";
-
+@import "./content.ios.vars";
 
 // iOS Content
 // --------------------------------------------------
-
-/// @prop - Background color of the outer content
-$content-ios-outer-background:          #efeff4 !default;
-
-/// @prop - Background color of the content when making transition
-$content-ios-transition-background:     #000 !default;
-
 
 .content-ios {
   color: $text-ios-color;
@@ -27,34 +19,17 @@ $content-ios-transition-background:     #000 !default;
   background-color: rgba(0, 0, 0, .12);
 }
 
-.ios .ion-page.show-page ~ .nav-decor {
-  // when ios pages transition, the leaving page grays out
-  // this is the black square behind all pages so they gray out
-  @include position(0, null, null, 0);
-
-  position: absolute;
-  z-index: 0;
-  display: block;
-
-  width: 100%;
-  height: 100%;
-
-  background: $content-ios-transition-background;
-
-  pointer-events: none;
-}
-
 
 // iOS Content Padding
 // --------------------------------------------------
 
-@include content-padding('ios', $content-ios-padding);
+@include content-padding("ios", $content-ios-padding);
 
 
 // iOS Content Margin
 // --------------------------------------------------
 
-@include content-margin('ios', $content-ios-margin);
+@include content-margin("ios", $content-ios-margin);
 
 
 // iOS Content Scroll

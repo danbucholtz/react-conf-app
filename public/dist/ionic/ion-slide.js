@@ -2,29 +2,31 @@
  * (C) Ionic http://ionicframework.com - MIT License
  * Built with http://stenciljs.com
  */
+
+Ionic.loadStyles("ion-slide","ion-slide {\n  display: block;\n  width: 100%;\n  height: 100%;\n}\n\n.slide-zoom {\n  text-align: center;\n  display: block;\n  width: 100%;\n}\n\n.swiper-slide {\n  text-align: center;\n  position: relative;\n  display: flex;\n  flex-shrink: 0;\n  align-items: center;\n  justify-content: center;\n  width: 100%;\n  height: 100%;\n  font-size: 18px;\n  box-sizing: border-box;\n}\n\n.swiper-slide img {\n  width: auto;\n  max-width: 100%;\n  height: auto;\n  max-height: 100%;\n}\nion-slide.hydrated{visibility:inherit}","ion-slides","/**\n * Swiper 3.4.2\n * Most modern mobile touch slider and framework with hardware accelerated transitions\n *\n * http://www.idangero.us/swiper/\n *\n * Copyright 2017, Vladimir Kharlampidi\n * The iDangero.us\n * http://www.idangero.us/\n *\n * Licensed under MIT\n *\n * Released on: March 10, 2017\n */\n.swiper-container {\n  margin-left: auto;\n  margin-right: auto;\n  position: relative;\n  overflow: hidden;\n  /* Fix of Webkit flickering */\n  z-index: 1;\n}\n\n.swiper-container-no-flexbox .swiper-slide {\n  float: left;\n}\n\n.swiper-container-vertical > .swiper-wrapper {\n  -webkit-box-orient: vertical;\n  -moz-box-orient: vertical;\n  -ms-flex-direction: column;\n  -webkit-flex-direction: column;\n  flex-direction: column;\n}\n\n.swiper-wrapper {\n  position: relative;\n  width: 100%;\n  height: 100%;\n  z-index: 1;\n  display: -webkit-box;\n  display: -moz-box;\n  display: -ms-flexbox;\n  display: -webkit-flex;\n  display: flex;\n  -webkit-transition-property: -webkit-transform;\n  -moz-transition-property: -moz-transform;\n  -o-transition-property: -o-transform;\n  -ms-transition-property: -ms-transform;\n  transition-property: transform;\n  -webkit-box-sizing: content-box;\n  -moz-box-sizing: content-box;\n  box-sizing: content-box;\n}\n\n.swiper-container-android .swiper-slide,\n.swiper-wrapper {\n  -webkit-transform: translate3d(0px, 0, 0);\n  -moz-transform: translate3d(0px, 0, 0);\n  -o-transform: translate(0px, 0px);\n  -ms-transform: translate3d(0px, 0, 0);\n  transform: translate3d(0px, 0, 0);\n}\n\n.swiper-container-multirow > .swiper-wrapper {\n  -webkit-box-lines: multiple;\n  -moz-box-lines: multiple;\n  -ms-flex-wrap: wrap;\n  -webkit-flex-wrap: wrap;\n  flex-wrap: wrap;\n}\n\n.swiper-container-free-mode > .swiper-wrapper {\n  -webkit-transition-timing-function: ease-out;\n  -moz-transition-timing-function: ease-out;\n  -ms-transition-timing-function: ease-out;\n  -o-transition-timing-function: ease-out;\n  transition-timing-function: ease-out;\n  margin: 0 auto;\n}\n\n.swiper-slide {\n  -webkit-flex-shrink: 0;\n  -ms-flex: 0 0 auto;\n  flex-shrink: 0;\n  width: 100%;\n  height: 100%;\n  position: relative;\n}\n\n/* Auto Height */\n.swiper-container-autoheight,\n.swiper-container-autoheight .swiper-slide {\n  height: auto;\n}\n\n.swiper-container-autoheight .swiper-wrapper {\n  -webkit-box-align: start;\n  -ms-flex-align: start;\n  -webkit-align-items: flex-start;\n  align-items: flex-start;\n  -webkit-transition-property: -webkit-transform, height;\n  -moz-transition-property: -moz-transform;\n  -o-transition-property: -o-transform;\n  -ms-transition-property: -ms-transform;\n  transition-property: transform, height;\n}\n\n/* a11y */\n.swiper-container .swiper-notification {\n  position: absolute;\n  left: 0;\n  top: 0;\n  pointer-events: none;\n  opacity: 0;\n  z-index: -1000;\n}\n\n/* IE10 Windows Phone 8 Fixes */\n.swiper-wp8-horizontal {\n  -ms-touch-action: pan-y;\n  touch-action: pan-y;\n}\n\n.swiper-wp8-vertical {\n  -ms-touch-action: pan-x;\n  touch-action: pan-x;\n}\n\n/* Arrows */\n.swiper-button-prev,\n.swiper-button-next {\n  position: absolute;\n  top: 50%;\n  width: 27px;\n  height: 44px;\n  margin-top: -22px;\n  z-index: 10;\n  cursor: pointer;\n  -moz-background-size: 27px 44px;\n  -webkit-background-size: 27px 44px;\n  background-size: 27px 44px;\n  background-position: center;\n  background-repeat: no-repeat;\n}\n\n.swiper-button-prev.swiper-button-disabled,\n.swiper-button-next.swiper-button-disabled {\n  opacity: 0.35;\n  cursor: auto;\n  pointer-events: none;\n}\n\n.swiper-button-prev,\n.swiper-container-rtl .swiper-button-next {\n  background-image: url(\"data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D'http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg'%20viewBox%3D'0%200%2027%2044'%3E%3Cpath%20d%3D'M0%2C22L22%2C0l2.1%2C2.1L4.2%2C22l19.9%2C19.9L22%2C44L0%2C22L0%2C22L0%2C22z'%20fill%3D'%23007aff'%2F%3E%3C%2Fsvg%3E\");\n  left: 10px;\n  right: auto;\n}\n\n.swiper-button-prev.swiper-button-black,\n.swiper-container-rtl .swiper-button-next.swiper-button-black {\n  background-image: url(\"data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D'http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg'%20viewBox%3D'0%200%2027%2044'%3E%3Cpath%20d%3D'M0%2C22L22%2C0l2.1%2C2.1L4.2%2C22l19.9%2C19.9L22%2C44L0%2C22L0%2C22L0%2C22z'%20fill%3D'%23000000'%2F%3E%3C%2Fsvg%3E\");\n}\n\n.swiper-button-prev.swiper-button-white,\n.swiper-container-rtl .swiper-button-next.swiper-button-white {\n  background-image: url(\"data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D'http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg'%20viewBox%3D'0%200%2027%2044'%3E%3Cpath%20d%3D'M0%2C22L22%2C0l2.1%2C2.1L4.2%2C22l19.9%2C19.9L22%2C44L0%2C22L0%2C22L0%2C22z'%20fill%3D'%23ffffff'%2F%3E%3C%2Fsvg%3E\");\n}\n\n.swiper-button-next,\n.swiper-container-rtl .swiper-button-prev {\n  background-image: url(\"data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D'http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg'%20viewBox%3D'0%200%2027%2044'%3E%3Cpath%20d%3D'M27%2C22L27%2C22L5%2C44l-2.1-2.1L22.8%2C22L2.9%2C2.1L5%2C0L27%2C22L27%2C22z'%20fill%3D'%23007aff'%2F%3E%3C%2Fsvg%3E\");\n  right: 10px;\n  left: auto;\n}\n\n.swiper-button-next.swiper-button-black,\n.swiper-container-rtl .swiper-button-prev.swiper-button-black {\n  background-image: url(\"data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D'http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg'%20viewBox%3D'0%200%2027%2044'%3E%3Cpath%20d%3D'M27%2C22L27%2C22L5%2C44l-2.1-2.1L22.8%2C22L2.9%2C2.1L5%2C0L27%2C22L27%2C22z'%20fill%3D'%23000000'%2F%3E%3C%2Fsvg%3E\");\n}\n\n.swiper-button-next.swiper-button-white,\n.swiper-container-rtl .swiper-button-prev.swiper-button-white {\n  background-image: url(\"data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D'http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg'%20viewBox%3D'0%200%2027%2044'%3E%3Cpath%20d%3D'M27%2C22L27%2C22L5%2C44l-2.1-2.1L22.8%2C22L2.9%2C2.1L5%2C0L27%2C22L27%2C22z'%20fill%3D'%23ffffff'%2F%3E%3C%2Fsvg%3E\");\n}\n\n/* Pagination Styles */\n.swiper-pagination {\n  position: absolute;\n  text-align: center;\n  -webkit-transition: 300ms;\n  -moz-transition: 300ms;\n  -o-transition: 300ms;\n  transition: 300ms;\n  -webkit-transform: translate3d(0, 0, 0);\n  -ms-transform: translate3d(0, 0, 0);\n  -o-transform: translate3d(0, 0, 0);\n  transform: translate3d(0, 0, 0);\n  z-index: 10;\n}\n\n.swiper-pagination.swiper-pagination-hidden {\n  opacity: 0;\n}\n\n/* Common Styles */\n.swiper-pagination-fraction,\n.swiper-pagination-custom,\n.swiper-container-horizontal > .swiper-pagination-bullets {\n  bottom: 10px;\n  left: 0;\n  width: 100%;\n}\n\n/* Bullets */\n.swiper-pagination-bullet {\n  width: 8px;\n  height: 8px;\n  display: inline-block;\n  border-radius: 100%;\n  background: #000;\n  opacity: 0.2;\n}\n\nbutton.swiper-pagination-bullet {\n  border: none;\n  margin: 0;\n  padding: 0;\n  box-shadow: none;\n  -moz-appearance: none;\n  -ms-appearance: none;\n  -webkit-appearance: none;\n  appearance: none;\n}\n\n.swiper-pagination-clickable .swiper-pagination-bullet {\n  cursor: pointer;\n}\n\n.swiper-pagination-white .swiper-pagination-bullet {\n  background: #fff;\n}\n\n.swiper-pagination-bullet-active {\n  opacity: 1;\n  background: #007aff;\n}\n\n.swiper-pagination-white .swiper-pagination-bullet-active {\n  background: #fff;\n}\n\n.swiper-pagination-black .swiper-pagination-bullet-active {\n  background: #000;\n}\n\n.swiper-container-vertical > .swiper-pagination-bullets {\n  right: 10px;\n  top: 50%;\n  -webkit-transform: translate3d(0px, -50%, 0);\n  -moz-transform: translate3d(0px, -50%, 0);\n  -o-transform: translate(0px, -50%);\n  -ms-transform: translate3d(0px, -50%, 0);\n  transform: translate3d(0px, -50%, 0);\n}\n\n.swiper-container-vertical > .swiper-pagination-bullets .swiper-pagination-bullet {\n  margin: 5px 0;\n  display: block;\n}\n\n.swiper-container-horizontal > .swiper-pagination-bullets .swiper-pagination-bullet {\n  margin: 0 5px;\n}\n\n/* Progress */\n.swiper-pagination-progress {\n  background: rgba(0, 0, 0, 0.25);\n  position: absolute;\n}\n\n.swiper-pagination-progress .swiper-pagination-progressbar {\n  background: #007aff;\n  position: absolute;\n  left: 0;\n  top: 0;\n  width: 100%;\n  height: 100%;\n  -webkit-transform: scale(0);\n  -ms-transform: scale(0);\n  -o-transform: scale(0);\n  transform: scale(0);\n  -webkit-transform-origin: left top;\n  -moz-transform-origin: left top;\n  -ms-transform-origin: left top;\n  -o-transform-origin: left top;\n  transform-origin: left top;\n}\n\n.swiper-container-rtl .swiper-pagination-progress .swiper-pagination-progressbar {\n  -webkit-transform-origin: right top;\n  -moz-transform-origin: right top;\n  -ms-transform-origin: right top;\n  -o-transform-origin: right top;\n  transform-origin: right top;\n}\n\n.swiper-container-horizontal > .swiper-pagination-progress {\n  width: 100%;\n  height: 4px;\n  left: 0;\n  top: 0;\n}\n\n.swiper-container-vertical > .swiper-pagination-progress {\n  width: 4px;\n  height: 100%;\n  left: 0;\n  top: 0;\n}\n\n.swiper-pagination-progress.swiper-pagination-white {\n  background: rgba(255, 255, 255, 0.5);\n}\n\n.swiper-pagination-progress.swiper-pagination-white .swiper-pagination-progressbar {\n  background: #fff;\n}\n\n.swiper-pagination-progress.swiper-pagination-black .swiper-pagination-progressbar {\n  background: #000;\n}\n\n/* 3D Container */\n.swiper-container-3d {\n  -webkit-perspective: 1200px;\n  -moz-perspective: 1200px;\n  -o-perspective: 1200px;\n  perspective: 1200px;\n}\n\n.swiper-container-3d .swiper-wrapper,\n.swiper-container-3d .swiper-slide,\n.swiper-container-3d .swiper-slide-shadow-left,\n.swiper-container-3d .swiper-slide-shadow-right,\n.swiper-container-3d .swiper-slide-shadow-top,\n.swiper-container-3d .swiper-slide-shadow-bottom,\n.swiper-container-3d .swiper-cube-shadow {\n  -webkit-transform-style: preserve-3d;\n  -moz-transform-style: preserve-3d;\n  -ms-transform-style: preserve-3d;\n  transform-style: preserve-3d;\n}\n\n.swiper-container-3d .swiper-slide-shadow-left,\n.swiper-container-3d .swiper-slide-shadow-right,\n.swiper-container-3d .swiper-slide-shadow-top,\n.swiper-container-3d .swiper-slide-shadow-bottom {\n  position: absolute;\n  left: 0;\n  top: 0;\n  width: 100%;\n  height: 100%;\n  pointer-events: none;\n  z-index: 10;\n}\n\n.swiper-container-3d .swiper-slide-shadow-left {\n  background-image: -webkit-gradient(linear, left top, right top, from(rgba(0, 0, 0, 0.5)), to(transparent));\n  /* Safari 4+, Chrome */\n  background-image: -webkit-linear-gradient(right, rgba(0, 0, 0, 0.5), transparent);\n  /* Chrome 10+, Safari 5.1+, iOS 5+ */\n  background-image: -moz-linear-gradient(right, rgba(0, 0, 0, 0.5), transparent);\n  /* Firefox 3.6-15 */\n  background-image: -o-linear-gradient(right, rgba(0, 0, 0, 0.5), transparent);\n  /* Opera 11.10-12.00 */\n  background-image: linear-gradient(to left, rgba(0, 0, 0, 0.5), transparent);\n  /* Firefox 16+, IE10, Opera 12.50+ */\n}\n\n.swiper-container-3d .swiper-slide-shadow-right {\n  background-image: -webkit-gradient(linear, right top, left top, from(rgba(0, 0, 0, 0.5)), to(transparent));\n  /* Safari 4+, Chrome */\n  background-image: -webkit-linear-gradient(left, rgba(0, 0, 0, 0.5), transparent);\n  /* Chrome 10+, Safari 5.1+, iOS 5+ */\n  background-image: -moz-linear-gradient(left, rgba(0, 0, 0, 0.5), transparent);\n  /* Firefox 3.6-15 */\n  background-image: -o-linear-gradient(left, rgba(0, 0, 0, 0.5), transparent);\n  /* Opera 11.10-12.00 */\n  background-image: linear-gradient(to right, rgba(0, 0, 0, 0.5), transparent);\n  /* Firefox 16+, IE10, Opera 12.50+ */\n}\n\n.swiper-container-3d .swiper-slide-shadow-top {\n  background-image: -webkit-gradient(linear, left top, left bottom, from(rgba(0, 0, 0, 0.5)), to(transparent));\n  /* Safari 4+, Chrome */\n  background-image: -webkit-linear-gradient(bottom, rgba(0, 0, 0, 0.5), transparent);\n  /* Chrome 10+, Safari 5.1+, iOS 5+ */\n  background-image: -moz-linear-gradient(bottom, rgba(0, 0, 0, 0.5), transparent);\n  /* Firefox 3.6-15 */\n  background-image: -o-linear-gradient(bottom, rgba(0, 0, 0, 0.5), transparent);\n  /* Opera 11.10-12.00 */\n  background-image: linear-gradient(to top, rgba(0, 0, 0, 0.5), transparent);\n  /* Firefox 16+, IE10, Opera 12.50+ */\n}\n\n.swiper-container-3d .swiper-slide-shadow-bottom {\n  background-image: -webkit-gradient(linear, left bottom, left top, from(rgba(0, 0, 0, 0.5)), to(transparent));\n  /* Safari 4+, Chrome */\n  background-image: -webkit-linear-gradient(top, rgba(0, 0, 0, 0.5), transparent);\n  /* Chrome 10+, Safari 5.1+, iOS 5+ */\n  background-image: -moz-linear-gradient(top, rgba(0, 0, 0, 0.5), transparent);\n  /* Firefox 3.6-15 */\n  background-image: -o-linear-gradient(top, rgba(0, 0, 0, 0.5), transparent);\n  /* Opera 11.10-12.00 */\n  background-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.5), transparent);\n  /* Firefox 16+, IE10, Opera 12.50+ */\n}\n\n/* Coverflow */\n.swiper-container-coverflow .swiper-wrapper,\n.swiper-container-flip .swiper-wrapper {\n  /* Windows 8 IE 10 fix */\n  -ms-perspective: 1200px;\n}\n\n/* Cube + Flip */\n.swiper-container-cube,\n.swiper-container-flip {\n  overflow: visible;\n}\n\n.swiper-container-cube .swiper-slide,\n.swiper-container-flip .swiper-slide {\n  pointer-events: none;\n  -webkit-backface-visibility: hidden;\n  -moz-backface-visibility: hidden;\n  -ms-backface-visibility: hidden;\n  backface-visibility: hidden;\n  z-index: 1;\n}\n\n.swiper-container-cube .swiper-slide .swiper-slide,\n.swiper-container-flip .swiper-slide .swiper-slide {\n  pointer-events: none;\n}\n\n.swiper-container-cube .swiper-slide-active,\n.swiper-container-flip .swiper-slide-active,\n.swiper-container-cube .swiper-slide-active .swiper-slide-active,\n.swiper-container-flip .swiper-slide-active .swiper-slide-active {\n  pointer-events: auto;\n}\n\n.swiper-container-cube .swiper-slide-shadow-top,\n.swiper-container-flip .swiper-slide-shadow-top,\n.swiper-container-cube .swiper-slide-shadow-bottom,\n.swiper-container-flip .swiper-slide-shadow-bottom,\n.swiper-container-cube .swiper-slide-shadow-left,\n.swiper-container-flip .swiper-slide-shadow-left,\n.swiper-container-cube .swiper-slide-shadow-right,\n.swiper-container-flip .swiper-slide-shadow-right {\n  z-index: 0;\n  -webkit-backface-visibility: hidden;\n  -moz-backface-visibility: hidden;\n  -ms-backface-visibility: hidden;\n  backface-visibility: hidden;\n}\n\n/* Cube */\n.swiper-container-cube .swiper-slide {\n  visibility: hidden;\n  -webkit-transform-origin: 0 0;\n  -moz-transform-origin: 0 0;\n  -ms-transform-origin: 0 0;\n  transform-origin: 0 0;\n  width: 100%;\n  height: 100%;\n}\n\n.swiper-container-cube.swiper-container-rtl .swiper-slide {\n  -webkit-transform-origin: 100% 0;\n  -moz-transform-origin: 100% 0;\n  -ms-transform-origin: 100% 0;\n  transform-origin: 100% 0;\n}\n\n.swiper-container-cube .swiper-slide-active,\n.swiper-container-cube .swiper-slide-next,\n.swiper-container-cube .swiper-slide-prev,\n.swiper-container-cube .swiper-slide-next + .swiper-slide {\n  pointer-events: auto;\n  visibility: visible;\n}\n\n.swiper-container-cube .swiper-cube-shadow {\n  position: absolute;\n  left: 0;\n  bottom: 0px;\n  width: 100%;\n  height: 100%;\n  background: #000;\n  opacity: 0.6;\n  -webkit-filter: blur(50px);\n  filter: blur(50px);\n  z-index: 0;\n}\n\n/* Fade */\n.swiper-container-fade.swiper-container-free-mode .swiper-slide {\n  -webkit-transition-timing-function: ease-out;\n  -moz-transition-timing-function: ease-out;\n  -ms-transition-timing-function: ease-out;\n  -o-transition-timing-function: ease-out;\n  transition-timing-function: ease-out;\n}\n\n.swiper-container-fade .swiper-slide {\n  pointer-events: none;\n  -webkit-transition-property: opacity;\n  -moz-transition-property: opacity;\n  -o-transition-property: opacity;\n  transition-property: opacity;\n}\n\n.swiper-container-fade .swiper-slide .swiper-slide {\n  pointer-events: none;\n}\n\n.swiper-container-fade .swiper-slide-active,\n.swiper-container-fade .swiper-slide-active .swiper-slide-active {\n  pointer-events: auto;\n}\n\n.swiper-zoom-container {\n  width: 100%;\n  height: 100%;\n  display: -webkit-box;\n  display: -moz-box;\n  display: -ms-flexbox;\n  display: -webkit-flex;\n  display: flex;\n  -webkit-box-pack: center;\n  -moz-box-pack: center;\n  -ms-flex-pack: center;\n  -webkit-justify-content: center;\n  justify-content: center;\n  -webkit-box-align: center;\n  -moz-box-align: center;\n  -ms-flex-align: center;\n  -webkit-align-items: center;\n  align-items: center;\n  text-align: center;\n}\n\n.swiper-zoom-container > img,\n.swiper-zoom-container > svg,\n.swiper-zoom-container > canvas {\n  max-width: 100%;\n  max-height: 100%;\n  object-fit: contain;\n}\n\n/* Scrollbar */\n.swiper-scrollbar {\n  border-radius: 10px;\n  position: relative;\n  -ms-touch-action: none;\n  background: rgba(0, 0, 0, 0.1);\n}\n\n.swiper-container-horizontal > .swiper-scrollbar {\n  position: absolute;\n  left: 1%;\n  bottom: 3px;\n  z-index: 50;\n  height: 5px;\n  width: 98%;\n}\n\n.swiper-container-vertical > .swiper-scrollbar {\n  position: absolute;\n  right: 3px;\n  top: 1%;\n  z-index: 50;\n  width: 5px;\n  height: 98%;\n}\n\n.swiper-scrollbar-drag {\n  height: 100%;\n  width: 100%;\n  position: relative;\n  background: rgba(0, 0, 0, 0.5);\n  border-radius: 10px;\n  left: 0;\n  top: 0;\n}\n\n.swiper-scrollbar-cursor-drag {\n  cursor: move;\n}\n\n/* Preloader */\n.swiper-lazy-preloader {\n  width: 42px;\n  height: 42px;\n  position: absolute;\n  left: 50%;\n  top: 50%;\n  margin-left: -21px;\n  margin-top: -21px;\n  z-index: 10;\n  -webkit-transform-origin: 50%;\n  -moz-transform-origin: 50%;\n  transform-origin: 50%;\n  -webkit-animation: swiper-preloader-spin 1s steps(12, end) infinite;\n  -moz-animation: swiper-preloader-spin 1s steps(12, end) infinite;\n  animation: swiper-preloader-spin 1s steps(12, end) infinite;\n}\n\n.swiper-lazy-preloader:after {\n  display: block;\n  content: \"\";\n  width: 100%;\n  height: 100%;\n  background-image: url(\"data:image/svg+xml;charset=utf-8,%3Csvg%20viewBox%3D'0%200%20120%20120'%20xmlns%3D'http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg'%20xmlns%3Axlink%3D'http%3A%2F%2Fwww.w3.org%2F1999%2Fxlink'%3E%3Cdefs%3E%3Cline%20id%3D'l'%20x1%3D'60'%20x2%3D'60'%20y1%3D'7'%20y2%3D'27'%20stroke%3D'%236c6c6c'%20stroke-width%3D'11'%20stroke-linecap%3D'round'%2F%3E%3C%2Fdefs%3E%3Cg%3E%3Cuse%20xlink%3Ahref%3D'%23l'%20opacity%3D'.27'%2F%3E%3Cuse%20xlink%3Ahref%3D'%23l'%20opacity%3D'.27'%20transform%3D'rotate(30%2060%2C60)'%2F%3E%3Cuse%20xlink%3Ahref%3D'%23l'%20opacity%3D'.27'%20transform%3D'rotate(60%2060%2C60)'%2F%3E%3Cuse%20xlink%3Ahref%3D'%23l'%20opacity%3D'.27'%20transform%3D'rotate(90%2060%2C60)'%2F%3E%3Cuse%20xlink%3Ahref%3D'%23l'%20opacity%3D'.27'%20transform%3D'rotate(120%2060%2C60)'%2F%3E%3Cuse%20xlink%3Ahref%3D'%23l'%20opacity%3D'.27'%20transform%3D'rotate(150%2060%2C60)'%2F%3E%3Cuse%20xlink%3Ahref%3D'%23l'%20opacity%3D'.37'%20transform%3D'rotate(180%2060%2C60)'%2F%3E%3Cuse%20xlink%3Ahref%3D'%23l'%20opacity%3D'.46'%20transform%3D'rotate(210%2060%2C60)'%2F%3E%3Cuse%20xlink%3Ahref%3D'%23l'%20opacity%3D'.56'%20transform%3D'rotate(240%2060%2C60)'%2F%3E%3Cuse%20xlink%3Ahref%3D'%23l'%20opacity%3D'.66'%20transform%3D'rotate(270%2060%2C60)'%2F%3E%3Cuse%20xlink%3Ahref%3D'%23l'%20opacity%3D'.75'%20transform%3D'rotate(300%2060%2C60)'%2F%3E%3Cuse%20xlink%3Ahref%3D'%23l'%20opacity%3D'.85'%20transform%3D'rotate(330%2060%2C60)'%2F%3E%3C%2Fg%3E%3C%2Fsvg%3E\");\n  background-position: 50%;\n  -webkit-background-size: 100%;\n  background-size: 100%;\n  background-repeat: no-repeat;\n}\n\n.swiper-lazy-preloader-white:after {\n  background-image: url(\"data:image/svg+xml;charset=utf-8,%3Csvg%20viewBox%3D'0%200%20120%20120'%20xmlns%3D'http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg'%20xmlns%3Axlink%3D'http%3A%2F%2Fwww.w3.org%2F1999%2Fxlink'%3E%3Cdefs%3E%3Cline%20id%3D'l'%20x1%3D'60'%20x2%3D'60'%20y1%3D'7'%20y2%3D'27'%20stroke%3D'%23fff'%20stroke-width%3D'11'%20stroke-linecap%3D'round'%2F%3E%3C%2Fdefs%3E%3Cg%3E%3Cuse%20xlink%3Ahref%3D'%23l'%20opacity%3D'.27'%2F%3E%3Cuse%20xlink%3Ahref%3D'%23l'%20opacity%3D'.27'%20transform%3D'rotate(30%2060%2C60)'%2F%3E%3Cuse%20xlink%3Ahref%3D'%23l'%20opacity%3D'.27'%20transform%3D'rotate(60%2060%2C60)'%2F%3E%3Cuse%20xlink%3Ahref%3D'%23l'%20opacity%3D'.27'%20transform%3D'rotate(90%2060%2C60)'%2F%3E%3Cuse%20xlink%3Ahref%3D'%23l'%20opacity%3D'.27'%20transform%3D'rotate(120%2060%2C60)'%2F%3E%3Cuse%20xlink%3Ahref%3D'%23l'%20opacity%3D'.27'%20transform%3D'rotate(150%2060%2C60)'%2F%3E%3Cuse%20xlink%3Ahref%3D'%23l'%20opacity%3D'.37'%20transform%3D'rotate(180%2060%2C60)'%2F%3E%3Cuse%20xlink%3Ahref%3D'%23l'%20opacity%3D'.46'%20transform%3D'rotate(210%2060%2C60)'%2F%3E%3Cuse%20xlink%3Ahref%3D'%23l'%20opacity%3D'.56'%20transform%3D'rotate(240%2060%2C60)'%2F%3E%3Cuse%20xlink%3Ahref%3D'%23l'%20opacity%3D'.66'%20transform%3D'rotate(270%2060%2C60)'%2F%3E%3Cuse%20xlink%3Ahref%3D'%23l'%20opacity%3D'.75'%20transform%3D'rotate(300%2060%2C60)'%2F%3E%3Cuse%20xlink%3Ahref%3D'%23l'%20opacity%3D'.85'%20transform%3D'rotate(330%2060%2C60)'%2F%3E%3C%2Fg%3E%3C%2Fsvg%3E\");\n}\n\n\@-webkit-keyframes swiper-preloader-spin {\n  100% {\n    -webkit-transform: rotate(360deg);\n  }\n}\n\n\@keyframes swiper-preloader-spin {\n  100% {\n    transform: rotate(360deg);\n  }\n}\n\nion-slides {\n  display: block;\n}\nion-slides.hydrated{visibility:inherit}");
 Ionic.loadComponents(
 
 /**** module id (dev mode) ****/
 "ion-slide",
 
 /**** component modules ****/
-function importComponent(exports, h, t, Context, publicPath) {
-var Slide = /** @class */ (function () {
-    function Slide() {
-    }
-    Slide.prototype.hostData = function () {
+function importComponent(exports, h, Context, publicPath) {
+"use strict";
+class Slide {
+    hostData() {
         return {
             class: {
                 'slide-zoom': true,
                 'swiper-slide': true
             }
         };
-    };
-    Slide.prototype.render = function () {
-        return h(0, 0);
-    };
-    return Slide;
-}());
+    }
+    render() {
+        return h("slot", null);
+    }
+}
+
+// @stencil/core
 
 /**
  * Swiper 3.4.2
@@ -388,7 +390,6 @@ var Swiper;
         if (s.container.length > 1) {
             var swipers = [];
             s.container.each(function () {
-                var container = this;
                 swipers.push(new Swiper(this, params));
             });
             return swipers;
@@ -1264,7 +1265,6 @@ var Swiper;
             }
             var newTranslate;
             function forceSetTranslate() {
-                var translate = s.rtl ? -s.translate : s.translate;
                 newTranslate = Math.min(Math.max(s.translate, s.maxTranslate()), s.minTranslate());
                 s.setWrapperTranslate(newTranslate);
                 s.updateActiveIndex();
@@ -2178,7 +2178,6 @@ var Swiper;
             if (s.params.loop) {
                 if (s.animating) return false;
                 s.fixLoop();
-                var clientLeft = s.container[0].clientLeft;
                 return s.slideTo(s.activeIndex + s.params.slidesPerGroup, speed, runCallbacks, internal);
             }
             else return s.slideTo(s.activeIndex + s.params.slidesPerGroup, speed, runCallbacks, internal);
@@ -2190,7 +2189,6 @@ var Swiper;
             if (s.params.loop) {
                 if (s.animating) return false;
                 s.fixLoop();
-                var clientLeft = s.container[0].clientLeft;
                 return s.slideTo(s.activeIndex - 1, speed, runCallbacks, internal);
             }
             else return s.slideTo(s.activeIndex - 1, speed, runCallbacks, internal);
@@ -2947,8 +2945,6 @@ var Swiper;
             isTouched: false,
             setDragPosition: function (e) {
                 var sb = s.scrollbar;
-                var x = 0, y = 0;
-                var translate;
                 var pointerPosition = s.isHorizontal() ?
                     ((e.type === 'touchstart' || e.type === 'touchmove') ? e.targetTouches[0].pageX : e.pageX || e.clientX) :
                     ((e.type === 'touchstart' || e.type === 'touchmove') ? e.targetTouches[0].pageY : e.pageY || e.clientY);
@@ -3067,9 +3063,7 @@ var Swiper;
             },
             setTranslate: function () {
                 if (!s.params.scrollbar) return;
-                var diff;
                 var sb = s.scrollbar;
-                var translate = s.translate || 0;
                 var newPos;
         
                 var newSize = sb.dragSize;
@@ -3153,8 +3147,6 @@ var Swiper;
                 // (x1,y1) is the known point before given value,
                 // (x3,y3) is the known point after given value.
                 var i1, i3;
-                var l = this.x.length;
-        
                 this.interpolate = function (x2) {
                     if (!x2) return 0;
         
@@ -4146,7 +4138,6 @@ var Swiper;
                 var action = detach ? 'off' : 'on';
         
                 if (s.params.zoom) {
-                    var target = s.slides;
                     var passiveListener = s.touchEvents.start === 'touchstart' && s.support.passiveListener && s.params.passiveListeners ? {passive: true, capture: false} : false;
                     // Scale image
                     if (s.support.gestures) {
@@ -5365,8 +5356,8 @@ var Swiper;
 
 })();
 
-var Slides = /** @class */ (function () {
-    function Slides() {
+class Slides {
+    constructor() {
         /**
          * @input {string} The animation effect of the slides.
          * Possible values are: `slide`, `fade`, `cube`, `coverflow` or `flip`.
@@ -5431,18 +5422,21 @@ var Slides = /** @class */ (function () {
          * texts on usual resolution screens (if you have such)
          */
         this.roundLengths = false;
-        this.id = ++slidesId;
-        this.slideId = 'slides-' + this.id;
+        this.slidesId = ++slidesId;
+        this.slideId = 'slides-' + this.slidesId;
     }
-    Slides.prototype.render = function () {
-        return (h("div", { "c": { "swiper-container": true }, "a": { "data-dir": 'rtl' } },
-            h("div", { "c": { "swiper-wrapper": true } },
-                h(0, 0)),
-            h("div", { "c": { "swiper-pagination": true, "hide": !this.pager } })));
-    };
-    Slides.prototype._initSlides = function () {
+    render() {
+        return (h("div", { class: 'swiper-container', "data-dir": 'rtl' },
+            h("div", { class: 'swiper-wrapper' },
+                h("slot", null)),
+            h("div", { class: {
+                    'swiper-pagination': true,
+                    'hide': !this.pager
+                } })));
+    }
+    _initSlides() {
         if (!this._init) {
-            console.debug("ion-slides, init");
+            console.debug(`ion-slides, init`);
             this.container = this.el.children[0];
             var swiperOptions = {
                 height: this.height,
@@ -5538,7 +5532,7 @@ var Slides = /** @class */ (function () {
                 lastSlideMessage: 'This is the last slide',
                 onSlideChangeStart: this.ionSlideWillChange.emit,
                 onSlideChangeEnd: this.ionSlideDidChange.emit,
-                onSlideNextStart: this.ionSlideNextStarto.emit,
+                onSlideNextStart: this.ionSlideNextStart.emit,
                 onSlidePrevStart: this.ionSlidePrevStart.emit,
                 onSlideNextEnd: this.ionSlideNextEnd.emit,
                 onSlidePrevEnd: this.ionSlidePrevEnd.emit,
@@ -5558,38 +5552,35 @@ var Slides = /** @class */ (function () {
             }
             this._init = true;
         }
-    };
+    }
     /**
      * @hidden
      */
-    Slides.prototype["componentDidLoad"] = function () {
-        var _this = this;
+    componentDidLoad() {
         /**
-         * TODO: This should change because currently ionViewDidLoad fires independent of whether the
+         * TODO: This should change because currently componentDidLoad fires independent of whether the
          * child components are ready.
          */
-        setTimeout(function () {
-            _this._initSlides();
+        setTimeout(() => {
+            this._initSlides();
         }, 10);
-    };
+    }
     /**
      * Update the underlying slider implementation. Call this if you've added or removed
      * child slides.
      */
-    Slides.prototype.update = function (debounce) {
-        var _this = this;
-        if (debounce === void 0) { debounce = 300; }
+    update(debounce = 300) {
         if (this._init) {
             window.clearTimeout(this._tmr);
-            this._tmr = window.setTimeout(function () {
-                _this.swiper.update();
+            this._tmr = window.setTimeout(() => {
+                this.swiper.update();
                 // Don't allow pager to show with > 10 slides
-                if (_this.length() > 10) {
-                    _this.paginationType = undefined;
+                if (this.length() > 10) {
+                    this.paginationType = undefined;
                 }
             }, debounce);
         }
-    };
+    }
     /**
      * Transition to the specified slide.
      *
@@ -5597,136 +5588,135 @@ var Slides = /** @class */ (function () {
      * @param {number} [speed]  Transition duration (in ms).
      * @param {boolean} [runCallbacks] Whether or not to emit the `ionSlideWillChange`/`ionSlideDidChange` events. Default true.
      */
-    Slides.prototype.slideTo = function (index, speed, runCallbacks) {
+    slideTo(index, speed, runCallbacks) {
         this.swiper.slideTo(index, speed, runCallbacks);
-    };
+    }
     /**
      * Transition to the next slide.
      *
      * @param {number} [speed]  Transition duration (in ms).
      * @param {boolean} [runCallbacks]  Whether or not to emit the `ionSlideWillChange`/`ionSlideDidChange` events. Default true.
      */
-    Slides.prototype.slideNext = function (speed, runCallbacks) {
+    slideNext(speed, runCallbacks) {
         this.swiper.slideNext(runCallbacks, speed);
-    };
+    }
     /**
      * Transition to the previous slide.
      *
      * @param {number} [speed]  Transition duration (in ms).
      * @param {boolean} [runCallbacks]  Whether or not to emit the `ionSlideWillChange`/`ionSlideDidChange` events. Default true.
      */
-    Slides.prototype.slidePrev = function (speed, runCallbacks) {
+    slidePrev(speed, runCallbacks) {
         this.swiper.slidePrev(runCallbacks, speed);
-    };
+    }
     /**
      * Get the index of the active slide.
      *
      * @returns {number} The index number of the current slide.
      */
-    Slides.prototype.getActiveIndex = function () {
+    getActiveIndex() {
         return this.swiper.activeIndex;
-    };
+    }
     /**
      * Get the index of the previous slide.
      *
      * @returns {number} The index number of the previous slide.
      */
-    Slides.prototype.getPreviousIndex = function () {
+    getPreviousIndex() {
         return this.swiper.previousIndex;
-    };
+    }
     /**
      * Get the total number of slides.
      *
      * @returns {number} The total number of slides.
      */
-    Slides.prototype.length = function () {
+    length() {
         return this.swiper.slides.length;
-    };
+    }
     /**
      * Get whether or not the current slide is the last slide.
      *
      * @returns {boolean} If the slide is the last slide or not.
      */
-    Slides.prototype.isEnd = function () {
+    isEnd() {
         return this.isEnd();
-    };
+    }
     /**
      * Get whether or not the current slide is the first slide.
      *
      * @returns {boolean} If the slide is the first slide or not.
      */
-    Slides.prototype.isBeginning = function () {
+    isBeginning() {
         return this.isBeginning();
-    };
+    }
     /**
      * Start auto play.
      */
-    Slides.prototype.startAutoplay = function () {
+    startAutoplay() {
         this.swiper.startAutoplay();
-    };
+    }
     /**
      * Stop auto play.
      */
-    Slides.prototype.stopAutoplay = function () {
+    stopAutoplay() {
         this.swiper.stopAutoplay();
-    };
+    }
     /**
      * Lock or unlock the ability to slide to the next slides.
      */
-    Slides.prototype.lockSwipeToNext = function (shouldLockSwipeToNext) {
+    lockSwipeToNext(shouldLockSwipeToNext) {
         if (shouldLockSwipeToNext) {
             return this.swiper.lockSwipeToNext();
         }
         this.swiper.unlockSwipeToNext();
-    };
+    }
     /**
      * Lock or unlock the ability to slide to the previous slides.
      */
-    Slides.prototype.lockSwipeToPrev = function (shouldLockSwipeToPrev) {
+    lockSwipeToPrev(shouldLockSwipeToPrev) {
         if (shouldLockSwipeToPrev) {
             return this.swiper.lockSwipeToPrev();
         }
         this.swiper.unlockSwipeToPrev();
-    };
+    }
     /**
      * Lock or unlock the ability to slide to change slides.
      */
-    Slides.prototype.lockSwipes = function (shouldLockSwipes) {
+    lockSwipes(shouldLockSwipes) {
         if (shouldLockSwipes) {
             return this.swiper.lockSwipes();
         }
         this.swiper.unlockSwipes();
-    };
+    }
     /**
      * Enable or disable keyboard control.
      */
-    Slides.prototype.enableKeyboardControl = function (shouldEnableKeyboard) {
+    enableKeyboardControl(shouldEnableKeyboard) {
         if (shouldEnableKeyboard) {
             return this.swiper.enableKeyboardControl();
         }
         this.swiper.disableKeyboardControl();
-    };
+    }
     /**
      * @hidden
      */
-    Slides.prototype["componentDidunload"] = function () {
+    componentDidUnload() {
         this._init = false;
         this.swiper.destroy(true, true);
         this.enableKeyboardControl(false);
-    };
-    return Slides;
-}());
-var slidesId = -1;
+    }
+}
+let slidesId = -1;
 
-exports['ION-SLIDE'] = Slide;
-exports['ION-SLIDES'] = Slides;
+exports['ion-slide'] = Slide;
+exports['ion-slides'] = Slides;
 },
 
 
 /***************** ion-slide *****************/
 [
 /** ion-slide: tag **/
-"ION-SLIDE",
+"ion-slide",
 
 /** ion-slide: members **/
 0 /* no members */,
@@ -5739,25 +5729,25 @@ exports['ION-SLIDES'] = Slides;
 /***************** ion-slides *****************/
 [
 /** ion-slides: tag **/
-"ION-SLIDES",
+"ion-slides",
 
 /** ion-slides: members **/
 [
-  [ "autoplay", /** prop **/ 1, /** type number **/ 2 ],
-  [ "control", /** prop **/ 1 ],
-  [ "direction", /** prop **/ 1 ],
-  [ "effect", /** prop **/ 1 ],
-  [ "el", /** element ref **/ 7 ],
-  [ "initialSlide", /** prop **/ 1, /** type number **/ 2 ],
-  [ "keyboardControl", /** prop **/ 1, /** type boolean **/ 1 ],
-  [ "loop", /** prop **/ 1, /** type boolean **/ 1 ],
-  [ "pager", /** prop **/ 1, /** type boolean **/ 1 ],
-  [ "paginationType", /** prop **/ 1 ],
-  [ "parallax", /** prop **/ 1, /** type boolean **/ 1 ],
-  [ "slidesPerView", /** prop **/ 1 ],
-  [ "spaceBetween", /** prop **/ 1, /** type number **/ 2 ],
-  [ "speed", /** prop **/ 1, /** type number **/ 2 ],
-  [ "zoom", /** prop **/ 1, /** type boolean **/ 1 ]
+  [ "autoplay", /** prop **/ 1, /** observe attribute **/ 1, /** type number **/ 4 ],
+  [ "control", /** prop **/ 1, /** observe attribute **/ 1, /** type any **/ 1 ],
+  [ "direction", /** prop **/ 1, /** observe attribute **/ 1, /** type any **/ 1 ],
+  [ "effect", /** prop **/ 1, /** observe attribute **/ 1, /** type string **/ 2 ],
+  [ "el", /** element ref **/ 7, /** do not observe attribute **/ 0, /** type any **/ 1 ],
+  [ "initialSlide", /** prop **/ 1, /** observe attribute **/ 1, /** type number **/ 4 ],
+  [ "keyboardControl", /** prop **/ 1, /** observe attribute **/ 1, /** type boolean **/ 3 ],
+  [ "loop", /** prop **/ 1, /** observe attribute **/ 1, /** type boolean **/ 3 ],
+  [ "pager", /** prop **/ 1, /** observe attribute **/ 1, /** type boolean **/ 3 ],
+  [ "paginationType", /** prop **/ 1, /** observe attribute **/ 1, /** type string **/ 2 ],
+  [ "parallax", /** prop **/ 1, /** observe attribute **/ 1, /** type boolean **/ 3 ],
+  [ "slidesPerView", /** prop **/ 1, /** observe attribute **/ 1, /** type any **/ 1 ],
+  [ "spaceBetween", /** prop **/ 1, /** observe attribute **/ 1, /** type number **/ 4 ],
+  [ "speed", /** prop **/ 1, /** observe attribute **/ 1, /** type number **/ 4 ],
+  [ "zoom", /** prop **/ 1, /** observe attribute **/ 1, /** type boolean **/ 3 ]
 ],
 
 /** ion-slides: host **/
@@ -5774,8 +5764,8 @@ exports['ION-SLIDES'] = Slides;
     /* event name ***/ "ionSlideDidChange"
   ],
   [
-    /*****  ion-slides ionSlideNextStarto ***** /
-    /* event name ***/ "ionSlideNextStarto"
+    /*****  ion-slides ionSlideNextStart ***** /
+    /* event name ***/ "ionSlideNextStart"
   ],
   [
     /*****  ion-slides ionSlidePrevStart ***** /
@@ -5820,4 +5810,4 @@ exports['ION-SLIDES'] = Slides;
 ]
 
 ]
-)
+);

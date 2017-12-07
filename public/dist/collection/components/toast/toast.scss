@@ -1,15 +1,7 @@
-@import "../../themes/ionic.globals";
-
+@import "./toast.vars";
 
 // Toast
 // --------------------------------------------------
-
-/// @prop - Width of the toast
-$toast-width:                             100% !default;
-
-/// @prop - Max width of the toast
-$toast-max-width:                         700px !default;
-
 
 ion-toast {
   @include position(0, null, null, 0);
@@ -39,9 +31,7 @@ ion-toast {
 }
 
 .toast-button {
-  @include padding(19px, 16px, 17px);
-
-  font-size: 1.5rem;
+  font-size: 15px;
 }
 
 .toast-message {

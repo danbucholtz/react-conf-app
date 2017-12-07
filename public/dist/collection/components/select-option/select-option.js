@@ -1,7 +1,8 @@
-var SelectOption = /** @class */ (function () {
-    function SelectOption() {
+import { EventEmitter } from '@stencil/core';
+export class SelectOption {
+    constructor() {
         /**
-         * @input {boolean} If true, the user cannot interact with this element.
+         * @input {boolean} If true, the user cannot interact with the select option.
          */
         this.disabled = false;
         /**
@@ -9,12 +10,10 @@ var SelectOption = /** @class */ (function () {
          */
         this.selected = false;
     }
-    SelectOption.prototype.getText = function () {
+    getText() {
         return this.el.textContent || '';
-    };
-    SelectOption.prototype.render = function () {
-        return h(0, 0);
-    };
-    return SelectOption;
-}());
-export { SelectOption };
+    }
+    render() {
+        return h("slot", null);
+    }
+}

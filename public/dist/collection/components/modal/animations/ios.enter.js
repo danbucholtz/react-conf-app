@@ -1,11 +1,12 @@
+import { Animation } from '../../../index';
 /**
  * iOS Modal Enter Animation
  */
-export default function (Animation, baseElm) {
-    var baseAnimation = new Animation();
-    var backdropAnimation = new Animation();
+export default function iosEnterAnimation(Animation, baseElm) {
+    const baseAnimation = new Animation();
+    const backdropAnimation = new Animation();
     backdropAnimation.addElement(baseElm.querySelector('.modal-backdrop'));
-    var wrapperAnimation = new Animation();
+    const wrapperAnimation = new Animation();
     wrapperAnimation.addElement(baseElm.querySelector('.modal-wrapper'));
     wrapperAnimation.beforeStyles({ 'opacity': 1 })
         .fromTo('translateY', '100%', '0%');
@@ -24,9 +25,9 @@ export default function (Animation, baseElm) {
 // export function modalSlideIn(rootElm: HTMLElement) {
 // }
 // export class ModalSlideOut {
-//   constructor(ele: HTMLElement) {
-//     let backdrop = new Animation(this.plt, ele.querySelector('ion-backdrop'));
-//     let wrapperEle = <HTMLElement>ele.querySelector('.modal-wrapper');
+//   constructor(el: HTMLElement) {
+//     let backdrop = new Animation(this.plt, el.querySelector('ion-backdrop'));
+//     let wrapperEle = <HTMLElement>el.querySelector('.modal-wrapper');
 //     let wrapperEleRect = wrapperEle.getBoundingClientRect();
 //     let wrapper = new Animation(this.plt, wrapperEle);
 //     // height of the screen - top of the container tells us how much to scoot it down
@@ -42,9 +43,9 @@ export default function (Animation, baseElm) {
 //   }
 // }
 // export class ModalMDSlideIn {
-//   constructor(ele: HTMLElement) {
-//     const backdrop = new Animation(this.plt, ele.querySelector('ion-backdrop'));
-//     const wrapper = new Animation(this.plt, ele.querySelector('.modal-wrapper'));
+//   constructor(el: HTMLElement) {
+//     const backdrop = new Animation(this.plt, el.querySelector('ion-backdrop'));
+//     const wrapper = new Animation(this.plt, el.querySelector('.modal-wrapper'));
 //     backdrop.fromTo('opacity', 0.01, 0.4);
 //     wrapper.fromTo('translateY', '40px', '0px');
 //     wrapper.fromTo('opacity', 0.01, 1);
@@ -56,9 +57,9 @@ export default function (Animation, baseElm) {
 //   }
 // }
 // export class ModalMDSlideOut {
-//   constructor(ele: HTMLElement) {
-//     const backdrop = new Animation(this.plt, ele.querySelector('ion-backdrop'));
-//     const wrapper = new Animation(this.plt, ele.querySelector('.modal-wrapper'));
+//   constructor(el: HTMLElement) {
+//     const backdrop = new Animation(this.plt, el.querySelector('ion-backdrop'));
+//     const wrapper = new Animation(this.plt, el.querySelector('.modal-wrapper'));
 //     backdrop.fromTo('opacity', 0.4, 0.0);
 //     wrapper.fromTo('translateY', '0px', '40px');
 //     wrapper.fromTo('opacity', 0.99, 0);

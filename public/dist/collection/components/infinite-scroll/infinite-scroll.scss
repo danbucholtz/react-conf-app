@@ -1,0 +1,63 @@
+@import "./infinite-scroll.vars";
+
+// Infinite Scroll
+// --------------------------------------------------
+
+ion-infinite-scroll {
+  display: none;
+
+  width: 100%;
+}
+
+.infinite-scroll-enabled {
+  display: block;
+}
+
+
+// Infinite Scroll Content
+// --------------------------------------------------
+
+ion-infinite-scroll-content {
+  @include text-align(center);
+
+  display: flex;
+
+  flex-direction: column;
+  justify-content: center;
+
+  min-height: $infinite-scroll-content-min-height;
+}
+
+.infinite-loading {
+  @include margin($infinite-scroll-loading-margin-top, $infinite-scroll-loading-margin-end, $infinite-scroll-loading-margin-bottom, $infinite-scroll-loading-margin-start);
+
+  display: none;
+
+  width: 100%;
+}
+
+
+.infinite-loading-text {
+  @include margin($infinite-scroll-loading-text-margin-top, $infinite-scroll-loading-text-margin-end, $infinite-scroll-loading-text-margin-bottom, $infinite-scroll-loading-text-margin-start);
+
+  color: $infinite-scroll-loading-text-color;
+}
+
+.infinite-loading-spinner .spinner-ios line,
+.infinite-loading-spinner .spinner-ios-small line,
+.infinite-loading-spinner .spinner-crescent circle {
+  stroke: $infinite-scroll-loading-color;
+}
+
+.infinite-loading-spinner .spinner-bubbles circle,
+.infinite-loading-spinner .spinner-circles circle,
+.infinite-loading-spinner .spinner-dots circle {
+  fill: $infinite-scroll-loading-color;
+}
+
+
+// Infinite Scroll Content States
+// --------------------------------------------------
+.infinite-scroll-loading ion-infinite-scroll-content > .infinite-loading {
+  display: block;
+}

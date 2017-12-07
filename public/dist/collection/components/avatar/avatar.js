@@ -1,9 +1,5 @@
-var Avatar = /** @class */ (function () {
-    function Avatar() {
+export class Avatar {
+    render() {
+        return h("slot", null);
     }
-    Avatar.prototype.render = function () {
-        return h(0, 0);
-    };
-    return Avatar;
-}());
-export { Avatar };
+}

@@ -1,11 +1,13 @@
+import { Config } from '../index';
+import { PlatformConfig } from './platform-configs';
 export function createConfigController(configObj, platforms) {
     configObj = configObj || {};
     function get(key, fallback) {
         if (configObj[key] !== undefined) {
             return configObj[key];
         }
-        var settings = null;
-        for (var i = 0; i < platforms.length; i++) {
+        let settings = null;
+        for (let i = 0; i < platforms.length; i++) {
             settings = platforms[i]['settings'];
             if (settings && settings[key] !== undefined) {
                 return settings[key];
@@ -14,7 +16,7 @@ export function createConfigController(configObj, platforms) {
         return fallback !== undefined ? fallback : null;
     }
     function getBoolean(key, fallback) {
-        var val = get(key);
+        const val = get(key);
         if (val === null) {
             return fallback !== undefined ? fallback : false;
         }
@@ -24,7 +26,7 @@ export function createConfigController(configObj, platforms) {
         return !!val;
     }
     function getNumber(key, fallback) {
-        var val = parseFloat(get(key));
+        const val = parseFloat(get(key));
         return isNaN(val) ? (fallback !== undefined ? fallback : NaN) : val;
     }
     return {

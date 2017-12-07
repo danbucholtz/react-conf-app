@@ -1,11 +1,12 @@
+import { Animation } from '../../../index';
 /**
  * iOS Action Sheet Enter Animation
  */
-export default function (Animation, baseElm) {
-    var baseAnimation = new Animation();
-    var backdropAnimation = new Animation();
+export default function iosEnterAnimation(Animation, baseElm) {
+    const baseAnimation = new Animation();
+    const backdropAnimation = new Animation();
     backdropAnimation.addElement(baseElm.querySelector('.action-sheet-backdrop'));
-    var wrapperAnimation = new Animation();
+    const wrapperAnimation = new Animation();
     wrapperAnimation.addElement(baseElm.querySelector('.action-sheet-wrapper'));
     backdropAnimation.fromTo('opacity', 0.01, 0.4);
     wrapperAnimation.fromTo('translateY', '100%', '0%');

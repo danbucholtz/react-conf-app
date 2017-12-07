@@ -1,26 +1,27 @@
+import { AnimationOptions, Transition, ViewController } from '../../index';
 import { canNavGoBack } from '../nav-utils';
 import { isDef } from '../../utils/helpers';
-var DURATION = 500;
-var EASING = 'cubic-bezier(0.36,0.66,0.04,1)';
-var OPACITY = 'opacity';
-var TRANSFORM = 'transform';
-var TRANSLATEX = 'translateX';
-var CENTER = '0%';
-var OFF_OPACITY = 0.8;
-var SHOW_BACK_BTN_CSS = 'show-back-button';
+const DURATION = 500;
+const EASING = 'cubic-bezier(0.36,0.66,0.04,1)';
+const OPACITY = 'opacity';
+const TRANSFORM = 'transform';
+const TRANSLATEX = 'translateX';
+const CENTER = '0%';
+const OFF_OPACITY = 0.8;
+const SHOW_BACK_BTN_CSS = 'show-back-button';
 export function buildIOSTransition(rootTransition, enteringView, leavingView, opts) {
     rootTransition.enteringView = enteringView;
     rootTransition.leavingView = leavingView;
-    var isRTL = document.dir === 'rtl';
-    var OFF_RIGHT = isRTL ? '-99.5%' : '99.5%';
-    var OFF_LEFT = isRTL ? '33%' : '-33%';
+    const isRTL = document.dir === 'rtl';
+    const OFF_RIGHT = isRTL ? '-99.5%' : '99.5%';
+    const OFF_LEFT = isRTL ? '33%' : '-33%';
     rootTransition.duration(isDef(opts.duration) ? opts.duration : DURATION);
     rootTransition.easing(isDef(opts.easing) ? opts.easing : EASING);
     rootTransition.addElement(enteringView.element);
-    rootTransition.beforeAddClass('show-page');
-    var backDirection = (opts.direction === 'back');
+    rootTransition.beforeRemoveClass('hide-page');
+    const backDirection = (opts.direction === 'back');
     if (enteringView) {
-        var enteringContent = rootTransition.create();
+        const enteringContent = rootTransition.create();
         enteringContent.addElement(enteringView.element.querySelectorAll('ion-header > *:not(ion-navbar),ion-footer > *'));
         rootTransition.add(enteringContent);
         if (backDirection) {
@@ -30,18 +31,18 @@ export function buildIOSTransition(rootTransition, enteringView, leavingView, op
             // entering content, forward direction
             enteringContent.beforeClearStyles([OPACITY]).fromTo(TRANSLATEX, OFF_RIGHT, CENTER, true);
         }
-        var enteringNavbarEle = enteringView.element.querySelector('ion-navbar');
+        const enteringNavbarEle = enteringView.element.querySelector('ion-navbar');
         if (enteringNavbarEle) {
-            var enteringNavBar = rootTransition.create();
+            const enteringNavBar = rootTransition.create();
             enteringNavBar.addElement(enteringNavbarEle);
             rootTransition.add(enteringNavBar);
-            var enteringTitle = rootTransition.create();
+            const enteringTitle = rootTransition.create();
             enteringTitle.addElement(enteringNavbarEle.querySelector('ion-title'));
-            var enteringNavbarItems = rootTransition.create();
+            const enteringNavbarItems = rootTransition.create();
             enteringNavbarItems.addElement(enteringNavbarEle.querySelectorAll('ion-buttons,[menuToggle]'));
-            var enteringNavbarBg = rootTransition.create();
+            const enteringNavbarBg = rootTransition.create();
             enteringNavbarBg.addElement(enteringNavbarEle.querySelector('.toolbar-background'));
-            var enteringBackButton = rootTransition.create();
+            const enteringBackButton = rootTransition.create();
             enteringBackButton.addElement(enteringNavbarEle.querySelector('.back-button'));
             enteringNavBar
                 .add(enteringTitle)
@@ -64,7 +65,7 @@ export function buildIOSTransition(rootTransition, enteringView, leavingView, op
                 if (canNavGoBack(enteringView.nav)) {
                     // forward direction, entering page has a back button
                     enteringBackButton.beforeAddClass(SHOW_BACK_BTN_CSS).fromTo(OPACITY, 0.01, 1, true);
-                    var enteringBackBtnText = rootTransition.create();
+                    const enteringBackBtnText = rootTransition.create();
                     enteringBackBtnText.addElement(enteringNavbarEle.querySelector('.back-button-text'));
                     enteringBackBtnText.fromTo(TRANSLATEX, (isRTL ? '-100px' : '100px'), '0px');
                     enteringNavBar.add(enteringBackBtnText);
@@ -77,7 +78,7 @@ export function buildIOSTransition(rootTransition, enteringView, leavingView, op
     }
     // setup leaving view
     if (leavingView) {
-        var leavingContent = rootTransition.create();
+        const leavingContent = rootTransition.create();
         leavingContent.addElement(leavingView.element);
         leavingContent.addElement(leavingView.element.querySelectorAll('ion-header > *:not(ion-navbar),ion-footer > *'));
         rootTransition.add(leavingContent);
@@ -92,17 +93,17 @@ export function buildIOSTransition(rootTransition, enteringView, leavingView, op
                 .fromTo(OPACITY, 1, OFF_OPACITY)
                 .afterClearStyles([TRANSFORM, OPACITY]);
         }
-        var leavingNavbarEle = leavingView.element.querySelector('ion-navbar');
+        const leavingNavbarEle = leavingView.element.querySelector('ion-navbar');
         if (leavingNavbarEle) {
-            var leavingNavBar = rootTransition.create();
+            const leavingNavBar = rootTransition.create();
             leavingNavBar.addElement(leavingNavbarEle);
-            var leavingTitle = rootTransition.create();
+            const leavingTitle = rootTransition.create();
             leavingTitle.addElement(leavingNavbarEle.querySelector('ion-title'));
-            var leavingNavbarItems = rootTransition.create();
+            const leavingNavbarItems = rootTransition.create();
             leavingNavbarItems.addElement(leavingNavbarEle.querySelectorAll('ion-buttons,[menuToggle]'));
-            var leavingNavbarBg = rootTransition.create();
+            const leavingNavbarBg = rootTransition.create();
             leavingNavbarBg.addElement(leavingNavbarEle.querySelector('.toolbar-background'));
-            var leavingBackButton = rootTransition.create();
+            const leavingBackButton = rootTransition.create();
             leavingBackButton.addElement(leavingNavbarEle.querySelector('.back-button'));
             leavingNavBar
                 .add(leavingTitle)
@@ -122,7 +123,7 @@ export function buildIOSTransition(rootTransition, enteringView, leavingView, op
                 leavingNavbarBg
                     .beforeClearStyles([OPACITY])
                     .fromTo(TRANSLATEX, CENTER, (isRTL ? '-100%' : '100%'));
-                var leavingBackBtnText = rootTransition.create();
+                const leavingBackBtnText = rootTransition.create();
                 leavingBackBtnText.addElement(leavingNavbarEle.querySelector('.back-button-text'));
                 leavingBackBtnText.fromTo(TRANSLATEX, CENTER, (isRTL ? -300 : 300) + 'px');
                 leavingNavBar.add(leavingBackBtnText);

@@ -1,11 +1,10 @@
 @import "../../themes/ionic.globals";
 
-
 // Card Header
 // --------------------------------------------------
 
-
 ion-card-header {
+  position: relative;
   display: block;
   overflow: hidden;
 

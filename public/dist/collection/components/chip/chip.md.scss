@@ -1,57 +1,13 @@
-@import "../../themes/ionic.globals.md";
 @import "./chip";
+@import "./chip.md.vars";
 
 // Material Design Chip
 // --------------------------------------------------
 
-/// @prop - Margin top of the chip
-$chip-md-margin-top:                       2px !default;
-
-/// @prop - Margin end of the chip
-$chip-md-margin-end:                       0 !default;
-
-/// @prop - Margin bottom of the chip
-$chip-md-margin-bottom:                    $chip-md-margin-top !default;
-
-/// @prop - Margin start of the chip
-$chip-md-margin-start:                     $chip-md-margin-end !default;
-
-/// @prop - Height of the chip
-$chip-md-height:                           32px !default;
-
-/// @prop - Border radius of the chip
-$chip-md-border-radius:                    16px !default;
-
-/// @prop - Font size of the chip
-$chip-md-font-size:                        13px !default;
-
-/// @prop - Text color of the chip
-$chip-md-text-color:                       rgba(0, 0, 0, .87) !default;
-
-/// @prop - Background color of the chip
-$chip-md-background-color:                 rgba(0, 0, 0, .12) !default;
-
-/// @prop - Margin top of the label in the chip
-$chip-md-label-margin-top:                 0 !default;
-
-/// @prop - Margin end of the label in the chip
-$chip-md-label-margin-end:                 10px !default;
-
-/// @prop - Margin bottom of the label in the chip
-$chip-md-label-margin-bottom:              $chip-md-label-margin-top !default;
-
-/// @prop - Margin start of the label in the chip
-$chip-md-label-margin-start:               $chip-md-label-margin-end !default;
-
-/// @prop - Background color of the icon in the chip
-$chip-md-icon-background-color:            color($colors-md, primary) !default;
-
-/// @prop - Fill color of the icon in the chip
-$chip-md-icon-fill-color:                  color-contrast($colors-md, $chip-md-icon-background-color) !default;
-
-
 .chip-md {
   @include border-radius($chip-md-border-radius);
+
+  @include margin($chip-md-margin-top, $chip-md-margin-end, $chip-md-margin-bottom, $chip-md-margin-start);
 
   height: $chip-md-height;
 
@@ -59,8 +15,6 @@ $chip-md-icon-fill-color:                  color-contrast($colors-md, $chip-md-i
   line-height: $chip-md-height;
   color: $chip-md-text-color;
   background: $chip-md-background-color;
-
-  @include margin($chip-md-margin-top, $chip-md-margin-end, $chip-md-margin-bottom, $chip-md-margin-start);
 }
 
 .chip-md > ion-label {
@@ -68,8 +22,14 @@ $chip-md-icon-fill-color:                  color-contrast($colors-md, $chip-md-i
 }
 
 .chip-md > ion-icon {
-  fill: $chip-md-icon-fill-color;
   background-color: $chip-md-icon-background-color;
+
+  fill: $chip-md-icon-fill-color;
+}
+
+.chip-md ion-avatar {
+  width: $chip-md-avatar-width;
+  height: $chip-md-avatar-height;
 }
 
 
@@ -84,8 +44,9 @@ $chip-md-icon-fill-color:                  color-contrast($colors-md, $chip-md-i
   }
 
   .chip-md .icon-md-#{$color-name} {
-    fill: $color-contrast;
     background-color: $color-base;
+
+    fill: $color-contrast;
   }
 
 }

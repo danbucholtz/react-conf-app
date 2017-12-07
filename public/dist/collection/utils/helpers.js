@@ -1,3 +1,7 @@
+import { Animation, DomController, StencilElement } from '../index';
+export function clamp(min, n, max) {
+    return Math.max(min, Math.min(n, max));
+}
 export function isDef(v) { return v !== undefined && v !== null; }
 export function isUndef(v) { return v === undefined || v === null; }
 export function isArray(v) { return Array.isArray(v); }
@@ -7,14 +11,31 @@ export function isString(v) { return typeof v === 'string'; }
 export function isNumber(v) { return typeof v === 'number'; }
 export function isFunction(v) { return typeof v === 'function'; }
 export function isStringOrNumber(v) { return isString(v) || isNumber(v); }
+export function isBlank(val) { return val === undefined || val === null; }
+/** @hidden */
+export function isCheckedProperty(a, b) {
+    if (a === undefined || a === null || a === '') {
+        return (b === undefined || b === null || b === '');
+    }
+    else if (a === true || a === 'true') {
+        return (b === true || b === 'true');
+    }
+    else if (a === false || a === 'false') {
+        return (b === false || b === 'false');
+    }
+    else if (a === 0 || a === '0') {
+        return (b === 0 || b === '0');
+    }
+    // not using strict comparison on purpose
+    return (a == b); // tslint:disable-line
+}
 export function assert(bool, msg) {
     if (!bool) {
         console.error(msg);
     }
 }
-;
 export function toDashCase(str) {
-    return str.replace(/([A-Z])/g, function (g) { return '-' + g[0].toLowerCase(); });
+    return str.replace(/([A-Z])/g, (g) => '-' + g[0].toLowerCase());
 }
 export function noop() { }
 export function pointerCoordX(ev) {
@@ -30,6 +51,26 @@ export function pointerCoordX(ev) {
         }
     }
     return 0;
+}
+export function updateDetail(ev, detail) {
+    // get X coordinates for either a mouse click
+    // or a touch depending on the given event
+    let x = 0;
+    let y = 0;
+    if (ev) {
+        var changedTouches = ev.changedTouches;
+        if (changedTouches && changedTouches.length > 0) {
+            var touch = changedTouches[0];
+            x = touch.clientX;
+            y = touch.clientY;
+        }
+        else if (ev.pageX !== undefined) {
+            x = ev.pageX;
+            y = ev.pageY;
+        }
+    }
+    detail.currentX = x;
+    detail.currentY = y;
 }
 export function pointerCoordY(ev) {
     // get Y coordinates for either a mouse click
@@ -74,28 +115,32 @@ export function getParentElement(elm) {
     }
     return null;
 }
+export function getPageElement(el) {
+    const tabs = el.closest('ion-tabs');
+    if (tabs) {
+        return tabs;
+    }
+    const page = el.closest('ion-page,.ion-page,page-inner');
+    if (page) {
+        return page;
+    }
+    return getParentElement(el);
+}
 export function applyStyles(elm, styles) {
-    var styleProps = Object.keys(styles);
+    const styleProps = Object.keys(styles);
     if (elm) {
         for (var i = 0; i < styleProps.length; i++) {
             elm.style[styleProps[i]] = styles[styleProps[i]];
         }
     }
 }
-export function getToolbarHeight(toolbarTagName, pageChildren, mode, iosHeight, defaultHeight) {
-    for (var i = 0; i < pageChildren.length; i++) {
-        if (pageChildren[i].tagName === toolbarTagName) {
-            var headerHeight = pageChildren[i].getAttribute(mode + "-height");
-            if (headerHeight) {
-                return headerHeight;
-            }
-            if (mode === 'ios') {
-                return iosHeight;
-            }
-            return defaultHeight;
-        }
+export function checkEdgeSide(posX, isRightSide, maxEdgeStart) {
+    if (isRightSide) {
+        return posX >= window.innerWidth - maxEdgeStart;
     }
-    return '';
+    else {
+        return posX <= maxEdgeStart;
+    }
 }
 /**
  * @hidden
@@ -105,8 +150,8 @@ export function getToolbarHeight(toolbarTagName, pageChildren, mode, iosHeight, 
  * @param isRTL whether the application dir is rtl
  * @param defaultRight whether the default side is right
  */
-export function isRightSide(side, isRTL, defaultRight) {
-    if (defaultRight === void 0) { defaultRight = false; }
+export function isRightSide(side, defaultRight = false) {
+    const isRTL = document.dir === 'rtl';
     switch (side) {
         case 'right': return true;
         case 'left': return false;
@@ -134,18 +179,14 @@ export function swipeShouldReset(isResetDirection, isMovingFast, isOnResetZone) 
     return (!isMovingFast && isOnResetZone) || (isResetDirection && isMovingFast);
 }
 export function isReady(element) {
-    return new Promise(function (resolve) {
-        element.componentOnReady(function (elm) {
-            resolve(elm);
-        });
-    });
+    return element.componentOnReady();
 }
 export function getOrAppendElement(tagName) {
-    var element = document.querySelector(tagName);
+    const element = document.querySelector(tagName);
     if (element) {
         return element;
     }
-    var tmp = document.createElement(tagName);
+    const tmp = document.createElement(tagName);
     document.body.appendChild(tmp);
     return tmp;
 }
@@ -163,20 +204,45 @@ export function getActiveElement() {
     return getDocument()['activeElement'];
 }
 export function focusOutActiveElement() {
-    var activeElement = getActiveElement();
+    const activeElement = getActiveElement();
     activeElement && activeElement.blur && activeElement.blur();
 }
-export function isTextInput(ele) {
-    return !!ele &&
-        (ele.tagName === 'TEXTAREA'
-            || ele.contentEditable === 'true'
-            || (ele.tagName === 'INPUT' && !(NON_TEXT_INPUT_REGEX.test(ele.type))));
+export function isTextInput(el) {
+    return !!el &&
+        (el.tagName === 'TEXTAREA'
+            || el.contentEditable === 'true'
+            || (el.tagName === 'INPUT' && !(NON_TEXT_INPUT_REGEX.test(el.type))));
 }
-export var NON_TEXT_INPUT_REGEX = /^(radio|checkbox|range|file|submit|reset|color|image|button)$/i;
+export const NON_TEXT_INPUT_REGEX = /^(radio|checkbox|range|file|submit|reset|color|image|button)$/i;
 export function hasFocusedTextInput() {
-    var activeElement = getActiveElement();
+    const activeElement = getActiveElement();
     if (isTextInput(activeElement)) {
         return activeElement.parentElement.querySelector(':focus') === activeElement;
     }
     return false;
+}
+/**
+ * @private
+ */
+export function reorderArray(array, indexes) {
+    const element = array[indexes.from];
+    array.splice(indexes.from, 1);
+    array.splice(indexes.to, 0, element);
+    return array;
+}
+export function playAnimationAsync(animation) {
+    return new Promise((resolve) => {
+        animation.onFinish((ani) => {
+            resolve(ani);
+        });
+        animation.play();
+    });
+}
+export function domControllerAsync(domControllerFunction, callback) {
+    return new Promise((resolve) => {
+        domControllerFunction(() => {
+            callback();
+            resolve();
+        });
+    });
 }

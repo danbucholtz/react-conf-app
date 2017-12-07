@@ -2,36 +2,102 @@
   "namespace": "Ionic",
   "components": [
     [
-      "ION-ACTION-SHEET",
       "ion-action-sheet",
       {
-        "ios": "ios.ion-action-sheet",
-        "md": "md.ion-action-sheet",
-        "wp": "wp.ion-action-sheet"
+        "ios": [
+          "ion-action-sheet.ios",
+          null
+        ],
+        "md": [
+          "ion-action-sheet.md",
+          null
+        ]
       },
+      1,
       [
         [
-          "cssClass",
-          1
+          "animate",
+          1,
+          1,
+          3
         ],
         [
-          "enableBackdropDismiss",
+          "animationCtrl",
+          4,
+          0,
+          0,
+          "ion-animation-controller"
+        ],
+        [
+          "buttons",
+          1,
           1,
           1
         ],
         [
-          "id",
+          "config",
+          3,
+          0,
+          0,
+          "config"
+        ],
+        [
+          "cssClass",
+          1,
+          1,
+          2
+        ],
+        [
+          "dismiss",
+          6
+        ],
+        [
+          "el",
+          7
+        ],
+        [
+          "enableBackdropDismiss",
+          1,
+          1,
+          3
+        ],
+        [
+          "enterAnimation",
+          1,
+          1,
           1
+        ],
+        [
+          "leaveAnimation",
+          1,
+          1,
+          1
+        ],
+        [
+          "present",
+          6
         ],
         [
           "subTitle",
-          1
+          1,
+          1,
+          2
         ],
         [
           "title",
-          1
+          1,
+          1,
+          2
+        ],
+        [
+          "translucent",
+          1,
+          1,
+          3
         ]
       ],
+      0,
+      0,
       [
         [
           "ionDismiss",
@@ -40,373 +106,731 @@
       ]
     ],
     [
-      "ION-ACTION-SHEET-CONTROLLER",
-      "ion-action-sheet",
+      "ion-action-sheet-controller",
       {
-        "ios": "ios.ion-action-sheet",
-        "md": "md.ion-action-sheet",
-        "wp": "wp.ion-action-sheet"
+        "ios": [
+          "ion-action-sheet.ios",
+          null
+        ],
+        "md": [
+          "ion-action-sheet.md",
+          null
+        ]
       },
       0,
       [
         [
+          "create",
+          6
+        ]
+      ],
+      0,
+      0,
+      [
+        [
           "body:ionActionSheetDidLoad",
-          "viewDidLoad"
-        ],
-        [
-          "body:ionActionSheetDidUnload",
-          "willDismiss"
-        ],
-        [
-          "body:ionActionSheetWillDismiss",
-          "willDismiss"
+          "didLoad"
         ],
         [
           "body:ionActionSheetWillPresent",
           "willPresent"
         ],
         [
+          "body:ionActionSheetWillDismiss",
+          "willDismiss"
+        ],
+        [
+          "body:ionActionSheetDidUnload",
+          "willDismiss"
+        ],
+        [
           "body:keyup.escape",
           "escapeKeyUp"
         ]
       ]
     ],
     [
-      "ION-ALERT",
       "ion-alert",
       {
-        "ios": "ios.ion-alert",
-        "md": "md.ion-alert",
-        "wp": "wp.ion-alert"
+        "ios": [
+          "ion-alert.ios",
+          null
+        ],
+        "md": [
+          "ion-alert.md",
+          null
+        ]
       },
+      1,
       [
         [
-          "cssClass",
-          1
+          "animate",
+          1,
+          1,
+          3
         ],
         [
-          "enableBackdropDismiss",
+          "animationCtrl",
+          4,
+          0,
+          0,
+          "ion-animation-controller"
+        ],
+        [
+          "buttons",
+          1,
           1,
           1
         ],
         [
-          "id",
+          "config",
+          3,
+          0,
+          0,
+          "config"
+        ],
+        [
+          "cssClass",
+          1,
+          1,
+          2
+        ],
+        [
+          "dismiss",
+          6
+        ],
+        [
+          "el",
+          7
+        ],
+        [
+          "enableBackdropDismiss",
+          1,
+          1,
+          3
+        ],
+        [
+          "enterAnimation",
+          1,
+          1,
+          1
+        ],
+        [
+          "inputs",
+          2,
+          1,
+          1
+        ],
+        [
+          "leaveAnimation",
+          1,
+          1,
           1
         ],
         [
           "message",
-          1
+          1,
+          1,
+          2
+        ],
+        [
+          "present",
+          6
         ],
         [
           "subTitle",
-          1
+          1,
+          1,
+          2
         ],
         [
           "title",
-          1
-        ]
-      ],
-      [
+          1,
+          1,
+          2
+        ],
         [
-          "ionDismiss",
-          "onDismiss"
+          "translucent",
+          1,
+          1,
+          3
         ]
       ]
     ],
     [
-      "ION-ALERT-CONTROLLER",
-      "ion-alert",
+      "ion-alert-controller",
       {
-        "ios": "ios.ion-alert",
-        "md": "md.ion-alert",
-        "wp": "wp.ion-alert"
+        "ios": [
+          "ion-alert.ios",
+          null
+        ],
+        "md": [
+          "ion-alert.md",
+          null
+        ]
       },
       0,
       [
         [
+          "create",
+          6
+        ]
+      ],
+      0,
+      0,
+      [
+        [
           "body:ionAlertDidLoad",
-          "viewDidLoad"
-        ],
-        [
-          "body:ionAlertDidUnload",
-          "willDismiss"
-        ],
-        [
-          "body:ionAlertWillDismiss",
-          "willDismiss"
+          "didLoad"
         ],
         [
           "body:ionAlertWillPresent",
           "willPresent"
         ],
         [
+          "body:ionAlertWillDismiss",
+          "willDismiss"
+        ],
+        [
+          "body:ionAlertDidUnload",
+          "willDismiss"
+        ],
+        [
           "body:keyup.escape",
           "escapeKeyUp"
         ]
       ]
     ],
     [
-      "ION-ANIMATION-CONTROLLER",
-      "ion-animation-controller"
+      "ion-animation-controller",
+      [
+        "ion-animation-controller",
+        null
+      ],
+      0,
+      [
+        [
+          "create",
+          6
+        ]
+      ]
     ],
     [
-      "ION-APP",
       "ion-app",
       {
-        "$": "ion-app",
-        "ios": "ios.ion-app",
-        "md": "md.ion-app",
-        "wp": "wp.ion-app"
+        "ios": [
+          "ion-app.ios",
+          null
+        ],
+        "md": [
+          "ion-app.md",
+          null
+        ]
       },
+      1,
+      [
+        [
+          "config",
+          3,
+          0,
+          0,
+          "config"
+        ],
+        [
+          "element",
+          7
+        ],
+        [
+          "getActiveNavs",
+          6
+        ],
+        [
+          "getNavByIdOrName",
+          6
+        ],
+        [
+          "getRootNavs",
+          6
+        ],
+        [
+          "hoverCSS",
+          5
+        ],
+        [
+          "isScrolling",
+          6
+        ],
+        [
+          "modeCode",
+          5
+        ],
+        [
+          "useRouter",
+          5
+        ]
+      ],
       0,
+      1,
       [
         [
           "body:navInit",
           "registerRootNav"
-        ],
-        [
-          "body:registerPortal",
-          "registerPortal"
         ]
+      ]
+    ],
+    [
+      "ion-avatar",
+      {
+        "ios": [
+          "ion-avatar.ios",
+          null
+        ],
+        "md": [
+          "ion-avatar.md",
+          null
+        ]
+      },
+      1,
+      0,
+      0,
+      1
+    ],
+    [
+      "ion-backdrop",
+      [
+        "ion-backdrop",
+        null
       ],
       1
     ],
     [
-      "ION-AVATAR",
-      "ion-avatar",
+      "ion-badge",
       {
-        "ios": "ios.ion-avatar",
-        "md": "md.ion-avatar",
-        "wp": "wp.ion-avatar"
+        "ios": [
+          "ion-avatar.ios",
+          null
+        ],
+        "md": [
+          "ion-avatar.md",
+          null
+        ]
       },
-      0,
-      0,
-      1
-    ],
-    [
-      "ION-BACKDROP",
-      "ion-backdrop",
-      {
-        "$": "ion-backdrop"
-      }
-    ],
-    [
-      "ION-BADGE",
-      "ion-avatar",
-      {
-        "ios": "ios.ion-avatar",
-        "md": "md.ion-avatar",
-        "wp": "wp.ion-avatar"
-      },
-      0,
-      0,
-      1
-    ],
-    [
-      "ION-BUTTON",
-      "ion-button",
-      {
-        "ios": "ios.ion-button",
-        "md": "md.ion-button",
-        "wp": "wp.ion-button"
-      },
+      1,
       [
         [
-          "block",
+          "color",
+          1,
+          1,
+          2
+        ],
+        [
+          "mode",
+          1,
           1,
           1
+        ]
+      ],
+      0,
+      1
+    ],
+    [
+      "ion-button",
+      {
+        "ios": [
+          "ion-button.ios",
+          null
         ],
+        "md": [
+          "ion-button.md",
+          null
+        ]
+      },
+      1,
+      [
         [
           "buttonType",
-          1
+          1,
+          1,
+          2
         ],
         [
-          "clear",
+          "color",
           1,
-          1
-        ],
-        [
-          "default",
           1,
-          1
+          2
         ],
         [
           "disabled",
           1,
+          1,
+          3
+        ],
+        [
+          "el",
+          7
+        ],
+        [
+          "expand",
+          1,
+          1,
           1
         ],
         [
-          "full",
+          "fill",
+          1,
           1,
           1
         ],
         [
           "href",
-          1
+          1,
+          1,
+          2
         ],
         [
           "itemButton",
           1,
-          1
-        ],
-        [
-          "large",
           1,
-          1
+          3
         ],
         [
-          "outline",
+          "mode",
+          1,
           1,
           1
         ],
         [
           "round",
           1,
-          1
-        ],
-        [
-          "small",
           1,
-          1
+          3
         ],
         [
-          "solid",
+          "size",
+          1,
           1,
           1
         ],
         [
           "strong",
           1,
-          1
+          1,
+          3
         ]
       ],
       0,
       2
     ],
     [
-      "ION-BUTTONS",
-      "ion-button",
+      "ion-buttons",
       {
-        "ios": "ios.ion-button",
-        "md": "md.ion-button",
-        "wp": "wp.ion-button"
+        "ios": [
+          "ion-button.ios",
+          null
+        ],
+        "md": [
+          "ion-button.md",
+          null
+        ]
       },
       0,
+      [
+        [
+          "el",
+          7
+        ]
+      ],
       0,
       1
     ],
     [
-      "ION-CARD",
       "ion-card",
       {
-        "ios": "ios.ion-card",
-        "md": "md.ion-card",
-        "wp": "wp.ion-card"
+        "ios": [
+          "ion-card.ios",
+          null
+        ],
+        "md": [
+          "ion-card.md",
+          null
+        ]
       },
-      0,
+      1,
+      [
+        [
+          "color",
+          1,
+          1,
+          2
+        ],
+        [
+          "mode",
+          1,
+          1,
+          1
+        ]
+      ],
       0,
       1
     ],
     [
-      "ION-CARD-CONTENT",
-      "ion-card",
+      "ion-card-content",
       {
-        "ios": "ios.ion-card",
-        "md": "md.ion-card",
-        "wp": "wp.ion-card"
+        "ios": [
+          "ion-card.ios",
+          null
+        ],
+        "md": [
+          "ion-card.md",
+          null
+        ]
       },
-      0,
+      1,
+      [
+        [
+          "color",
+          1,
+          1,
+          2
+        ],
+        [
+          "mode",
+          1,
+          1,
+          1
+        ]
+      ],
       0,
       1
     ],
     [
-      "ION-CARD-HEADER",
-      "ion-card",
+      "ion-card-header",
       {
-        "ios": "ios.ion-card",
-        "md": "md.ion-card",
-        "wp": "wp.ion-card"
+        "ios": [
+          "ion-card.ios",
+          null
+        ],
+        "md": [
+          "ion-card.md",
+          null
+        ]
       },
-      0,
+      1,
+      [
+        [
+          "color",
+          1,
+          1,
+          2
+        ],
+        [
+          "mode",
+          1,
+          1,
+          1
+        ],
+        [
+          "translucent",
+          1,
+          1,
+          3
+        ]
+      ],
       0,
       1
     ],
     [
-      "ION-CARD-TITLE",
-      "ion-card",
+      "ion-card-subtitle",
       {
-        "ios": "ios.ion-card",
-        "md": "md.ion-card",
-        "wp": "wp.ion-card"
+        "ios": [
+          "ion-card-subtitle.ios",
+          null
+        ],
+        "md": [
+          "ion-card-subtitle.md",
+          null
+        ]
       },
-      0,
+      1,
+      [
+        [
+          "color",
+          1,
+          1,
+          2
+        ],
+        [
+          "mode",
+          1,
+          1,
+          1
+        ]
+      ],
       0,
       1
     ],
     [
-      "ION-CHECKBOX",
+      "ion-card-title",
+      {
+        "ios": [
+          "ion-card.ios",
+          null
+        ],
+        "md": [
+          "ion-card.md",
+          null
+        ]
+      },
+      1,
+      [
+        [
+          "color",
+          1,
+          1,
+          2
+        ],
+        [
+          "mode",
+          1,
+          1,
+          1
+        ]
+      ],
+      0,
+      1
+    ],
+    [
       "ion-checkbox",
       {
-        "ios": "ios.ion-checkbox",
-        "md": "md.ion-checkbox",
-        "wp": "wp.ion-checkbox"
+        "ios": [
+          "ion-checkbox.ios",
+          null
+        ],
+        "md": [
+          "ion-checkbox.md",
+          null
+        ]
       },
+      1,
       [
         [
           "checked",
           2,
-          1
+          1,
+          3
+        ],
+        [
+          "color",
+          1,
+          1,
+          2
         ],
         [
           "disabled",
-          2,
+          1,
+          1,
+          3
+        ],
+        [
+          "keyFocus",
+          5
+        ],
+        [
+          "mode",
+          1,
+          1,
           1
         ],
         [
-          "value",
+          "name",
+          1,
+          1,
           2
-        ]
-      ],
-      [
+        ],
         [
-          "keydown.space",
-          "onSpace"
+          "value",
+          2,
+          1,
+          2
         ]
       ]
     ],
     [
-      "ION-CHIP",
       "ion-chip",
       {
-        "ios": "ios.ion-chip",
-        "md": "md.ion-chip",
-        "wp": "wp.ion-chip"
+        "ios": [
+          "ion-chip.ios",
+          null
+        ],
+        "md": [
+          "ion-chip.md",
+          null
+        ]
       },
-      0,
+      1,
+      [
+        [
+          "color",
+          1,
+          1,
+          2
+        ],
+        [
+          "mode",
+          1,
+          1,
+          1
+        ]
+      ],
       0,
       1
     ],
     [
-      "ION-CHIP-BUTTON",
-      "ion-chip",
+      "ion-chip-button",
       {
-        "ios": "ios.ion-chip",
-        "md": "md.ion-chip",
-        "wp": "wp.ion-chip"
+        "ios": [
+          "ion-chip.ios",
+          null
+        ],
+        "md": [
+          "ion-chip.md",
+          null
+        ]
       },
+      1,
       [
         [
           "clear",
           1,
-          1
+          1,
+          3
+        ],
+        [
+          "color",
+          1,
+          1,
+          2
         ],
         [
           "disabled",
           1,
-          1
+          1,
+          3
+        ],
+        [
+          "el",
+          7
         ],
         [
           "href",
+          1,
+          1,
+          2
+        ],
+        [
+          "mode",
+          1,
+          1,
           1
         ]
       ],
@@ -414,421 +838,1007 @@
       1
     ],
     [
-      "ION-COL",
       "ion-col",
-      {
-        "$": "ion-col"
-      }
+      [
+        "ion-col",
+        null
+      ]
     ],
     [
-      "ION-CONTENT",
-      "ion-app",
+      "ion-content",
       {
-        "$": "ion-app",
-        "ios": "ios.ion-app",
-        "md": "md.ion-app",
-        "wp": "wp.ion-app"
+        "ios": [
+          "ion-app.ios",
+          null
+        ],
+        "md": [
+          "ion-app.md",
+          null
+        ]
       },
+      1,
       [
+        [
+          "config",
+          3,
+          0,
+          0,
+          "config"
+        ],
+        [
+          "el",
+          7
+        ],
+        [
+          "enableJsScroll",
+          6
+        ],
         [
           "fullscreen",
           1,
-          1
-        ]
-      ],
-      0,
-      1
-    ],
-    [
-      "ION-FAB",
-      "ion-fab",
-      {
-        "ios": "ios.ion-fab",
-        "md": "md.ion-fab",
-        "wp": "wp.ion-fab"
-      },
-      0,
-      0,
-      1
-    ],
-    [
-      "ION-FAB-BUTTON",
-      "ion-fab",
-      {
-        "ios": "ios.ion-fab",
-        "md": "md.ion-fab",
-        "wp": "wp.ion-fab"
-      },
-      [
+          1,
+          3
+        ],
         [
-          "disabled",
+          "ionScroll",
+          1,
           1,
           1
         ],
         [
-          "href",
+          "ionScrollEnd",
+          1,
+          1,
           1
+        ],
+        [
+          "ionScrollStart",
+          1,
+          1,
+          1
+        ],
+        [
+          "scrollToBottom",
+          6
+        ],
+        [
+          "scrollToTop",
+          6
+        ]
+      ],
+      0,
+      2,
+      [
+        [
+          "body:ionNavChanged",
+          "onNavChanged"
+        ]
+      ]
+    ],
+    [
+      "ion-datetime",
+      {
+        "ios": [
+          "ion-datetime.ios",
+          null
+        ],
+        "md": [
+          "ion-datetime.md",
+          null
+        ]
+      },
+      1,
+      [
+        [
+          "cancelText",
+          1,
+          1,
+          2
+        ],
+        [
+          "dayNames",
+          1,
+          1,
+          1
+        ],
+        [
+          "dayShortNames",
+          1,
+          1,
+          1
+        ],
+        [
+          "dayValues",
+          1,
+          1,
+          1
+        ],
+        [
+          "disabled",
+          1,
+          1,
+          3
+        ],
+        [
+          "displayFormat",
+          1,
+          1,
+          2
+        ],
+        [
+          "doneText",
+          1,
+          1,
+          2
+        ],
+        [
+          "hourValues",
+          1,
+          1,
+          1
+        ],
+        [
+          "max",
+          2,
+          1,
+          2
+        ],
+        [
+          "min",
+          2,
+          1,
+          2
+        ],
+        [
+          "minuteValues",
+          1,
+          1,
+          1
+        ],
+        [
+          "monthNames",
+          1,
+          1,
+          1
+        ],
+        [
+          "monthShortNames",
+          1,
+          1,
+          1
+        ],
+        [
+          "monthValues",
+          1,
+          1,
+          1
+        ],
+        [
+          "pickerCtrl",
+          4,
+          0,
+          0,
+          "ion-picker-controller"
+        ],
+        [
+          "pickerFormat",
+          1,
+          1,
+          2
+        ],
+        [
+          "pickerOptions",
+          1,
+          1,
+          1
+        ],
+        [
+          "placeholder",
+          1,
+          1,
+          2
+        ],
+        [
+          "text",
+          5
+        ],
+        [
+          "value",
+          2,
+          1,
+          2
+        ],
+        [
+          "yearValues",
+          1,
+          1,
+          1
+        ]
+      ]
+    ],
+    [
+      "ion-fab",
+      [
+        "ion-fab",
+        null
+      ],
+      1,
+      [
+        [
+          "activated",
+          5
+        ],
+        [
+          "close",
+          6
+        ],
+        [
+          "el",
+          7
         ]
       ],
       0,
       1
     ],
     [
-      "ION-FAB-LIST",
-      "ion-fab",
+      "ion-fab-button",
       {
-        "ios": "ios.ion-fab",
-        "md": "md.ion-fab",
-        "wp": "wp.ion-fab"
+        "ios": [
+          "ion-fab-button.ios",
+          null
+        ],
+        "md": [
+          "ion-fab-button.md",
+          null
+        ]
       },
-      0,
+      1,
+      [
+        [
+          "activated",
+          1,
+          1,
+          3
+        ],
+        [
+          "color",
+          1,
+          1,
+          2
+        ],
+        [
+          "disabled",
+          1,
+          1,
+          3
+        ],
+        [
+          "el",
+          7
+        ],
+        [
+          "href",
+          1,
+          1,
+          2
+        ],
+        [
+          "inContainer",
+          5
+        ],
+        [
+          "inList",
+          5
+        ],
+        [
+          "mode",
+          1,
+          1,
+          1
+        ],
+        [
+          "show",
+          1,
+          1,
+          3
+        ],
+        [
+          "toggleActive",
+          1,
+          1,
+          1
+        ],
+        [
+          "translucent",
+          1,
+          1,
+          3
+        ]
+      ],
       0,
       1
     ],
     [
-      "ION-FIXED",
-      "ion-app",
-      {
-        "$": "ion-app",
-        "ios": "ios.ion-app",
-        "md": "md.ion-app",
-        "wp": "wp.ion-app"
-      },
-      0,
-      0,
-      1
-    ],
-    [
-      "ION-FOOTER",
-      "ion-app",
-      {
-        "$": "ion-app",
-        "ios": "ios.ion-app",
-        "md": "md.ion-app",
-        "wp": "wp.ion-app"
-      },
-      0,
+      "ion-fab-list",
+      [
+        "ion-fab",
+        null
+      ],
+      1,
+      [
+        [
+          "activated",
+          1,
+          1,
+          3
+        ],
+        [
+          "el",
+          7
+        ]
+      ],
       0,
       1
     ],
     [
-      "ION-GESTURE",
+      "ion-footer",
+      {
+        "ios": [
+          "ion-app.ios",
+          null
+        ],
+        "md": [
+          "ion-app.md",
+          null
+        ]
+      },
+      0,
+      [
+        [
+          "translucent",
+          1,
+          1,
+          3
+        ]
+      ],
+      0,
+      1
+    ],
+    [
       "ion-gesture",
+      [
+        "ion-gesture",
+        null
+      ],
       0,
       [
         [
           "attachTo",
+          1,
+          1,
           1
         ],
         [
           "autoBlockAll",
           1,
-          1
+          1,
+          3
         ],
         [
           "block",
-          1
-        ],
-        [
-          "direction",
-          1
-        ],
-        [
-          "disableScroll",
           1,
-          1
-        ],
-        [
-          "gestureName",
-          1
-        ],
-        [
-          "gesturePriority",
           1,
           2
         ],
         [
+          "canStart",
+          1,
+          1,
+          1
+        ],
+        [
+          "direction",
+          1,
+          1,
+          2
+        ],
+        [
+          "disableScroll",
+          1,
+          1,
+          3
+        ],
+        [
+          "el",
+          7
+        ],
+        [
+          "enabled",
+          1,
+          1,
+          3
+        ],
+        [
+          "gestureName",
+          1,
+          1,
+          2
+        ],
+        [
+          "gesturePriority",
+          1,
+          1,
+          4
+        ],
+        [
           "maxAngle",
+          1,
+          1,
+          4
+        ],
+        [
+          "notCaptured",
+          1,
+          1,
+          1
+        ],
+        [
+          "onEnd",
+          1,
+          1,
+          1
+        ],
+        [
+          "onMove",
+          1,
+          1,
+          1
+        ],
+        [
+          "onPress",
+          1,
+          1,
+          1
+        ],
+        [
+          "onStart",
+          1,
+          1,
+          1
+        ],
+        [
+          "onWillStart",
+          1,
+          1,
+          1
+        ],
+        [
+          "threshold",
+          1,
+          1,
+          4
+        ],
+        [
+          "type",
+          1,
+          1,
+          2
+        ]
+      ],
+      0,
+      0,
+      [
+        [
+          "touchstart",
+          "onTouchStart",
+          1,
+          1
+        ],
+        [
+          "mousedown",
+          "onMouseDown",
+          1,
+          1
+        ],
+        [
+          "touchmove",
+          "onTouchMove",
+          1,
+          1
+        ],
+        [
+          "document:mousemove",
+          "onMoveMove",
+          1,
+          1
+        ],
+        [
+          "touchcancel",
+          "onTouchCancel",
+          1,
+          1
+        ],
+        [
+          "touchend",
+          "onTouchEnd",
+          1,
+          1
+        ],
+        [
+          "document:mouseup",
+          "onMouseUp",
+          1,
+          1
+        ]
+      ]
+    ],
+    [
+      "ion-gesture-controller",
+      [
+        "ion-gesture-controller",
+        null
+      ]
+    ],
+    [
+      "ion-grid",
+      [
+        "ion-col",
+        null
+      ],
+      1
+    ],
+    [
+      "ion-header",
+      {
+        "ios": [
+          "ion-app.ios",
+          null
+        ],
+        "md": [
+          "ion-app.md",
+          null
+        ]
+      },
+      1,
+      [
+        [
+          "translucent",
+          1,
+          1,
+          3
+        ]
+      ],
+      0,
+      1
+    ],
+    [
+      "ion-icon",
+      {
+        "ios": [
+          "ion-button.ios",
+          null
+        ],
+        "md": [
+          "ion-button.md",
+          null
+        ]
+      },
+      0,
+      [
+        [
+          "ariaLabel",
+          1,
+          1,
+          2
+        ],
+        [
+          "ios",
+          1,
+          1,
+          2
+        ],
+        [
+          "isServer",
+          3,
+          0,
+          0,
+          "isServer"
+        ],
+        [
+          "md",
+          1,
+          1,
+          2
+        ],
+        [
+          "mode",
+          3,
+          0,
+          0,
+          "mode"
+        ],
+        [
+          "name",
+          1,
+          1,
+          2
+        ],
+        [
+          "svgContent",
+          5
+        ]
+      ]
+    ],
+    [
+      "ion-infinite-scroll",
+      [
+        "ion-infinite-scroll",
+        null
+      ],
+      1,
+      [
+        [
+          "complete",
+          6
+        ],
+        [
+          "el",
+          7
+        ],
+        [
+          "enabled",
+          1,
+          1,
+          3
+        ],
+        [
+          "isLoading",
+          5
+        ],
+        [
+          "position",
+          1,
           1,
           2
         ],
         [
           "threshold",
           1,
+          1,
+          2
+        ]
+      ],
+      0,
+      1,
+      [
+        [
+          "ionScroll",
+          "onScroll",
+          1
+        ]
+      ]
+    ],
+    [
+      "ion-infinite-scroll-content",
+      [
+        "ion-infinite-scroll",
+        null
+      ],
+      0,
+      [
+        [
+          "config",
+          3,
+          0,
+          0,
+          "config"
+        ],
+        [
+          "loadingSpinner",
+          2,
+          1,
           2
         ],
         [
-          "type",
-          1
-        ]
-      ],
-      [
-        [
-          "document:mousemove",
-          "onMoveMove",
-          1
-        ],
-        [
-          "document:mouseup",
-          "onMouseUp",
-          1
-        ],
-        [
-          "mousedown",
-          "onMouseDown",
-          1
-        ],
-        [
-          "touchend",
-          "onTouchEnd",
-          1
-        ],
-        [
-          "touchmove",
-          "onTouchMove",
-          1
-        ],
-        [
-          "touchstart",
-          "onTouchStart",
-          1
-        ]
-      ]
-    ],
-    [
-      "ION-GRID",
-      "ion-col",
-      {
-        "$": "ion-col"
-      }
-    ],
-    [
-      "ION-HEADER",
-      "ion-app",
-      {
-        "$": "ion-app",
-        "ios": "ios.ion-app",
-        "md": "md.ion-app",
-        "wp": "wp.ion-app"
-      },
-      0,
-      0,
-      1
-    ],
-    [
-      "ION-ICON",
-      "ion-button",
-      {
-        "ios": "ios.ion-button",
-        "md": "md.ion-button",
-        "wp": "wp.ion-button"
-      },
-      [
-        [
-          "ariaLabel",
-          1
-        ],
-        [
-          "ios",
-          1
-        ],
-        [
-          "isServer",
-          3,
+          "loadingText",
           1,
-          "isServer"
-        ],
-        [
-          "md",
-          1
-        ],
-        [
-          "name",
-          1
+          1,
+          2
         ]
       ]
     ],
     [
-      "ION-INPUT",
       "ion-input",
       {
-        "ios": "ios.ion-input",
-        "md": "md.ion-input",
-        "wp": "wp.ion-input"
+        "ios": [
+          "ion-input.ios",
+          null
+        ],
+        "md": [
+          "ion-input.md",
+          null
+        ]
       },
+      1,
       [
         [
           "accept",
-          1
+          1,
+          1,
+          2
         ],
         [
           "autocapitalize",
-          1
+          1,
+          1,
+          2
         ],
         [
           "autocomplete",
-          1
+          1,
+          1,
+          2
         ],
         [
           "autocorrect",
-          1
+          1,
+          1,
+          2
         ],
         [
           "autofocus",
           1,
-          1
+          1,
+          3
         ],
         [
           "checked",
           1,
-          1
+          1,
+          3
         ],
         [
           "clearInput",
           1,
-          1
+          1,
+          3
         ],
         [
           "clearOnEdit",
           2,
-          1
+          1,
+          3
         ],
         [
           "disabled",
           1,
-          1
+          1,
+          3
+        ],
+        [
+          "el",
+          7
         ],
         [
           "inputmode",
-          1
+          1,
+          1,
+          2
         ],
         [
           "max",
-          1
+          1,
+          1,
+          2
         ],
         [
           "maxlength",
           1,
-          2
+          1,
+          4
         ],
         [
           "min",
-          1
+          1,
+          1,
+          2
         ],
         [
           "minlength",
           1,
-          2
+          1,
+          4
         ],
         [
           "multiple",
           1,
-          1
+          1,
+          3
         ],
         [
           "name",
-          1
+          1,
+          1,
+          2
         ],
         [
           "pattern",
-          1
+          1,
+          1,
+          2
         ],
         [
           "placeholder",
-          1
+          1,
+          1,
+          2
         ],
         [
           "readonly",
           1,
-          1
+          1,
+          3
         ],
         [
           "required",
           1,
-          1
+          1,
+          3
         ],
         [
           "results",
           1,
-          2
+          1,
+          4
         ],
         [
           "size",
           1,
-          2
+          1,
+          4
         ],
         [
           "spellcheck",
           1,
-          1
+          1,
+          3
         ],
         [
           "step",
-          1
+          1,
+          1,
+          2
         ],
         [
           "type",
-          1
+          1,
+          1,
+          2
         ],
         [
           "value",
+          2,
+          1,
           2
         ]
       ]
     ],
     [
-      "ION-ITEM",
       "ion-item",
       {
-        "$": "ion-item",
-        "ios": "ios.ion-item",
-        "md": "md.ion-item",
-        "wp": "wp.ion-item"
+        "ios": [
+          "ion-item.ios",
+          null
+        ],
+        "md": [
+          "ion-item.md",
+          null
+        ]
       },
+      1,
       [
         [
+          "color",
+          1,
+          1,
+          2
+        ],
+        [
+          "el",
+          7
+        ],
+        [
+          "hasStyleChange",
+          5
+        ],
+        [
           "href",
+          1,
+          1,
+          2
+        ],
+        [
+          "mode",
+          1,
+          1,
           1
         ]
       ],
+      0,
+      2,
       [
         [
           "ionStyle",
           "itemStyle"
         ]
-      ],
-      2
+      ]
     ],
     [
-      "ION-ITEM-DIVIDER",
-      "ion-item",
+      "ion-item-divider",
       {
-        "$": "ion-item",
-        "ios": "ios.ion-item",
-        "md": "md.ion-item",
-        "wp": "wp.ion-item"
+        "ios": [
+          "ion-item.ios",
+          null
+        ],
+        "md": [
+          "ion-item.md",
+          null
+        ]
       },
-      0,
-      0,
-      2
-    ],
-    [
-      "ION-ITEM-OPTION",
-      "ion-item",
-      {
-        "$": "ion-item",
-        "ios": "ios.ion-item",
-        "md": "md.ion-item",
-        "wp": "wp.ion-item"
-      },
+      1,
       [
+        [
+          "color",
+          1,
+          1,
+          2
+        ],
+        [
+          "mode",
+          1,
+          1,
+          1
+        ]
+      ],
+      0,
+      2
+    ],
+    [
+      "ion-item-option",
+      {
+        "ios": [
+          "ion-item-option.ios",
+          null
+        ],
+        "md": [
+          "ion-item-option.md",
+          null
+        ]
+      },
+      0,
+      [
+        [
+          "color",
+          1,
+          1,
+          2
+        ],
         [
           "disabled",
           1,
-          1
+          1,
+          3
         ],
         [
           "href",
+          1,
+          1,
+          2
+        ],
+        [
+          "mode",
+          1,
+          1,
           1
         ]
       ],
@@ -836,123 +1846,323 @@
       1
     ],
     [
-      "ION-ITEM-OPTIONS",
-      "ion-item",
+      "ion-item-options",
       {
-        "$": "ion-item",
-        "ios": "ios.ion-item",
-        "md": "md.ion-item",
-        "wp": "wp.ion-item"
+        "ios": [
+          "ion-item-option.ios",
+          null
+        ],
+        "md": [
+          "ion-item-option.md",
+          null
+        ]
       },
       0,
-      0,
-      1
-    ],
-    [
-      "ION-ITEM-SLIDING",
-      "ion-item",
-      {
-        "$": "ion-item",
-        "ios": "ios.ion-item",
-        "md": "md.ion-item",
-        "wp": "wp.ion-item"
-      },
-      0,
-      0,
-      1
-    ],
-    [
-      "ION-LABEL",
-      "ion-item",
-      {
-        "$": "ion-item",
-        "ios": "ios.ion-item",
-        "md": "md.ion-item",
-        "wp": "wp.ion-item"
-      },
       [
         [
-          "fixed",
+          "el",
+          7
+        ],
+        [
+          "fireSwipeEvent",
+          6
+        ],
+        [
+          "isRightSide",
+          6
+        ],
+        [
+          "side",
+          1,
           1,
           1
         ],
         [
+          "width",
+          6
+        ]
+      ],
+      0,
+      1
+    ],
+    [
+      "ion-item-sliding",
+      {
+        "ios": [
+          "ion-item-option.ios",
+          null
+        ],
+        "md": [
+          "ion-item-option.md",
+          null
+        ]
+      },
+      1,
+      [
+        [
+          "close",
+          6
+        ],
+        [
+          "closeOpened",
+          6
+        ],
+        [
+          "el",
+          7
+        ],
+        [
+          "getOpenAmount",
+          6
+        ],
+        [
+          "getSlidingPercent",
+          6
+        ],
+        [
+          "state",
+          5
+        ]
+      ],
+      0,
+      1
+    ],
+    [
+      "ion-keyboard-controller",
+      [
+        "ion-keyboard-controller",
+        null
+      ],
+      0,
+      [
+        [
+          "config",
+          3,
+          0,
+          0,
+          "config"
+        ]
+      ]
+    ],
+    [
+      "ion-label",
+      {
+        "ios": [
+          "ion-item.ios",
+          null
+        ],
+        "md": [
+          "ion-item.md",
+          null
+        ]
+      },
+      1,
+      [
+        [
+          "color",
+          1,
+          1,
+          2
+        ],
+        [
+          "el",
+          7
+        ],
+        [
+          "fixed",
+          1,
+          1,
+          3
+        ],
+        [
           "floating",
+          1,
+          1,
+          3
+        ],
+        [
+          "getText",
+          6
+        ],
+        [
+          "mode",
+          1,
           1,
           1
         ],
         [
           "stacked",
           1,
-          1
+          1,
+          3
         ]
       ],
       0,
       1
     ],
     [
-      "ION-LIST",
-      "ion-item",
+      "ion-list",
       {
-        "$": "ion-item",
-        "ios": "ios.ion-item",
-        "md": "md.ion-item",
-        "wp": "wp.ion-item"
+        "ios": [
+          "ion-item.ios",
+          null
+        ],
+        "md": [
+          "ion-item.md",
+          null
+        ]
       },
-      0,
-      0,
-      1
-    ],
-    [
-      "ION-LIST-HEADER",
-      "ion-item",
-      {
-        "$": "ion-item",
-        "ios": "ios.ion-item",
-        "md": "md.ion-item",
-        "wp": "wp.ion-item"
-      },
-      0,
-      0,
-      1
-    ],
-    [
-      "ION-LOADING",
-      "ion-loading",
-      {
-        "ios": "ios.ion-loading",
-        "md": "md.ion-loading",
-        "wp": "wp.ion-loading"
-      },
+      1,
       [
         [
-          "content",
-          1
+          "closeSlidingItems",
+          6
         ],
         [
-          "cssClass",
-          1
+          "getOpenedItem",
+          6
         ],
         [
-          "dismissOnPageChange",
+          "setOpenedItem",
+          6
+        ]
+      ],
+      0,
+      1
+    ],
+    [
+      "ion-list-header",
+      {
+        "ios": [
+          "ion-item.ios",
+          null
+        ],
+        "md": [
+          "ion-item.md",
+          null
+        ]
+      },
+      1,
+      [
+        [
+          "color",
           1,
-          1
-        ],
-        [
-          "duration",
           1,
           2
         ],
         [
-          "id",
-          1
-        ],
-        [
-          "showBackdrop",
+          "mode",
+          1,
           1,
           1
         ]
       ],
+      0,
+      1
+    ],
+    [
+      "ion-loading",
+      {
+        "ios": [
+          "ion-loading.ios",
+          null
+        ],
+        "md": [
+          "ion-loading.md",
+          null
+        ]
+      },
+      1,
+      [
+        [
+          "animate",
+          1,
+          1,
+          3
+        ],
+        [
+          "animationCtrl",
+          4,
+          0,
+          0,
+          "ion-animation-controller"
+        ],
+        [
+          "config",
+          3,
+          0,
+          0,
+          "config"
+        ],
+        [
+          "content",
+          1,
+          1,
+          2
+        ],
+        [
+          "cssClass",
+          1,
+          1,
+          2
+        ],
+        [
+          "dismiss",
+          6
+        ],
+        [
+          "dismissOnPageChange",
+          1,
+          1,
+          3
+        ],
+        [
+          "duration",
+          1,
+          1,
+          4
+        ],
+        [
+          "el",
+          7
+        ],
+        [
+          "enterAnimation",
+          1,
+          1,
+          1
+        ],
+        [
+          "leaveAnimation",
+          1,
+          1,
+          1
+        ],
+        [
+          "present",
+          6
+        ],
+        [
+          "showBackdrop",
+          1,
+          1,
+          3
+        ],
+        [
+          "spinner",
+          1,
+          1,
+          2
+        ],
+        [
+          "translucent",
+          1,
+          1,
+          3
+        ]
+      ],
+      0,
+      0,
       [
         [
           "ionDismiss",
@@ -961,30 +2171,42 @@
       ]
     ],
     [
-      "ION-LOADING-CONTROLLER",
-      "ion-loading",
+      "ion-loading-controller",
       {
-        "ios": "ios.ion-loading",
-        "md": "md.ion-loading",
-        "wp": "wp.ion-loading"
+        "ios": [
+          "ion-loading.ios",
+          null
+        ],
+        "md": [
+          "ion-loading.md",
+          null
+        ]
       },
       0,
       [
         [
+          "create",
+          6
+        ]
+      ],
+      0,
+      0,
+      [
+        [
           "body:ionLoadingDidLoad",
-          "viewDidLoad"
+          "didLoad"
         ],
         [
-          "body:ionLoadingDidUnload",
-          "willDismiss"
+          "body:ionLoadingWillPresent",
+          "willPresent"
         ],
         [
           "body:ionLoadingWillDismiss",
           "willDismiss"
         ],
         [
-          "body:ionLoadingWillPresent",
-          "willPresent"
+          "body:ionLoadingDidUnload",
+          "willDismiss"
         ],
         [
           "body:keyup.escape",
@@ -993,100 +2215,314 @@
       ]
     ],
     [
-      "ION-MENU",
       "ion-menu",
       {
-        "ios": "ios.ion-menu",
-        "md": "md.ion-menu",
-        "wp": "wp.ion-menu"
+        "ios": [
+          "ion-menu.ios",
+          null
+        ],
+        "md": [
+          "ion-menu.md",
+          null
+        ]
       },
+      1,
       [
         [
+          "close",
+          6
+        ],
+        [
+          "config",
+          3,
+          0,
+          0,
+          "config"
+        ],
+        [
           "content",
-          1
-        ],
-        [
-          "enabled",
           1,
-          1
-        ],
-        [
-          "id",
-          1
-        ],
-        [
-          "isAnimating",
-          1,
-          1
-        ],
-        [
-          "isOpen",
-          1,
-          1
-        ],
-        [
-          "maxEdgeStart",
           1,
           2
         ],
         [
+          "el",
+          7
+        ],
+        [
+          "enabled",
+          2,
+          1,
+          3
+        ],
+        [
+          "isOpen",
+          6
+        ],
+        [
+          "lazyMenuCtrl",
+          4,
+          0,
+          0,
+          "ion-menu-controller"
+        ],
+        [
+          "maxEdgeStart",
+          1,
+          1,
+          4
+        ],
+        [
+          "menuId",
+          1,
+          1,
+          2
+        ],
+        [
+          "open",
+          6
+        ],
+        [
           "persistent",
           1,
-          1
+          1,
+          3
+        ],
+        [
+          "setOpen",
+          6
         ],
         [
           "side",
+          1,
+          1,
           1
         ],
         [
           "swipeEnabled",
           1,
-          1
+          1,
+          3
+        ],
+        [
+          "toggle",
+          6
         ],
         [
           "type",
-          1
+          2,
+          1,
+          2
         ]
       ],
       0,
-      1
-    ],
-    [
-      "ION-MODAL",
-      "ion-modal",
-      {
-        "ios": "ios.ion-modal",
-        "md": "md.ion-modal",
-        "wp": "wp.ion-modal"
-      },
+      1,
       [
         [
+          "body:ionSplitPaneDidChange",
+          "splitPaneChanged"
+        ],
+        [
+          "body:click",
+          "onBackdropClick",
+          1,
+          0,
+          1
+        ]
+      ]
+    ],
+    [
+      "ion-menu-controller",
+      {
+        "ios": [
+          "ion-menu.ios",
+          null
+        ],
+        "md": [
+          "ion-menu.md",
+          null
+        ]
+      },
+      0,
+      [
+        [
+          "_register",
+          6
+        ],
+        [
+          "_setActiveMenu",
+          6
+        ],
+        [
+          "_unregister",
+          6
+        ],
+        [
+          "animationCtrl",
+          4,
+          0,
+          0,
+          "ion-animation-controller"
+        ],
+        [
+          "close",
+          6
+        ],
+        [
+          "createAnimation",
+          6
+        ],
+        [
+          "enable",
+          6
+        ],
+        [
+          "get",
+          6
+        ],
+        [
+          "getMenus",
+          6
+        ],
+        [
+          "getOpen",
+          6
+        ],
+        [
+          "isAnimating",
+          6
+        ],
+        [
+          "isEnabled",
+          6
+        ],
+        [
+          "isOpen",
+          6
+        ],
+        [
+          "open",
+          6
+        ],
+        [
+          "swipeEnable",
+          6
+        ],
+        [
+          "toggle",
+          6
+        ]
+      ]
+    ],
+    [
+      "ion-modal",
+      {
+        "ios": [
+          "ion-modal.ios",
+          null
+        ],
+        "md": [
+          "ion-modal.md",
+          null
+        ]
+      },
+      1,
+      [
+        [
+          "animate",
+          1,
+          1,
+          3
+        ],
+        [
+          "animationCtrl",
+          4,
+          0,
+          0,
+          "ion-animation-controller"
+        ],
+        [
+          "color",
+          1,
+          1,
+          2
+        ],
+        [
           "component",
+          1,
+          1,
           1
         ],
         [
-          "componentProps",
-          1
+          "config",
+          3,
+          0,
+          0,
+          "config"
         ],
         [
           "cssClass",
+          1,
+          1,
+          2
+        ],
+        [
+          "data",
+          1,
+          1,
           1
+        ],
+        [
+          "dismiss",
+          6
+        ],
+        [
+          "el",
+          7
         ],
         [
           "enableBackdropDismiss",
           1,
+          1,
+          3
+        ],
+        [
+          "enterAnimation",
+          1,
+          1,
           1
         ],
         [
-          "id",
+          "leaveAnimation",
+          1,
+          1,
           1
+        ],
+        [
+          "modalId",
+          1,
+          1,
+          2
+        ],
+        [
+          "mode",
+          1,
+          1,
+          2
+        ],
+        [
+          "present",
+          6
         ],
         [
           "showBackdrop",
           1,
-          1
+          1,
+          3
         ]
       ],
+      0,
+      0,
       [
         [
           "ionDismiss",
@@ -1095,13 +2531,25 @@
       ]
     ],
     [
-      "ION-MODAL-CONTROLLER",
-      "ion-modal",
+      "ion-modal-controller",
       {
-        "ios": "ios.ion-modal",
-        "md": "md.ion-modal",
-        "wp": "wp.ion-modal"
+        "ios": [
+          "ion-modal.ios",
+          null
+        ],
+        "md": [
+          "ion-modal.md",
+          null
+        ]
       },
+      0,
+      [
+        [
+          "create",
+          6
+        ]
+      ],
+      0,
       0,
       [
         [
@@ -1109,16 +2557,16 @@
           "modalDidLoad"
         ],
         [
-          "body:ionModalDidUnload",
-          "modalWillDismiss"
+          "body:ionModalWillPresent",
+          "modalWillPresent"
         ],
         [
           "body:ionModalWillDismiss",
           "modalWillDismiss"
         ],
         [
-          "body:ionModalWillPresent",
-          "modalWillPresent"
+          "body:ionModalDidUnload",
+          "modalWillDismiss"
         ],
         [
           "body:keyup.escape",
@@ -1127,75 +2575,274 @@
       ]
     ],
     [
-      "ION-NAV",
       "ion-nav",
+      [
+        "ion-nav",
+        null
+      ],
       0,
       [
         [
-          "root",
+          "canGoBack",
+          6
+        ],
+        [
+          "canSwipeBack",
+          6
+        ],
+        [
+          "config",
+          3,
+          0,
+          0,
+          "config"
+        ],
+        [
+          "delegate",
+          1,
+          1,
           1
+        ],
+        [
+          "element",
+          7
+        ],
+        [
+          "getActive",
+          6
+        ],
+        [
+          "getFirstView",
+          6
+        ],
+        [
+          "getPrevious",
+          6
+        ],
+        [
+          "getRoutes",
+          6
+        ],
+        [
+          "getState",
+          6
+        ],
+        [
+          "insert",
+          6
+        ],
+        [
+          "insertPages",
+          6
+        ],
+        [
+          "mode",
+          1,
+          1,
+          2
+        ],
+        [
+          "pop",
+          6
+        ],
+        [
+          "popTo",
+          6
+        ],
+        [
+          "popToRoot",
+          6
+        ],
+        [
+          "push",
+          6
+        ],
+        [
+          "removeIndex",
+          6
+        ],
+        [
+          "removeView",
+          6
+        ],
+        [
+          "resize",
+          6
+        ],
+        [
+          "root",
+          1,
+          1,
+          1
+        ],
+        [
+          "setPages",
+          6
+        ],
+        [
+          "setRoot",
+          6
+        ],
+        [
+          "setRouteId",
+          6
         ]
       ],
+      0,
+      1,
       [
         [
           "navInit",
           "navInitialized"
         ]
+      ]
+    ],
+    [
+      "ion-nav-controller",
+      [
+        "ion-nav",
+        null
       ],
-      1
-    ],
-    [
-      "ION-NAV-CONTROLLER",
-      "ion-nav",
       0,
-      0,
-      0,
-      1
-    ],
-    [
-      "ION-NAVBAR",
-      "ion-app",
-      {
-        "$": "ion-app",
-        "ios": "ios.ion-app",
-        "md": "md.ion-app",
-        "wp": "wp.ion-app"
-      },
       [
         [
-          "backButtonIcon",
+          "animationCtrl",
+          4,
+          0,
+          0,
+          "ion-animation-controller"
+        ],
+        [
+          "delegate",
+          1,
+          1,
           1
         ],
         [
+          "element",
+          7
+        ],
+        [
+          "insert",
+          6
+        ],
+        [
+          "insertPages",
+          6
+        ],
+        [
+          "pop",
+          6
+        ],
+        [
+          "popTo",
+          6
+        ],
+        [
+          "popToRoot",
+          6
+        ],
+        [
+          "push",
+          6
+        ],
+        [
+          "removeIndex",
+          6
+        ],
+        [
+          "removeView",
+          6
+        ],
+        [
+          "setPages",
+          6
+        ],
+        [
+          "setRoot",
+          6
+        ]
+      ],
+      0,
+      1
+    ],
+    [
+      "ion-navbar",
+      {
+        "ios": [
+          "ion-app.ios",
+          null
+        ],
+        "md": [
+          "ion-app.md",
+          null
+        ]
+      },
+      0,
+      [
+        [
+          "backButtonIcon",
+          1,
+          1,
+          2
+        ],
+        [
           "backButtonText",
-          1
+          1,
+          1,
+          2
+        ],
+        [
+          "config",
+          3,
+          0,
+          0,
+          "config"
+        ],
+        [
+          "el",
+          7
         ],
         [
           "hidden",
           1,
-          1
+          1,
+          3
         ],
         [
           "hideBackButton",
           1,
-          1
+          1,
+          3
         ]
       ],
       0,
       2
     ],
     [
-      "ION-OVERLAY-PORTAL",
-      "ion-app",
+      "ion-note",
       {
-        "$": "ion-app",
-        "ios": "ios.ion-app",
-        "md": "md.ion-app",
-        "wp": "wp.ion-app"
+        "ios": [
+          "ion-note.ios",
+          null
+        ],
+        "md": [
+          "ion-note.md",
+          null
+        ]
       },
+      1,
       [
         [
-          "type",
+          "color",
+          1,
+          1,
+          2
+        ],
+        [
+          "mode",
+          1,
+          1,
           1
         ]
       ],
@@ -1203,54 +2850,161 @@
       1
     ],
     [
-      "ION-PAGE",
-      "ion-app",
+      "ion-page",
       {
-        "$": "ion-app",
-        "ios": "ios.ion-app",
-        "md": "md.ion-app",
-        "wp": "wp.ion-app"
+        "ios": [
+          "ion-app.ios",
+          null
+        ],
+        "md": [
+          "ion-app.md",
+          null
+        ]
       },
+      0,
       0,
       0,
       1
     ],
     [
-      "ION-POPOVER",
-      "ion-popover",
+      "ion-picker",
       {
-        "ios": "ios.ion-popover",
-        "md": "md.ion-popover",
-        "wp": "wp.ion-popover"
+        "ios": [
+          "ion-datetime.ios",
+          null
+        ],
+        "md": [
+          "ion-datetime.md",
+          null
+        ]
       },
+      1,
       [
         [
-          "component",
+          "addButton",
+          6
+        ],
+        [
+          "addColumn",
+          6
+        ],
+        [
+          "animate",
+          1,
+          1,
+          3
+        ],
+        [
+          "animationCtrl",
+          4,
+          0,
+          0,
+          "ion-animation-controller"
+        ],
+        [
+          "buttons",
+          1,
+          1,
           1
         ],
         [
-          "componentProps",
+          "columns",
+          1,
+          1,
           1
+        ],
+        [
+          "config",
+          3,
+          0,
+          0,
+          "config"
+        ],
+        [
+          "content",
+          1,
+          1,
+          2
         ],
         [
           "cssClass",
-          1
+          1,
+          1,
+          2
+        ],
+        [
+          "dismiss",
+          6
+        ],
+        [
+          "dismissOnPageChange",
+          1,
+          1,
+          3
+        ],
+        [
+          "duration",
+          1,
+          1,
+          4
+        ],
+        [
+          "el",
+          7
         ],
         [
           "enableBackdropDismiss",
           1,
+          1,
+          3
+        ],
+        [
+          "enterAnimation",
+          1,
+          1,
           1
         ],
         [
-          "id",
+          "getColumn",
+          6
+        ],
+        [
+          "getColumns",
+          6
+        ],
+        [
+          "leaveAnimation",
+          1,
+          1,
           1
+        ],
+        [
+          "pickerId",
+          1,
+          1,
+          2
+        ],
+        [
+          "present",
+          6
         ],
         [
           "showBackdrop",
           1,
-          1
+          1,
+          3
+        ],
+        [
+          "showSpinner",
+          5
+        ],
+        [
+          "spinner",
+          5
         ]
       ],
+      0,
+      0,
       [
         [
           "ionDismiss",
@@ -1259,186 +3013,1024 @@
       ]
     ],
     [
-      "ION-POPOVER-CONTROLLER",
-      "ion-popover",
+      "ion-picker-column",
       {
-        "ios": "ios.ion-popover",
-        "md": "md.ion-popover",
-        "wp": "wp.ion-popover"
+        "ios": [
+          "ion-datetime.ios",
+          null
+        ],
+        "md": [
+          "ion-datetime.md",
+          null
+        ]
       },
       0,
       [
         [
+          "col",
+          1,
+          1,
+          1
+        ],
+        [
+          "el",
+          7
+        ]
+      ]
+    ],
+    [
+      "ion-picker-controller",
+      {
+        "ios": [
+          "ion-datetime.ios",
+          null
+        ],
+        "md": [
+          "ion-datetime.md",
+          null
+        ]
+      },
+      0,
+      [
+        [
+          "create",
+          6
+        ]
+      ],
+      0,
+      0,
+      [
+        [
+          "body:ionPickerDidLoad",
+          "didLoad"
+        ],
+        [
+          "body:ionPickerWillPresent",
+          "willPresent"
+        ],
+        [
+          "body:ionPickerWillDismiss",
+          "willDismiss"
+        ],
+        [
+          "body:ionPickerDidUnload",
+          "willDismiss"
+        ],
+        [
+          "body:keyup.escape",
+          "escapeKeyUp"
+        ]
+      ]
+    ],
+    [
+      "ion-popover",
+      {
+        "ios": [
+          "ion-popover.ios",
+          null
+        ],
+        "md": [
+          "ion-popover.md",
+          null
+        ]
+      },
+      1,
+      [
+        [
+          "animate",
+          1,
+          1,
+          3
+        ],
+        [
+          "animationCtrl",
+          4,
+          0,
+          0,
+          "ion-animation-controller"
+        ],
+        [
+          "color",
+          1,
+          1,
+          2
+        ],
+        [
+          "component",
+          1,
+          1,
+          2
+        ],
+        [
+          "componentProps",
+          1,
+          1,
+          1
+        ],
+        [
+          "config",
+          3,
+          0,
+          0,
+          "config"
+        ],
+        [
+          "cssClass",
+          1,
+          1,
+          2
+        ],
+        [
+          "dismiss",
+          6
+        ],
+        [
+          "el",
+          7
+        ],
+        [
+          "enableBackdropDismiss",
+          1,
+          1,
+          3
+        ],
+        [
+          "enterAnimation",
+          1,
+          1,
+          1
+        ],
+        [
+          "ev",
+          1,
+          1,
+          1
+        ],
+        [
+          "leaveAnimation",
+          1,
+          1,
+          1
+        ],
+        [
+          "mode",
+          1,
+          1,
+          2
+        ],
+        [
+          "popoverId",
+          1,
+          1,
+          2
+        ],
+        [
+          "present",
+          6
+        ],
+        [
+          "showBackdrop",
+          1,
+          1,
+          3
+        ],
+        [
+          "translucent",
+          1,
+          1,
+          3
+        ]
+      ],
+      0,
+      0,
+      [
+        [
+          "ionDismiss",
+          "onDismiss"
+        ]
+      ]
+    ],
+    [
+      "ion-popover-controller",
+      {
+        "ios": [
+          "ion-popover.ios",
+          null
+        ],
+        "md": [
+          "ion-popover.md",
+          null
+        ]
+      },
+      0,
+      [
+        [
+          "create",
+          6
+        ]
+      ],
+      0,
+      0,
+      [
+        [
           "body:ionPopoverDidLoad",
-          "viewDidLoad"
-        ],
-        [
-          "body:ionPopoverDidUnload",
-          "willDismiss"
-        ],
-        [
-          "body:ionPopoverWillDismiss",
-          "willDismiss"
+          "didLoad"
         ],
         [
           "body:ionPopoverWillPresent",
           "willPresent"
         ],
         [
+          "body:ionPopoverWillDismiss",
+          "willDismiss"
+        ],
+        [
+          "body:ionPopoverDidUnload",
+          "willDismiss"
+        ],
+        [
           "body:keyup.escape",
           "escapeKeyUp"
         ]
       ]
     ],
     [
-      "ION-ROW",
-      "ion-col",
+      "ion-radio",
       {
-        "$": "ion-col"
-      }
+        "ios": [
+          "ion-radio.ios",
+          null
+        ],
+        "md": [
+          "ion-radio.md",
+          null
+        ]
+      },
+      1,
+      [
+        [
+          "checked",
+          2,
+          1,
+          3
+        ],
+        [
+          "color",
+          1,
+          1,
+          2
+        ],
+        [
+          "disabled",
+          1,
+          1,
+          3
+        ],
+        [
+          "keyFocus",
+          5
+        ],
+        [
+          "mode",
+          1,
+          1,
+          1
+        ],
+        [
+          "name",
+          1,
+          1,
+          2
+        ],
+        [
+          "value",
+          2,
+          1,
+          2
+        ]
+      ]
     ],
     [
-      "ION-SCROLL",
-      "ion-gesture",
+      "ion-radio-group",
+      {
+        "ios": [
+          "ion-radio.ios",
+          null
+        ],
+        "md": [
+          "ion-radio.md",
+          null
+        ]
+      },
       0,
       [
         [
-          "enabled",
+          "allowEmptySelection",
+          1,
+          1,
+          3
+        ],
+        [
+          "disabled",
+          2,
+          1,
+          3
+        ],
+        [
+          "el",
+          7
+        ],
+        [
+          "labelId",
+          5
+        ],
+        [
+          "name",
+          2,
+          1,
+          2
+        ],
+        [
+          "value",
+          2,
+          1,
+          2
+        ]
+      ],
+      0,
+      1,
+      [
+        [
+          "ionRadioDidLoad",
+          "onRadioDidLoad"
+        ],
+        [
+          "ionRadioDidUnload",
+          "onRadioDidUnload"
+        ],
+        [
+          "ionSelect",
+          "onRadioSelect"
+        ]
+      ]
+    ],
+    [
+      "ion-range",
+      {
+        "ios": [
+          "ion-range.ios",
+          null
+        ],
+        "md": [
+          "ion-range.md",
+          null
+        ]
+      },
+      1,
+      [
+        [
+          "activeB",
+          5
+        ],
+        [
+          "barL",
+          5
+        ],
+        [
+          "barR",
+          5
+        ],
+        [
+          "color",
+          1,
+          1,
+          2
+        ],
+        [
+          "debounce",
+          1,
+          1,
+          4
+        ],
+        [
+          "disabled",
+          1,
+          1,
+          3
+        ],
+        [
+          "dualKnobs",
+          1,
+          1,
+          3
+        ],
+        [
+          "el",
+          7
+        ],
+        [
+          "max",
+          1,
+          1,
+          4
+        ],
+        [
+          "min",
+          1,
+          1,
+          4
+        ],
+        [
+          "mode",
+          1,
           1,
           1
+        ],
+        [
+          "pin",
+          1,
+          1,
+          3
+        ],
+        [
+          "pressed",
+          5
+        ],
+        [
+          "pressedA",
+          5
+        ],
+        [
+          "pressedB",
+          5
+        ],
+        [
+          "ratio",
+          6
+        ],
+        [
+          "ratioA",
+          5
+        ],
+        [
+          "ratioB",
+          5
+        ],
+        [
+          "ratioUpper",
+          6
+        ],
+        [
+          "rect",
+          5
+        ],
+        [
+          "snaps",
+          1,
+          1,
+          3
+        ],
+        [
+          "step",
+          1,
+          1,
+          4
+        ],
+        [
+          "ticks",
+          5
+        ],
+        [
+          "valA",
+          5
+        ],
+        [
+          "valB",
+          5
+        ],
+        [
+          "value",
+          2,
+          1,
+          1
+        ]
+      ],
+      0,
+      2,
+      [
+        [
+          "ionIncrease",
+          "keyChng"
+        ],
+        [
+          "ionDecrease",
+          "keyChng"
+        ]
+      ]
+    ],
+    [
+      "ion-range-knob",
+      {
+        "ios": [
+          "ion-range.ios",
+          null
+        ],
+        "md": [
+          "ion-range.md",
+          null
+        ]
+      },
+      0,
+      [
+        [
+          "disabled",
+          1,
+          1,
+          3
+        ],
+        [
+          "knob",
+          1,
+          1,
+          2
+        ],
+        [
+          "labelId",
+          1,
+          1,
+          2
+        ],
+        [
+          "max",
+          1,
+          1,
+          4
+        ],
+        [
+          "min",
+          1,
+          1,
+          4
+        ],
+        [
+          "pin",
+          1,
+          1,
+          3
+        ],
+        [
+          "pressed",
+          1,
+          1,
+          3
+        ],
+        [
+          "ratio",
+          1,
+          1,
+          4
+        ],
+        [
+          "val",
+          1,
+          1,
+          4
+        ]
+      ],
+      0,
+      0,
+      [
+        [
+          "keydown",
+          "handleKeyBoard"
+        ]
+      ]
+    ],
+    [
+      "ion-reorder",
+      [
+        "ion-reorder",
+        null
+      ],
+      1,
+      [
+        [
+          "el",
+          7
+        ],
+        [
+          "hasContent",
+          5
+        ]
+      ],
+      0,
+      1
+    ],
+    [
+      "ion-reorder-group",
+      [
+        "ion-reorder",
+        null
+      ],
+      1,
+      [
+        [
+          "_actived",
+          5
+        ],
+        [
+          "_enabled",
+          5
+        ],
+        [
+          "_iconVisible",
+          5
+        ],
+        [
+          "el",
+          7
+        ],
+        [
+          "enabled",
+          1,
+          1,
+          3
+        ]
+      ],
+      0,
+      1
+    ],
+    [
+      "ion-route",
+      [
+        "ion-route",
+        null
+      ],
+      0,
+      [
+        [
+          "component",
+          1,
+          1,
+          2
+        ],
+        [
+          "getRoute",
+          6
+        ],
+        [
+          "path",
+          1,
+          1,
+          2
+        ],
+        [
+          "props",
+          1,
+          1,
+          1
+        ]
+      ]
+    ],
+    [
+      "ion-route-link",
+      [
+        "ion-route-link",
+        null
+      ],
+      0,
+      [
+        [
+          "router",
+          1,
+          1,
+          1
+        ],
+        [
+          "url",
+          1,
+          1,
+          2
+        ]
+      ]
+    ],
+    [
+      "ion-router-controller",
+      [
+        "ion-route",
+        null
+      ],
+      0,
+      [
+        [
+          "config",
+          3,
+          0,
+          0,
+          "config"
+        ]
+      ],
+      0,
+      0,
+      [
+        [
+          "window:hashchange",
+          "onURLHashChanged"
+        ],
+        [
+          "body:ionNavChanged",
+          "onNavChanged"
+        ]
+      ]
+    ],
+    [
+      "ion-row",
+      [
+        "ion-col",
+        null
+      ]
+    ],
+    [
+      "ion-scroll",
+      {
+        "ios": [
+          "ion-app.ios",
+          null
+        ],
+        "md": [
+          "ion-app.md",
+          null
+        ]
+      },
+      0,
+      [
+        [
+          "config",
+          3,
+          0,
+          0,
+          "config"
+        ],
+        [
+          "el",
+          7
+        ],
+        [
+          "enabled",
+          1,
+          1,
+          3
         ],
         [
           "jsScroll",
           1,
+          1,
+          3
+        ],
+        [
+          "onionScroll",
+          1,
+          1,
           1
+        ],
+        [
+          "onionScrollEnd",
+          1,
+          1,
+          1
+        ],
+        [
+          "onionScrollStart",
+          1,
+          1,
+          1
+        ],
+        [
+          "scrollToBottom",
+          6
+        ],
+        [
+          "scrollToPoint",
+          6
+        ],
+        [
+          "scrollToTop",
+          6
         ]
       ],
+      0,
+      1,
       [
         [
           "scroll",
-          "onNativeScroll"
-        ],
-        [
-          "touchend",
-          "onTouchEnd",
-          1
-        ],
-        [
-          "touchmove",
-          "onTouchMove",
-          1
-        ],
-        [
-          "touchstart",
-          "onTouchStart",
+          "onNativeScroll",
+          0,
           1
         ]
-      ],
-      1
+      ]
     ],
     [
-      "ION-SEARCHBAR",
       "ion-searchbar",
       {
-        "ios": "ios.ion-searchbar",
-        "md": "md.ion-searchbar",
-        "wp": "wp.ion-searchbar"
+        "ios": [
+          "ion-searchbar.ios",
+          null
+        ],
+        "md": [
+          "ion-searchbar.md",
+          null
+        ]
       },
+      1,
       [
+        [
+          "activated",
+          5
+        ],
         [
           "animated",
           2,
-          1
+          1,
+          3
         ],
         [
           "autocomplete",
+          2,
+          1,
           2
         ],
         [
           "autocorrect",
+          2,
+          1,
           2
         ],
         [
           "cancelButtonText",
+          2,
+          1,
+          2
+        ],
+        [
+          "color",
+          1,
+          1,
           2
         ],
         [
           "debounce",
           2,
-          2
+          1,
+          4
+        ],
+        [
+          "el",
+          7
+        ],
+        [
+          "focused",
+          5
+        ],
+        [
+          "mode",
+          1,
+          1,
+          1
         ],
         [
           "placeholder",
+          2,
+          1,
           2
         ],
         [
           "showCancelButton",
           2,
-          1
+          1,
+          3
         ],
         [
           "spellcheck",
           2,
-          1
+          1,
+          3
         ],
         [
           "type",
+          2,
+          1,
           2
         ],
         [
           "value",
+          2,
+          1,
           2
         ]
       ]
     ],
     [
-      "ION-SEGMENT",
       "ion-segment",
       {
-        "ios": "ios.ion-segment",
-        "md": "md.ion-segment",
-        "wp": "wp.ion-segment"
+        "ios": [
+          "ion-segment.ios",
+          null
+        ],
+        "md": [
+          "ion-segment.md",
+          null
+        ]
       },
+      1,
       [
+        [
+          "color",
+          1,
+          1,
+          2
+        ],
         [
           "disabled",
           2,
+          1,
+          3
+        ],
+        [
+          "el",
+          7
+        ],
+        [
+          "mode",
+          1,
+          1,
           1
         ],
         [
           "value",
+          2,
+          1,
           2
         ]
       ],
+      0,
+      1,
       [
         [
           "ionClick",
           "segmentClick"
         ]
-      ],
-      1
+      ]
     ],
     [
-      "ION-SEGMENT-BUTTON",
-      "ion-segment",
+      "ion-segment-button",
       {
-        "ios": "ios.ion-segment",
-        "md": "md.ion-segment",
-        "wp": "wp.ion-segment"
+        "ios": [
+          "ion-segment.ios",
+          null
+        ],
+        "md": [
+          "ion-segment.md",
+          null
+        ]
       },
+      0,
       [
+        [
+          "activated",
+          5
+        ],
         [
           "checked",
           2,
-          1
+          1,
+          3
+        ],
+        [
+          "color",
+          1,
+          1,
+          2
         ],
         [
           "disabled",
           2,
+          1,
+          3
+        ],
+        [
+          "el",
+          7
+        ],
+        [
+          "mode",
+          1,
+          1,
           1
         ],
         [
           "value",
+          2,
+          1,
           2
         ]
       ],
@@ -1446,179 +4038,405 @@
       1
     ],
     [
-      "ION-SELECT",
       "ion-select",
       {
-        "ios": "ios.ion-select",
-        "md": "md.ion-select",
-        "wp": "wp.ion-select"
+        "ios": [
+          "ion-select.ios",
+          null
+        ],
+        "md": [
+          "ion-select.md",
+          null
+        ]
       },
+      1,
       [
         [
+          "actionSheetCtrl",
+          4,
+          0,
+          0,
+          "ion-action-sheet-controller"
+        ],
+        [
+          "alertCtrl",
+          4,
+          0,
+          0,
+          "ion-alert-controller"
+        ],
+        [
           "cancelText",
-          1
+          1,
+          1,
+          2
         ],
         [
           "disabled",
           1,
-          1
+          1,
+          3
+        ],
+        [
+          "el",
+          7
         ],
         [
           "interface",
-          1
+          1,
+          1,
+          2
         ],
         [
           "multiple",
           1,
-          1
+          1,
+          3
         ],
         [
           "okText",
-          1
+          1,
+          1,
+          2
         ],
         [
           "placeholder",
-          1
+          1,
+          1,
+          2
+        ],
+        [
+          "popoverCtrl",
+          4,
+          0,
+          0,
+          "ion-popover-controller"
         ],
         [
           "selectOptions",
+          1,
+          1,
           1
         ],
         [
           "selectedText",
-          1
+          1,
+          1,
+          2
+        ],
+        [
+          "text",
+          5
         ],
         [
           "value",
-          2
+          2,
+          1,
+          1
         ]
       ]
     ],
     [
-      "ION-SELECT-OPTION",
-      "ion-select",
+      "ion-select-option",
       {
-        "ios": "ios.ion-select",
-        "md": "md.ion-select",
-        "wp": "wp.ion-select"
+        "ios": [
+          "ion-select.ios",
+          null
+        ],
+        "md": [
+          "ion-select.md",
+          null
+        ]
       },
+      0,
       [
         [
           "disabled",
           1,
-          1
+          1,
+          3
+        ],
+        [
+          "el",
+          7
+        ],
+        [
+          "getText",
+          6
         ],
         [
           "selected",
+          2,
           1,
-          1
+          3
         ],
         [
           "value",
-          1
+          1,
+          1,
+          2
         ]
       ],
       0,
       1
     ],
     [
-      "ION-SELECT-POPOVER",
-      "ion-select",
+      "ion-select-popover",
       {
-        "ios": "ios.ion-select",
-        "md": "md.ion-select",
-        "wp": "wp.ion-select"
+        "ios": [
+          "ion-select.ios",
+          null
+        ],
+        "md": [
+          "ion-select.md",
+          null
+        ]
       },
+      0,
       [
         [
+          "options",
+          1,
+          1,
+          1
+        ],
+        [
           "value",
+          2,
+          1,
+          2
+        ]
+      ],
+      0,
+      0,
+      [
+        [
+          "ionChange",
+          "onChange"
+        ]
+      ]
+    ],
+    [
+      "ion-skeleton-text",
+      {
+        "ios": [
+          "ion-item.ios",
+          null
+        ],
+        "md": [
+          "ion-item.md",
+          null
+        ]
+      },
+      1,
+      [
+        [
+          "width",
+          1,
+          1,
           2
         ]
       ]
     ],
     [
-      "ION-SKELETON-TEXT",
-      "ion-item",
-      {
-        "$": "ion-item",
-        "ios": "ios.ion-item",
-        "md": "md.ion-item",
-        "wp": "wp.ion-item"
-      },
-      [
-        [
-          "width",
-          1
-        ]
-      ]
-    ],
-    [
-      "ION-SLIDE",
       "ion-slide",
-      {
-        "$": "ion-slide"
-      },
+      [
+        "ion-slide",
+        null
+      ],
+      1,
       0,
       0,
       1
     ],
     [
-      "ION-SLIDES",
-      "ion-slide",
-      {
-        "$": "ion-slide"
-      },
+      "ion-slides",
+      [
+        "ion-slide",
+        null
+      ],
+      1,
       [
         [
           "autoplay",
           1,
-          2
+          1,
+          4
+        ],
+        [
+          "control",
+          1,
+          1,
+          1
+        ],
+        [
+          "direction",
+          1,
+          1,
+          1
         ],
         [
           "effect",
-          1
+          1,
+          1,
+          2
+        ],
+        [
+          "el",
+          7
         ],
         [
           "initialSlide",
           1,
-          2
+          1,
+          4
         ],
         [
           "keyboardControl",
           1,
-          1
+          1,
+          3
         ],
         [
           "loop",
           1,
-          1
+          1,
+          3
         ],
         [
           "pager",
           1,
-          1
+          1,
+          3
         ],
         [
           "paginationType",
-          1
+          1,
+          1,
+          2
         ],
         [
           "parallax",
+          1,
+          1,
+          3
+        ],
+        [
+          "slidesPerView",
+          1,
           1,
           1
         ],
         [
           "spaceBetween",
           1,
-          2
+          1,
+          4
         ],
         [
           "speed",
           1,
-          2
+          1,
+          4
         ],
         [
           "zoom",
+          1,
+          1,
+          3
+        ]
+      ],
+      0,
+      1
+    ],
+    [
+      "ion-spinner",
+      {
+        "ios": [
+          "ion-spinner.ios",
+          null
+        ],
+        "md": [
+          "ion-spinner.md",
+          null
+        ]
+      },
+      1,
+      [
+        [
+          "color",
+          1,
+          1,
+          2
+        ],
+        [
+          "config",
+          3,
+          0,
+          0,
+          "config"
+        ],
+        [
+          "duration",
+          1,
+          1,
+          4
+        ],
+        [
+          "mode",
+          1,
+          1,
+          1
+        ],
+        [
+          "name",
+          1,
+          1,
+          2
+        ],
+        [
+          "paused",
+          1,
+          1,
+          3
+        ]
+      ]
+    ],
+    [
+      "ion-split-pane",
+      {
+        "ios": [
+          "ion-split-pane.ios",
+          null
+        ],
+        "md": [
+          "ion-split-pane.md",
+          null
+        ]
+      },
+      1,
+      [
+        [
+          "el",
+          7
+        ],
+        [
+          "enabled",
+          1,
+          1,
+          3
+        ],
+        [
+          "isVisible",
+          6
+        ],
+        [
+          "visible",
+          5
+        ],
+        [
+          "when",
+          1,
           1,
           1
         ]
@@ -1627,332 +4445,651 @@
       1
     ],
     [
-      "ION-SPINNER",
-      "ion-spinner",
+      "ion-tab",
       {
-        "ios": "ios.ion-spinner",
-        "md": "md.ion-spinner",
-        "wp": "wp.ion-spinner"
+        "ios": [
+          "ion-tab.ios",
+          null
+        ],
+        "md": [
+          "ion-tab.md",
+          null
+        ]
       },
+      0,
       [
         [
-          "duration",
+          "_setActive",
+          6
+        ],
+        [
+          "active",
+          5
+        ],
+        [
+          "badge",
+          1,
           1,
           2
         ],
         [
-          "name",
-          1
+          "badgeStyle",
+          1,
+          1,
+          2
         ],
         [
-          "paused",
+          "btnId",
           1,
-          1
-        ]
-      ]
-    ],
-    [
-      "ION-TAB",
-      "ion-tab",
-      {
-        "ios": "ios.ion-tab",
-        "md": "md.ion-tab",
-        "wp": "wp.ion-tab"
-      },
-      [
+          1,
+          2
+        ],
+        [
+          "el",
+          7
+        ],
         [
           "enabled",
           1,
-          1
+          1,
+          3
+        ],
+        [
+          "getActive",
+          6
+        ],
+        [
+          "getNav",
+          6
+        ],
+        [
+          "getPath",
+          6
+        ],
+        [
+          "goToRoot",
+          6
+        ],
+        [
+          "icon",
+          1,
+          1,
+          2
+        ],
+        [
+          "init",
+          5
+        ],
+        [
+          "path",
+          1,
+          1,
+          2
         ],
         [
           "root",
-          1
+          1,
+          1,
+          2
         ],
         [
           "rootParams",
-          1
-        ],
-        [
-          "shown",
+          1,
           1,
           1
         ],
         [
-          "tabBadge",
-          1
+          "selected",
+          2,
+          1,
+          3
         ],
         [
-          "tabBadgeStyle",
-          1
-        ],
-        [
-          "tabIcon",
-          1
-        ],
-        [
-          "tabTitle",
-          1
+          "show",
+          1,
+          1,
+          3
         ],
         [
           "tabsHideOnSubPages",
           1,
+          1,
+          3
+        ],
+        [
+          "title",
+          1,
+          1,
+          2
+        ]
+      ],
+      0,
+      1
+    ],
+    [
+      "ion-tab-button",
+      {
+        "ios": [
+          "ion-tab.ios",
+          null
+        ],
+        "md": [
+          "ion-tab.md",
+          null
+        ]
+      },
+      0,
+      [
+        [
+          "selected",
+          1,
+          1,
+          3
+        ],
+        [
+          "tab",
+          1,
+          1,
+          1
+        ]
+      ],
+      0,
+      0,
+      [
+        [
+          "click",
+          "onClick"
+        ]
+      ]
+    ],
+    [
+      "ion-tab-highlight",
+      {
+        "ios": [
+          "ion-tab.ios",
+          null
+        ],
+        "md": [
+          "ion-tab.md",
+          null
+        ]
+      },
+      0,
+      [
+        [
+          "animated",
+          5
+        ],
+        [
+          "el",
+          7
+        ],
+        [
+          "selectedTab",
+          1,
+          1,
+          1
+        ],
+        [
+          "transform",
+          5
+        ]
+      ],
+      0,
+      0,
+      [
+        [
+          "window:resize",
+          "onResize",
+          0,
           1
         ]
       ]
     ],
     [
-      "ION-TAB-BAR",
-      "ion-tab",
+      "ion-tabbar",
       {
-        "ios": "ios.ion-tab",
-        "md": "md.ion-tab",
-        "wp": "wp.ion-tab"
+        "ios": [
+          "ion-tab.ios",
+          null
+        ],
+        "md": [
+          "ion-tab.md",
+          null
+        ]
       },
+      0,
       [
         [
-          "selectedIndex",
+          "hidden",
+          5
+        ],
+        [
+          "highlight",
+          1,
+          1,
+          3
+        ],
+        [
+          "layout",
+          1,
+          1,
+          2
+        ],
+        [
+          "placement",
+          1,
+          1,
+          2
+        ],
+        [
+          "selectedTab",
+          1,
+          1,
+          1
+        ],
+        [
+          "tabs",
+          1,
+          1,
+          1
+        ],
+        [
+          "translucent",
+          1,
+          1,
+          3
+        ]
+      ],
+      0,
+      0,
+      [
+        [
+          "body:keyboardWillHide",
+          "onKeyboardWillHide"
+        ],
+        [
+          "body:keyboardWillShow",
+          "onKeyboardWillShow"
+        ]
+      ]
+    ],
+    [
+      "ion-tabs",
+      {
+        "ios": [
+          "ion-tab.ios",
+          null
+        ],
+        "md": [
+          "ion-tab.md",
+          null
+        ]
+      },
+      1,
+      [
+        [
+          "config",
+          3,
+          0,
+          0,
+          "config"
+        ],
+        [
+          "el",
+          7
+        ],
+        [
+          "getByIndex",
+          6
+        ],
+        [
+          "getIndex",
+          6
+        ],
+        [
+          "getRoutes",
+          6
+        ],
+        [
+          "getSelected",
+          6
+        ],
+        [
+          "getState",
+          6
+        ],
+        [
+          "getTabs",
+          6
+        ],
+        [
+          "name",
+          1,
+          1,
+          2
+        ],
+        [
+          "select",
+          6
+        ],
+        [
+          "selectedTab",
+          5
+        ],
+        [
+          "setRouteId",
+          6
+        ],
+        [
+          "tabbarHidden",
+          1,
+          1,
+          3
+        ],
+        [
+          "tabbarHighlight",
+          2,
+          1,
+          3
+        ],
+        [
+          "tabbarLayout",
+          2,
+          1,
+          2
+        ],
+        [
+          "tabbarPlacement",
+          2,
           1,
           2
         ],
         [
           "tabs",
-          1
+          5
         ],
         [
-          "tabsLayout",
-          1
+          "translucent",
+          1,
+          1,
+          3
+        ]
+      ],
+      0,
+      1,
+      [
+        [
+          "ionTabbarClick",
+          "tabChange"
         ]
       ]
     ],
     [
-      "ION-TAB-BUTTON",
-      "ion-tab",
+      "ion-textarea",
       {
-        "ios": "ios.ion-tab",
-        "md": "md.ion-tab",
-        "wp": "wp.ion-tab"
-      },
-      [
-        [
-          "index",
-          1,
-          2
+        "ios": [
+          "ion-input.ios",
+          null
         ],
-        [
-          "layout",
-          1
-        ],
-        [
-          "selectedIndex",
-          1,
-          2
-        ],
-        [
-          "tab",
-          1
+        "md": [
+          "ion-input.md",
+          null
         ]
-      ]
-    ],
-    [
-      "ION-TAB-HIGHLIGHT",
-      "ion-tab",
-      {
-        "ios": "ios.ion-tab",
-        "md": "md.ion-tab",
-        "wp": "wp.ion-tab"
-      }
-    ],
-    [
-      "ION-TABS",
-      "ion-tab",
-      {
-        "ios": "ios.ion-tab",
-        "md": "md.ion-tab",
-        "wp": "wp.ion-tab"
       },
-      [
-        [
-          "tabsHighlight",
-          1,
-          1
-        ],
-        [
-          "tabsLayout",
-          1
-        ],
-        [
-          "tabsPlacement",
-          1
-        ]
-      ],
-      [
-        [
-          "ionTabDidLoad",
-          "tabDidLoad"
-        ],
-        [
-          "ionTabDidUnload",
-          "tabDidUnload"
-        ]
-      ],
-      1
-    ],
-    [
-      "ION-TEXTAREA",
-      "ion-input",
-      {
-        "ios": "ios.ion-input",
-        "md": "md.ion-input",
-        "wp": "wp.ion-input"
-      },
+      0,
       [
         [
           "autocapitalize",
-          1
+          1,
+          1,
+          2
         ],
         [
           "autocomplete",
-          1
+          1,
+          1,
+          2
         ],
         [
           "autofocus",
           1,
-          1
+          1,
+          3
         ],
         [
           "clearOnEdit",
           2,
-          1
+          1,
+          3
         ],
         [
           "cols",
           1,
-          2
+          1,
+          4
         ],
         [
           "disabled",
           1,
-          1
+          1,
+          3
+        ],
+        [
+          "el",
+          7
         ],
         [
           "maxlength",
           1,
-          2
+          1,
+          4
         ],
         [
           "minlength",
           1,
-          2
+          1,
+          4
         ],
         [
           "name",
-          1
+          1,
+          1,
+          2
         ],
         [
           "placeholder",
-          1
+          1,
+          1,
+          2
         ],
         [
           "readonly",
           1,
-          1
+          1,
+          3
         ],
         [
           "required",
           1,
-          1
+          1,
+          3
         ],
         [
           "rows",
           1,
-          2
+          1,
+          4
         ],
         [
           "spellcheck",
           1,
-          1
+          1,
+          3
         ],
         [
           "value",
+          2,
+          1,
           2
         ],
         [
           "wrap",
-          1
+          1,
+          1,
+          2
         ]
       ]
     ],
     [
-      "ION-THUMBNAIL",
-      "ion-avatar",
+      "ion-thumbnail",
       {
-        "ios": "ios.ion-avatar",
-        "md": "md.ion-avatar",
-        "wp": "wp.ion-avatar"
+        "ios": [
+          "ion-avatar.ios",
+          null
+        ],
+        "md": [
+          "ion-avatar.md",
+          null
+        ]
       },
+      1,
       0,
       0,
       1
     ],
     [
-      "ION-TITLE",
-      "ion-app",
+      "ion-title",
       {
-        "$": "ion-app",
-        "ios": "ios.ion-app",
-        "md": "md.ion-app",
-        "wp": "wp.ion-app"
+        "ios": [
+          "ion-app.ios",
+          null
+        ],
+        "md": [
+          "ion-app.md",
+          null
+        ]
       },
+      1,
       0,
       0,
       1
     ],
     [
-      "ION-TOAST",
       "ion-toast",
       {
-        "ios": "ios.ion-toast",
-        "md": "md.ion-toast",
-        "wp": "wp.ion-toast"
+        "ios": [
+          "ion-toast.ios",
+          null
+        ],
+        "md": [
+          "ion-toast.md",
+          null
+        ]
       },
+      1,
       [
         [
-          "closeButtonText",
-          1
-        ],
-        [
-          "cssClass",
-          1
-        ],
-        [
-          "dismissOnPageChange",
+          "animate",
           1,
-          1
+          1,
+          3
         ],
         [
-          "duration",
+          "animationCtrl",
+          4,
+          0,
+          0,
+          "ion-animation-controller"
+        ],
+        [
+          "closeButtonText",
+          1,
           1,
           2
         ],
         [
-          "id",
+          "config",
+          3,
+          0,
+          0,
+          "config"
+        ],
+        [
+          "cssClass",
+          1,
+          1,
+          2
+        ],
+        [
+          "dismiss",
+          6
+        ],
+        [
+          "dismissOnPageChange",
+          1,
+          1,
+          3
+        ],
+        [
+          "duration",
+          1,
+          1,
+          4
+        ],
+        [
+          "el",
+          7
+        ],
+        [
+          "enterAnimation",
+          1,
+          1,
+          1
+        ],
+        [
+          "leaveAnimation",
+          1,
+          1,
           1
         ],
         [
           "message",
-          1
+          1,
+          1,
+          2
         ],
         [
           "position",
-          1
+          1,
+          1,
+          2
+        ],
+        [
+          "present",
+          6
         ],
         [
           "showCloseButton",
           1,
-          1
+          1,
+          3
+        ],
+        [
+          "toastId",
+          1,
+          1,
+          2
+        ],
+        [
+          "translucent",
+          1,
+          1,
+          3
         ]
       ],
+      0,
+      0,
       [
         [
           "ionDismiss",
@@ -1961,30 +5098,42 @@
       ]
     ],
     [
-      "ION-TOAST-CONTROLLER",
-      "ion-toast",
+      "ion-toast-controller",
       {
-        "ios": "ios.ion-toast",
-        "md": "md.ion-toast",
-        "wp": "wp.ion-toast"
+        "ios": [
+          "ion-toast.ios",
+          null
+        ],
+        "md": [
+          "ion-toast.md",
+          null
+        ]
       },
       0,
       [
         [
+          "create",
+          6
+        ]
+      ],
+      0,
+      0,
+      [
+        [
           "body:ionToastDidLoad",
-          "viewDidLoad"
+          "didLoad"
         ],
         [
-          "body:ionToastDidUnload",
-          "willDismiss"
+          "body:ionToastWillPresent",
+          "willPresent"
         ],
         [
           "body:ionToastWillDismiss",
           "willDismiss"
         ],
         [
-          "body:ionToastWillPresent",
-          "willPresent"
+          "body:ionToastDidUnload",
+          "willDismiss"
         ],
         [
           "body:keyup.escape",
@@ -1993,68 +5142,114 @@
       ]
     ],
     [
-      "ION-TOGGLE",
       "ion-toggle",
       {
-        "ios": "ios.ion-toggle",
-        "md": "md.ion-toggle",
-        "wp": "wp.ion-toggle"
+        "ios": [
+          "ion-toggle.ios",
+          null
+        ],
+        "md": [
+          "ion-toggle.md",
+          null
+        ]
       },
+      1,
       [
+        [
+          "activated",
+          5
+        ],
         [
           "checked",
           2,
-          1
+          1,
+          3
+        ],
+        [
+          "color",
+          1,
+          1,
+          2
         ],
         [
           "disabled",
           2,
+          1,
+          3
+        ],
+        [
+          "keyFocus",
+          5
+        ],
+        [
+          "mode",
+          1,
+          1,
           1
         ],
         [
-          "value",
+          "name",
+          1,
+          1,
           2
-        ]
-      ],
-      [
+        ],
         [
-          "keydown.space",
-          "onSpace"
+          "value",
+          2,
+          1,
+          2
         ]
       ]
     ],
     [
-      "ION-TOOLBAR",
-      "ion-app",
+      "ion-toolbar",
       {
-        "$": "ion-app",
-        "ios": "ios.ion-app",
-        "md": "md.ion-app",
-        "wp": "wp.ion-app"
+        "ios": [
+          "ion-app.ios",
+          null
+        ],
+        "md": [
+          "ion-app.md",
+          null
+        ]
       },
-      0,
+      1,
+      [
+        [
+          "color",
+          1,
+          1,
+          2
+        ],
+        [
+          "config",
+          3,
+          0,
+          0,
+          "config"
+        ],
+        [
+          "el",
+          7
+        ],
+        [
+          "mode",
+          1,
+          1,
+          1
+        ],
+        [
+          "translucent",
+          1,
+          1,
+          3
+        ]
+      ],
       0,
       2
-    ],
-    [
-      "PAGE-ONE",
-      "ion-nav"
-    ],
-    [
-      "PAGE-THREE",
-      "ion-nav"
-    ],
-    [
-      "PAGE-TWO",
-      "ion-nav"
-    ],
-    [
-      "STENCIL-ION-NAV-DELEGATE",
-      "ion-nav"
     ]
   ],
-  "loader": "ionic.js",
   "global": "ionic.global.js",
-  "core": "ionic/ionic.core.js",
-  "coreEs5": "ionic/ionic.core.ce.js"
+  "core": "ionic.core.js",
+  "coreSsr": "ionic.core.ssr.js"
 }

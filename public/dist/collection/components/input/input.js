@@ -1,6 +1,8 @@
+import { EventEmitter } from '@stencil/core';
 import { createThemedClasses } from '../../utils/theme';
-var Input = /** @class */ (function () {
-    function Input() {
+import { InputComponent } from './input-base';
+export class Input {
+    constructor() {
         /**
          * @input {string} Indicates whether and how the text value should be automatically capitalized as it is entered/edited by the user. Defaults to `"none"`.
          */
@@ -26,7 +28,7 @@ var Input = /** @class */ (function () {
          */
         this.clearInput = false;
         /**
-         * @input {boolean} If true, the user cannot interact with this element. Defaults to `false`.
+         * @input {boolean} If true, the user cannot interact with the input. Defaults to `false`.
          */
         this.disabled = false;
         /**
@@ -49,89 +51,88 @@ var Input = /** @class */ (function () {
     /**
      * @hidden
      */
-    Input.prototype.checkedChanged = function () {
+    checkedChanged() {
         this.emitStyle();
-    };
+    }
     /**
      * @hidden
      */
-    Input.prototype.disabledChanged = function () {
+    disabledChanged() {
         this.emitStyle();
-    };
+    }
     /**
      * @hidden
      * Update the native input element when the value changes
      */
-    Input.prototype.valueChanged = function () {
-        var inputEl = this.el.querySelector('input');
+    valueChanged() {
+        const inputEl = this.el.querySelector('input');
         if (inputEl.value !== this.value) {
             inputEl.value = this.value;
         }
-    };
-    Input.prototype["componentDidLoad"] = function () {
+    }
+    componentDidLoad() {
         this.emitStyle();
         // By default, password inputs clear after focus when they have content
         if (this.type === 'password' && this.clearOnEdit !== false) {
             this.clearOnEdit = true;
         }
-    };
-    Input.prototype.emitStyle = function () {
-        var _this = this;
+    }
+    emitStyle() {
         clearTimeout(this.styleTmr);
-        var styles = {
+        let styles = {
             'input': true,
             'input-checked': this.checked,
             'input-disabled': this.disabled,
             'input-has-value': this.hasValue(),
             'input-has-focus': this.hasFocus()
         };
-        this.styleTmr = setTimeout(function () {
-            _this.ionStyle.emit(styles);
+        this.styleTmr = setTimeout(() => {
+            this.ionStyle.emit(styles);
         });
-    };
+    }
     /**
      * @hidden
      */
-    Input.prototype.inputBlurred = function (ev) {
+    inputBlurred(ev) {
         this.ionBlur.emit(ev);
         this.focusChange(this.hasFocus());
         this.emitStyle();
-    };
+    }
     /**
      * @hidden
      */
-    Input.prototype.inputChanged = function (ev) {
+    inputChanged(ev) {
         this.value = ev.target && ev.target.value;
         this.emitStyle();
-    };
+    }
     /**
      * @hidden
      */
-    Input.prototype.inputFocused = function (ev) {
+    inputFocused(ev) {
         this.ionFocus.emit(ev);
         this.focusChange(this.hasFocus());
         this.emitStyle();
-    };
+    }
     /**
      * @hidden
      */
-    Input.prototype.focusChange = function (inputHasFocus) {
+    focusChange(inputHasFocus) {
         // If clearOnEdit is enabled and the input blurred but has a value, set a flag
         if (this.clearOnEdit && !inputHasFocus && this.hasValue()) {
             this.didBlurAfterEdit = true;
         }
-    };
+    }
     /**
      * @hidden
      */
-    Input.prototype.inputKeydown = function () {
+    inputKeydown() {
         this.checkClearOnEdit();
-    };
+    }
     /**
     * Check if we need to clear the text input if clearOnEdit is enabled
     * @hidden
     */
-    Input.prototype.checkClearOnEdit = function () {
+    checkClearOnEdit() {
         if (!this.clearOnEdit) {
             return;
         }
@@ -142,34 +143,32 @@ var Input = /** @class */ (function () {
         }
         // Reset the flag
         this.didBlurAfterEdit = false;
-    };
+    }
     /**
      * @hidden
      */
-    Input.prototype.clearTextInput = function () {
+    clearTextInput() {
         this.value = '';
-    };
+    }
     /**
      * @hidden
      */
-    Input.prototype.hasFocus = function () {
+    hasFocus() {
         // check if an input has focus or not
         return this.el && (this.el.querySelector(':focus') === this.el.querySelector('input'));
-    };
+    }
     /**
      * @hidden
      */
-    Input.prototype.hasValue = function () {
+    hasValue() {
         return (this.value !== null && this.value !== undefined && this.value !== '');
-    };
-    Input.prototype.render = function () {
-        var themedClasses = createThemedClasses(this.mode, this.color, 'text-input');
+    }
+    render() {
+        const themedClasses = createThemedClasses(this.mode, this.color, 'text-input');
         // TODO aria-labelledby={this.item.labelId}
         return [
-            h("input", { "c": themedClasses, "o": { "blur": this.inputBlurred.bind(this), "input": this.inputChanged.bind(this), "focus": this.inputFocused.bind(this), "keydown": this.inputKeydown.bind(this) }, "a": { "aria-disabled": this.disabled ? 'true' : false, "disabled": this.disabled }, "p": { "accept": this.accept, "autoCapitalize": this.autocapitalize, "autoComplete": this.autocomplete, "autoCorrect": this.autocorrect, "autoFocus": this.autofocus, "checked": this.checked, "inputMode": this.inputmode, "min": this.min, "max": this.max, "minLength": this.minlength, "maxLength": this.maxlength, "multiple": this.multiple, "name": this.name, "pattern": this.pattern, "placeholder": this.placeholder, "results": this.results, "readOnly": this.readonly, "required": this.required, "spellCheck": this.spellcheck, "step": this.step, "size": this.size, "type": this.type, "value": this.value } }),
-            h("button", { "c": { "text-input-clear-icon": true }, "o": { "click": this.clearTextInput.bind(this), "mousedown": this.clearTextInput.bind(this) }, "a": { "hidden": this.clearInput !== true } })
+            h("input", { "aria-disabled": this.disabled ? 'true' : false, accept: this.accept, autoCapitalize: this.autocapitalize, autoComplete: this.autocomplete, autoCorrect: this.autocorrect, autoFocus: this.autofocus, checked: this.checked, disabled: this.disabled, inputMode: this.inputmode, min: this.min, max: this.max, minLength: this.minlength, maxLength: this.maxlength, multiple: this.multiple, name: this.name, pattern: this.pattern, placeholder: this.placeholder, results: this.results, readOnly: this.readonly, required: this.required, spellCheck: this.spellcheck, step: this.step, size: this.size, type: this.type, value: this.value, class: themedClasses, onBlur: this.inputBlurred.bind(this), onInput: this.inputChanged.bind(this), onFocus: this.inputFocused.bind(this), onKeyDown: this.inputKeydown.bind(this) }),
+            h("button", { hidden: this.clearInput !== true, class: 'text-input-clear-icon', onClick: this.clearTextInput.bind(this), onMouseDown: this.clearTextInput.bind(this) })
         ];
-    };
-    return Input;
-}());
-export { Input };
+    }
+}

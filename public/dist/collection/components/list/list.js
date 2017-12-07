@@ -1,16 +1,20 @@
-var List = /** @class */ (function () {
-    function List() {
+import { ItemSliding } from '../item-sliding/item-sliding';
+export class List {
+    getOpenedItem() {
+        return this.openedItem;
     }
-    List.prototype.render = function () {
-        return h(0, 0);
-    };
-    /**
-     * Close any sliding items that are open.
-     */
-    List.prototype.closeSlidingItems = function () {
-        this.openContainer.close();
-        this.openContainer = null;
-    };
-    return List;
-}());
-export { List };
+    setOpenedItem(itemSliding) {
+        this.openedItem = itemSliding;
+    }
+    closeSlidingItems() {
+        if (this.openedItem) {
+            this.openedItem.close();
+            this.openedItem = null;
+            return true;
+        }
+        return false;
+    }
+    render() {
+        return h("slot", null);
+    }
+}

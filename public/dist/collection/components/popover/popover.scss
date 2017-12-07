@@ -1,11 +1,7 @@
-@import "../../themes/ionic.globals";
+@import "./popover.vars";
 
 // Popover
 // --------------------------------------------------
-
-/// @prop - Color of the backdrop
-$popover-backdrop-color: #000 !default;
-
 
 ion-popover {
   @include position(0, 0, 0, 0);
@@ -55,9 +51,10 @@ ion-popover-controller {
 // --------------------------------------------------
 
 .popover-backdrop {
+  @include position(0, null, null, 0);
+
   position: absolute;
-  top: 0;
-  left: 0;
+
   z-index: $z-index-backdrop;
   display: block;
 

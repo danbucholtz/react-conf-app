@@ -1,69 +1,119 @@
-import { getActiveImpl, getFirstView, getPreviousImpl, getViews, init } from '../../navigation/nav-utils';
-import { isReady } from '../../utils/helpers';
-var IonNav = /** @class */ (function () {
-    function IonNav() {
-        init(this);
+import { EventEmitter } from '@stencil/core';
+import { ComponentDataPair, Config, FrameworkDelegate, NavController, NavOptions, NavState, PublicNav, PublicViewController, RouterEntries, ViewController } from '../../index';
+import { getActiveImpl, getFirstView, getNextNavId, getPreviousImpl, getViews, resolveRoute } from '../../navigation/nav-utils';
+import { assert, isReady } from '../../utils/helpers';
+/* it is very important to keep this class in sync with ./nav-interface interface */
+export class Nav {
+    constructor() {
+        this.init = false;
+        this.routes = [];
+        this.views = [];
+        this.navId = getNextNavId();
     }
-    IonNav.prototype.componentDidLoad = function () {
-        componentDidLoadImpl(this);
-    };
-    IonNav.prototype.getViews = function () {
+    componentWillLoad() {
+        this.routes = Array.from(this.element.querySelectorAll('ion-route'))
+            .map(child => child.getRoute());
+        this.useRouter = this.config.getBoolean('useRouter', false);
+    }
+    componentDidLoad() {
+        if (this.init) {
+            return;
+        }
+        this.init = true;
+        if (!this.useRouter) {
+            componentDidLoadImpl(this);
+        }
+    }
+    getViews() {
         return getViews(this);
-    };
-    IonNav.prototype.push = function (component, data, opts) {
+    }
+    push(component, data, opts) {
         return pushImpl(this, component, data, opts);
-    };
-    IonNav.prototype.pop = function (opts) {
+    }
+    pop(opts) {
         return popImpl(this, opts);
-    };
-    IonNav.prototype.setRoot = function (component, data, opts) {
+    }
+    setRoot(component, data, opts) {
         return setRootImpl(this, component, data, opts);
-    };
-    IonNav.prototype.insert = function (insertIndex, page, params, opts) {
+    }
+    insert(insertIndex, page, params, opts) {
         return insertImpl(this, insertIndex, page, params, opts);
-    };
-    IonNav.prototype.insertPages = function (insertIndex, insertPages, opts) {
+    }
+    insertPages(insertIndex, insertPages, opts) {
         return insertPagesImpl(this, insertIndex, insertPages, opts);
-    };
-    IonNav.prototype.popToRoot = function (opts) {
+    }
+    popToRoot(opts) {
         return popToRootImpl(this, opts);
-    };
-    IonNav.prototype.popTo = function (indexOrViewCtrl, opts) {
+    }
+    popTo(indexOrViewCtrl, opts) {
         return popToImpl(this, indexOrViewCtrl, opts);
-    };
-    IonNav.prototype.remove = function (startIndex, removeCount, opts) {
+    }
+    removeIndex(startIndex, removeCount, opts) {
         return removeImpl(this, startIndex, removeCount, opts);
-    };
-    IonNav.prototype.removeView = function (viewController, opts) {
+    }
+    removeView(viewController, opts) {
         return removeViewImpl(this, viewController, opts);
-    };
-    IonNav.prototype.setPages = function (componentDataPairs, opts) {
+    }
+    setPages(componentDataPairs, opts) {
         return setPagesImpl(this, componentDataPairs, opts);
-    };
-    IonNav.prototype.getActive = function () {
+    }
+    getActive() {
         return getActiveImpl(this);
-    };
-    IonNav.prototype.getPrevious = function (view) {
+    }
+    getPrevious(view) {
         return getPreviousImpl(this, view);
-    };
-    IonNav.prototype.canGoBack = function (nav) {
-        return nav.views && nav.views.length > 0;
-    };
-    IonNav.prototype.canSwipeBack = function () {
+    }
+    canGoBack() {
+        return canGoBackImpl(this);
+    }
+    canSwipeBack() {
         return true; // TODO, implement this for real
-    };
-    IonNav.prototype.getFirstView = function () {
+    }
+    getFirstView() {
         return getFirstView(this);
-    };
-    IonNav.prototype.navInitialized = function (event) {
+    }
+    resize() {
+        console.log('resize content');
+    }
+    navInitialized(event) {
         navInitializedImpl(this, event);
+    }
+    getState() {
+        assert(this.useRouter, 'routing is disabled');
+        return getState(this);
+    }
+    setRouteId(id, _ = {}) {
+        assert(this.useRouter, 'routing is disabled');
+        const active = this.getActive();
+        if (active && active.component === id) {
+            return Promise.resolve();
+        }
+        return this.setRoot(id);
+    }
+    getRoutes() {
+        assert(this.useRouter, 'routing is disabled');
+        return this.routes;
+    }
+    render() {
+        return h("slot", null);
+    }
+}
+export function getState(nav) {
+    const active = getActiveImpl(nav);
+    if (!active) {
+        return null;
+    }
+    const component = active.component;
+    const route = resolveRoute(nav, component);
+    if (!route) {
+        console.error('cant reverse route by component', component);
+        return null;
+    }
+    return {
+        path: route.path,
+        focusNode: active.element
     };
-    IonNav.prototype.render = function () {
-        return h(0, 0);
-    };
-    return IonNav;
-}());
-export { IonNav };
+}
 export function componentDidLoadImpl(nav) {
     nav.navInit.emit(nav);
     if (nav.root) {
@@ -71,52 +121,52 @@ export function componentDidLoadImpl(nav) {
     }
 }
 export function pushImpl(nav, component, data, opts) {
-    return getNavController(nav).then(function () {
+    return getNavController(nav).then(() => {
         return nav.navController.push(nav, component, data, opts);
     });
 }
 export function popImpl(nav, opts) {
-    return getNavController(nav).then(function () {
+    return getNavController(nav).then(() => {
         return nav.navController.pop(nav, opts);
     });
 }
 export function setRootImpl(nav, component, data, opts) {
-    return getNavController(nav).then(function () {
+    return getNavController(nav).then(() => {
         return nav.navController.setRoot(nav, component, data, opts);
     });
 }
 export function insertImpl(nav, insertIndex, page, params, opts) {
-    return getNavController(nav).then(function () {
+    return getNavController(nav).then(() => {
         return nav.navController.insert(nav, insertIndex, page, params, opts);
     });
 }
 export function insertPagesImpl(nav, insertIndex, insertPages, opts) {
-    return getNavController(nav).then(function () {
+    return getNavController(nav).then(() => {
         return nav.navController.insertPages(nav, insertIndex, insertPages, opts);
     });
 }
 export function popToRootImpl(nav, opts) {
-    return getNavController(nav).then(function () {
+    return getNavController(nav).then(() => {
         return nav.navController.popToRoot(nav, opts);
     });
 }
 export function popToImpl(nav, indexOrViewCtrl, opts) {
-    return getNavController(nav).then(function () {
+    return getNavController(nav).then(() => {
         return nav.navController.popTo(nav, indexOrViewCtrl, opts);
     });
 }
 export function removeImpl(nav, startIndex, removeCount, opts) {
-    return getNavController(nav).then(function () {
-        return nav.navController.remove(nav, startIndex, removeCount, opts);
+    return getNavController(nav).then(() => {
+        return nav.navController.removeIndex(nav, startIndex, removeCount, opts);
     });
 }
 export function removeViewImpl(nav, viewController, opts) {
-    return getNavController(nav).then(function () {
+    return getNavController(nav).then(() => {
         return nav.navController.removeView(nav, viewController, opts);
     });
 }
 export function setPagesImpl(nav, componentDataPairs, opts) {
-    return getNavController(nav).then(function () {
+    return getNavController(nav).then(() => {
         return nav.navController.setPages(nav, componentDataPairs, opts);
     });
 }
@@ -126,6 +176,9 @@ export function getNavController(nav) {
     }
     nav.navController = document.querySelector('ion-nav-controller');
     return isReady(nav.navController);
+}
+export function canGoBackImpl(nav) {
+    return nav.views && nav.views.length > 0;
 }
 export function navInitializedImpl(potentialParent, event) {
     if (potentialParent.element !== event.target) {

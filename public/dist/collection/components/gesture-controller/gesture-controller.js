@@ -1,84 +1,83 @@
-var GestureController = /** @class */ (function () {
-    function GestureController() {
-        this.id = 0;
+export class GestureController {
+    constructor() {
+        this.gestureId = 0;
         this.requestedStart = {};
         this.disabledGestures = {};
         this.disabledScroll = new Set();
-        this.capturedID = null;
+        this.capturedId = null;
     }
-    GestureController.prototype.createGesture = function (gestureName, gesturePriority, disableScroll) {
+    createGesture(gestureName, gesturePriority, disableScroll) {
         return new GestureDelegate(this, this.newID(), gestureName, gesturePriority, disableScroll);
-    };
-    GestureController.prototype.createBlocker = function (opts) {
-        if (opts === void 0) { opts = {}; }
+    }
+    createBlocker(opts = {}) {
         return new BlockerDelegate(this.newID(), this, opts.disable, !!opts.disableScroll);
-    };
-    GestureController.prototype.newID = function () {
-        return this.id++;
-    };
-    GestureController.prototype.start = function (gestureName, id, priority) {
+    }
+    newID() {
+        return this.gestureId++;
+    }
+    start(gestureName, id, priority) {
         if (!this.canStart(gestureName)) {
             delete this.requestedStart[id];
             return false;
         }
         this.requestedStart[id] = priority;
         return true;
-    };
-    GestureController.prototype.capture = function (gestureName, id, priority) {
+    }
+    capture(gestureName, id, priority) {
         if (!this.start(gestureName, id, priority)) {
             return false;
         }
-        var requestedStart = this.requestedStart;
-        var maxPriority = -10000;
-        for (var gestureID in requestedStart) {
+        let requestedStart = this.requestedStart;
+        let maxPriority = -10000;
+        for (let gestureID in requestedStart) {
             maxPriority = Math.max(maxPriority, requestedStart[gestureID]);
         }
         if (maxPriority === priority) {
-            this.capturedID = id;
+            this.capturedId = id;
             this.requestedStart = {};
             return true;
         }
         delete requestedStart[id];
         return false;
-    };
-    GestureController.prototype.release = function (id) {
+    }
+    release(id) {
         delete this.requestedStart[id];
-        if (this.capturedID && id === this.capturedID) {
-            this.capturedID = null;
+        if (this.capturedId && id === this.capturedId) {
+            this.capturedId = null;
         }
-    };
-    GestureController.prototype.disableGesture = function (gestureName, id) {
-        var set = this.disabledGestures[gestureName];
+    }
+    disableGesture(gestureName, id) {
+        let set = this.disabledGestures[gestureName];
         if (!set) {
             set = new Set();
             this.disabledGestures[gestureName] = set;
         }
         set.add(id);
-    };
-    GestureController.prototype.enableGesture = function (gestureName, id) {
-        var set = this.disabledGestures[gestureName];
+    }
+    enableGesture(gestureName, id) {
+        let set = this.disabledGestures[gestureName];
         if (set) {
             set.delete(id);
         }
-    };
-    GestureController.prototype.disableScroll = function (id) {
+    }
+    disableScroll(id) {
         // let isEnabled = !this.isScrollDisabled();
         this.disabledScroll.add(id);
         // if (this._app && isEnabled && this.isScrollDisabled()) {
         //   console.debug('GestureController: Disabling scrolling');
         //   this._app._setDisableScroll(true);
         // }
-    };
-    GestureController.prototype.enableScroll = function (id) {
+    }
+    enableScroll(id) {
         // let isDisabled = this.isScrollDisabled();
         this.disabledScroll.delete(id);
         // if (this._app && isDisabled && !this.isScrollDisabled()) {
         //   console.debug('GestureController: Enabling scrolling');
         //   this._app._setDisableScroll(false);
         // }
-    };
-    GestureController.prototype.canStart = function (gestureName) {
-        if (this.capturedID) {
+    }
+    canStart(gestureName) {
+        if (this.capturedId) {
             // a gesture already captured
             return false;
         }
@@ -86,114 +85,106 @@ var GestureController = /** @class */ (function () {
             return false;
         }
         return true;
-    };
-    GestureController.prototype.isCaptured = function () {
-        return !!this.capturedID;
-    };
-    GestureController.prototype.isScrollDisabled = function () {
+    }
+    isCaptured() {
+        return !!this.capturedId;
+    }
+    isScrollDisabled() {
         return this.disabledScroll.size > 0;
-    };
-    GestureController.prototype.isDisabled = function (gestureName) {
-        var disabled = this.disabledGestures[gestureName];
+    }
+    isDisabled(gestureName) {
+        let disabled = this.disabledGestures[gestureName];
         if (disabled && disabled.size > 0) {
             return true;
         }
         return false;
-    };
-    return GestureController;
-}());
-export { GestureController };
-var GestureDelegate = /** @class */ (function () {
-    function GestureDelegate(ctrl, id, name, priority, disableScroll) {
+    }
+}
+export class GestureDelegate {
+    constructor(ctrl, gestureDelegateId, name, priority, disableScroll) {
         this.ctrl = ctrl;
-        this.id = id;
+        this.gestureDelegateId = gestureDelegateId;
         this.name = name;
         this.priority = priority;
         this.disableScroll = disableScroll;
     }
-    GestureDelegate.prototype.canStart = function () {
+    canStart() {
         if (!this.ctrl) {
             return false;
         }
         return this.ctrl.canStart(this.name);
-    };
-    GestureDelegate.prototype.start = function () {
+    }
+    start() {
         if (!this.ctrl) {
             return false;
         }
-        return this.ctrl.start(this.name, this.id, this.priority);
-    };
-    GestureDelegate.prototype.capture = function () {
+        return this.ctrl.start(this.name, this.gestureDelegateId, this.priority);
+    }
+    capture() {
         if (!this.ctrl) {
             return false;
         }
-        var captured = this.ctrl.capture(this.name, this.id, this.priority);
+        let captured = this.ctrl.capture(this.name, this.gestureDelegateId, this.priority);
         if (captured && this.disableScroll) {
-            this.ctrl.disableScroll(this.id);
+            this.ctrl.disableScroll(this.gestureDelegateId);
         }
         return captured;
-    };
-    GestureDelegate.prototype.release = function () {
+    }
+    release() {
         if (this.ctrl) {
-            this.ctrl.release(this.id);
+            this.ctrl.release(this.gestureDelegateId);
             if (this.disableScroll) {
-                this.ctrl.enableScroll(this.id);
+                this.ctrl.enableScroll(this.gestureDelegateId);
             }
         }
-    };
-    GestureDelegate.prototype.destroy = function () {
+    }
+    destroy() {
         this.release();
         this.ctrl = null;
-    };
-    return GestureDelegate;
-}());
-export { GestureDelegate };
-var BlockerDelegate = /** @class */ (function () {
-    function BlockerDelegate(id, controller, disable, disableScroll) {
-        this.id = id;
+    }
+}
+export class BlockerDelegate {
+    constructor(blockerDelegateId, controller, disable, disableScroll) {
+        this.blockerDelegateId = blockerDelegateId;
         this.controller = controller;
         this.disable = disable;
         this.disableScroll = disableScroll;
         this.blocked = false;
     }
-    BlockerDelegate.prototype.block = function () {
-        var _this = this;
+    block() {
         if (!this.controller) {
             return;
         }
         if (this.disable) {
-            this.disable.forEach(function (gesture) {
-                _this.controller.disableGesture(gesture, _this.id);
+            this.disable.forEach(gesture => {
+                this.controller.disableGesture(gesture, this.blockerDelegateId);
             });
         }
         if (this.disableScroll) {
-            this.controller.disableScroll(this.id);
+            this.controller.disableScroll(this.blockerDelegateId);
         }
         this.blocked = true;
-    };
-    BlockerDelegate.prototype.unblock = function () {
-        var _this = this;
+    }
+    unblock() {
         if (!this.controller) {
             return;
         }
         if (this.disable) {
-            this.disable.forEach(function (gesture) {
-                _this.controller.enableGesture(gesture, _this.id);
+            this.disable.forEach(gesture => {
+                this.controller.enableGesture(gesture, this.blockerDelegateId);
             });
         }
         if (this.disableScroll) {
-            this.controller.enableScroll(this.id);
+            this.controller.enableScroll(this.blockerDelegateId);
         }
         this.blocked = false;
-    };
-    BlockerDelegate.prototype.destroy = function () {
+    }
+    destroy() {
         this.unblock();
         this.controller = null;
-    };
-    return BlockerDelegate;
-}());
-export { BlockerDelegate };
-export var BLOCK_ALL = {
+    }
+}
+export const BLOCK_ALL = {
     disable: ['menu-swipe', 'goback-swipe'],
     disableScroll: true
 };

@@ -1,9 +1,11 @@
-var CardTitle = /** @class */ (function () {
-    function CardTitle() {
+export class CardTitle {
+    hostData() {
+        return {
+            'role': 'heading',
+            'aria-level': '2'
+        };
     }
-    CardTitle.prototype.render = function () {
-        return h(0, 0);
-    };
-    return CardTitle;
-}());
-export { CardTitle };
+    render() {
+        return h("slot", null);
+    }
+}

@@ -30,7 +30,7 @@ export default class PageThree extends Component {
 
 
   goBack() {
-    const page = this.element.closest('ion-page');
+    const page = this.element.closest('.ion-page');
     const nav = page.closest('ion-nav');
     nav.pop();
   }
@@ -38,9 +38,9 @@ export default class PageThree extends Component {
   render() {
     return [
       <ion-header ref={(element) => this.element = element}>
-        <ion-navbar>
+        <ion-toolbar>
           <ion-title>Page three</ion-title>
-        </ion-navbar>
+        </ion-toolbar>
       </ion-header>,
       <ion-content>
         Page Three

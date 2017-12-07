@@ -1,33 +1,39 @@
 import { createThemedClasses } from '../../utils/theme';
-var Toolbar = /** @class */ (function () {
-    function Toolbar() {
+import { Config } from '../../index';
+export class Toolbar {
+    constructor() {
+        /**
+         * @input {boolean} If true, adds transparency to the header.
+         * Note: In order to scroll content behind the header, the `fullscreen`
+         * attribute needs to be set on the content.
+         * Only affects `ios` mode. Defaults to `false`.
+         */
+        this.translucent = false;
     }
-    Toolbar.prototype["componentDidLoad"] = function () {
-        var buttons = this.el.querySelectorAll('ion-button');
+    componentDidLoad() {
+        const buttons = this.el.querySelectorAll('ion-button');
         for (var i = 0; i < buttons.length; i++) {
             buttons[i].setAttribute('button-type', 'bar-button');
         }
-    };
-    Toolbar.prototype.hostData = function () {
+    }
+    hostData() {
+        const themedClasses = this.translucent ? createThemedClasses(this.mode, this.color, 'toolbar-translucent') : {};
+        const hostClasses = Object.assign({}, themedClasses, { 'statusbar-padding': this.config.getBoolean('statusbarPadding') });
         return {
-            class: {
-                'statusbar-padding': this.config.getBoolean('statusbarPadding')
-            }
+            class: hostClasses
         };
-    };
-    Toolbar.prototype.render = function () {
-        var backgroundCss = createThemedClasses(this.mode, this.color, 'toolbar-background');
-        var contentCss = createThemedClasses(this.mode, this.color, 'toolbar-content');
+    }
+    render() {
+        const backgroundCss = createThemedClasses(this.mode, this.color, 'toolbar-background');
+        const contentCss = createThemedClasses(this.mode, this.color, 'toolbar-content');
         return [
-            h("div", { "c": backgroundCss }),
-            h(0, { "a": { "name": 'start' } }),
-            h(0, { "a": { "name": 'mode-start' } }),
-            h(0, { "a": { "name": 'mode-end' } }),
-            h(0, { "a": { "name": 'end' } }),
-            h("div", { "c": contentCss },
-                h(0, 0))
+            h("div", { class: backgroundCss }),
+            h("slot", { name: 'start' }),
+            h("slot", { name: 'mode-start' }),
+            h("slot", { name: 'mode-end' }),
+            h("slot", { name: 'end' }),
+            h("div", { class: contentCss },
+                h("slot", null))
         ];
-    };
-    return Toolbar;
-}());
-export { Toolbar };
+    }
+}

@@ -1,11 +1,12 @@
+import { Animation } from '../../../index';
 /**
  * iOS Loading Enter Animation
  */
-export default function (Animation, baseElm) {
-    var baseAnimation = new Animation();
-    var backdropAnimation = new Animation();
+export default function iosEnterAnimation(Animation, baseElm) {
+    const baseAnimation = new Animation();
+    const backdropAnimation = new Animation();
     backdropAnimation.addElement(baseElm.querySelector('.loading-backdrop'));
-    var wrapperAnimation = new Animation();
+    const wrapperAnimation = new Animation();
     wrapperAnimation.addElement(baseElm.querySelector('.loading-wrapper'));
     backdropAnimation.fromTo('opacity', 0.01, 0.3);
     wrapperAnimation.fromTo('opacity', 0.01, 1)

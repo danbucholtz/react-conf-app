@@ -2,41 +2,46 @@
  * (C) Ionic http://ionicframework.com - MIT License
  * Built with http://stenciljs.com
  */
+
 Ionic.loadComponents(
 
 /**** module id (dev mode) ****/
 "ion-gesture",
 
 /**** component modules ****/
-function importComponent(exports, h, t, Context, publicPath) {
-function pointerCoordX(ev) {
+function importComponent(exports, h, Context, publicPath) {
+"use strict";
+/** @hidden */
+
+function assert(bool, msg) {
+    if (!bool) {
+        console.error(msg);
+    }
+}
+
+
+
+function updateDetail(ev, detail) {
     // get X coordinates for either a mouse click
     // or a touch depending on the given event
+    let x = 0;
+    let y = 0;
     if (ev) {
         var changedTouches = ev.changedTouches;
         if (changedTouches && changedTouches.length > 0) {
-            return changedTouches[0].clientX;
+            var touch = changedTouches[0];
+            x = touch.clientX;
+            y = touch.clientY;
         }
-        if (ev.pageX !== undefined) {
-            return ev.pageX;
-        }
-    }
-    return 0;
-}
-function pointerCoordY(ev) {
-    // get Y coordinates for either a mouse click
-    // or a touch depending on the given event
-    if (ev) {
-        var changedTouches = ev.changedTouches;
-        if (changedTouches && changedTouches.length > 0) {
-            return changedTouches[0].clientY;
-        }
-        if (ev.pageY !== undefined) {
-            return ev.pageY;
+        else if (ev.pageX !== undefined) {
+            x = ev.pageX;
+            y = ev.pageY;
         }
     }
-    return 0;
+    detail.currentX = x;
+    detail.currentY = y;
 }
+
 function getElementReference(elm, ref) {
     if (ref === 'child') {
         return elm.firstElementChild;
@@ -66,8 +71,9 @@ function getParentElement(elm) {
     }
     return null;
 }
+
 function applyStyles(elm, styles) {
-    var styleProps = Object.keys(styles);
+    const styleProps = Object.keys(styles);
     if (elm) {
         for (var i = 0; i < styleProps.length; i++) {
             elm.style[styleProps[i]] = styles[styleProps[i]];
@@ -90,87 +96,97 @@ function applyStyles(elm, styles) {
 
 /** @hidden */
 
-var GestureController = /** @class */ (function () {
-    function GestureController() {
-        this.id = 0;
+
+
+
+
+
+
+
+/**
+ * @private
+ */
+
+class GestureController {
+    constructor() {
+        this.gestureId = 0;
         this.requestedStart = {};
         this.disabledGestures = {};
         this.disabledScroll = new Set();
-        this.capturedID = null;
+        this.capturedId = null;
     }
-    GestureController.prototype.createGesture = function (gestureName, gesturePriority, disableScroll) {
+    createGesture(gestureName, gesturePriority, disableScroll) {
         return new GestureDelegate(this, this.newID(), gestureName, gesturePriority, disableScroll);
-    };
-    GestureController.prototype.createBlocker = function (opts) {
-        if (opts === void 0) { opts = {}; }
+    }
+    createBlocker(opts = {}) {
         return new BlockerDelegate(this.newID(), this, opts.disable, !!opts.disableScroll);
-    };
-    GestureController.prototype.newID = function () {
-        return this.id++;
-    };
-    GestureController.prototype.start = function (gestureName, id, priority) {
+    }
+    newID() {
+        return this.gestureId++;
+    }
+    start(gestureName, id, priority) {
         if (!this.canStart(gestureName)) {
             delete this.requestedStart[id];
             return false;
         }
         this.requestedStart[id] = priority;
         return true;
-    };
-    GestureController.prototype.capture = function (gestureName, id, priority) {
+    }
+    capture(gestureName, id, priority) {
         if (!this.start(gestureName, id, priority)) {
             return false;
         }
-        var requestedStart = this.requestedStart;
-        var maxPriority = -10000;
-        for (var gestureID in requestedStart) {
+        let requestedStart = this.requestedStart;
+        let maxPriority = -10000;
+        for (let gestureID in requestedStart) {
             maxPriority = Math.max(maxPriority, requestedStart[gestureID]);
         }
         if (maxPriority === priority) {
-            this.capturedID = id;
+            this.capturedId = id;
             this.requestedStart = {};
             return true;
         }
         delete requestedStart[id];
         return false;
-    };
-    GestureController.prototype.release = function (id) {
+    }
+    release(id) {
         delete this.requestedStart[id];
-        if (this.capturedID && id === this.capturedID) {
-            this.capturedID = null;
+        if (this.capturedId && id === this.capturedId) {
+            this.capturedId = null;
         }
-    };
-    GestureController.prototype.disableGesture = function (gestureName, id) {
-        var set = this.disabledGestures[gestureName];
+    }
+    disableGesture(gestureName, id) {
+        let set = this.disabledGestures[gestureName];
         if (!set) {
             set = new Set();
             this.disabledGestures[gestureName] = set;
         }
         set.add(id);
-    };
-    GestureController.prototype.enableGesture = function (gestureName, id) {
-        var set = this.disabledGestures[gestureName];
+    }
+    enableGesture(gestureName, id) {
+        let set = this.disabledGestures[gestureName];
         if (set) {
             set.delete(id);
         }
-    };
-    GestureController.prototype.disableScroll = function (id) {
+    }
+    disableScroll(id) {
         // let isEnabled = !this.isScrollDisabled();
         this.disabledScroll.add(id);
         // if (this._app && isEnabled && this.isScrollDisabled()) {
         //   console.debug('GestureController: Disabling scrolling');
         //   this._app._setDisableScroll(true);
         // }
-    };
-    GestureController.prototype.enableScroll = function (id) {
+    }
+    enableScroll(id) {
         // let isDisabled = this.isScrollDisabled();
         this.disabledScroll.delete(id);
         // if (this._app && isDisabled && !this.isScrollDisabled()) {
         //   console.debug('GestureController: Enabling scrolling');
         //   this._app._setDisableScroll(false);
         // }
-    };
-    GestureController.prototype.canStart = function (gestureName) {
-        if (this.capturedID) {
+    }
+    canStart(gestureName) {
+        if (this.capturedId) {
             // a gesture already captured
             return false;
         }
@@ -178,175 +194,172 @@ var GestureController = /** @class */ (function () {
             return false;
         }
         return true;
-    };
-    GestureController.prototype.isCaptured = function () {
-        return !!this.capturedID;
-    };
-    GestureController.prototype.isScrollDisabled = function () {
+    }
+    isCaptured() {
+        return !!this.capturedId;
+    }
+    isScrollDisabled() {
         return this.disabledScroll.size > 0;
-    };
-    GestureController.prototype.isDisabled = function (gestureName) {
-        var disabled = this.disabledGestures[gestureName];
+    }
+    isDisabled(gestureName) {
+        let disabled = this.disabledGestures[gestureName];
         if (disabled && disabled.size > 0) {
             return true;
         }
         return false;
-    };
-    return GestureController;
-}());
-var GestureDelegate = /** @class */ (function () {
-    function GestureDelegate(ctrl, id, name, priority, disableScroll) {
+    }
+}
+class GestureDelegate {
+    constructor(ctrl, gestureDelegateId, name, priority, disableScroll) {
         this.ctrl = ctrl;
-        this.id = id;
+        this.gestureDelegateId = gestureDelegateId;
         this.name = name;
         this.priority = priority;
         this.disableScroll = disableScroll;
     }
-    GestureDelegate.prototype.canStart = function () {
+    canStart() {
         if (!this.ctrl) {
             return false;
         }
         return this.ctrl.canStart(this.name);
-    };
-    GestureDelegate.prototype.start = function () {
+    }
+    start() {
         if (!this.ctrl) {
             return false;
         }
-        return this.ctrl.start(this.name, this.id, this.priority);
-    };
-    GestureDelegate.prototype.capture = function () {
+        return this.ctrl.start(this.name, this.gestureDelegateId, this.priority);
+    }
+    capture() {
         if (!this.ctrl) {
             return false;
         }
-        var captured = this.ctrl.capture(this.name, this.id, this.priority);
+        let captured = this.ctrl.capture(this.name, this.gestureDelegateId, this.priority);
         if (captured && this.disableScroll) {
-            this.ctrl.disableScroll(this.id);
+            this.ctrl.disableScroll(this.gestureDelegateId);
         }
         return captured;
-    };
-    GestureDelegate.prototype.release = function () {
+    }
+    release() {
         if (this.ctrl) {
-            this.ctrl.release(this.id);
+            this.ctrl.release(this.gestureDelegateId);
             if (this.disableScroll) {
-                this.ctrl.enableScroll(this.id);
+                this.ctrl.enableScroll(this.gestureDelegateId);
             }
         }
-    };
-    GestureDelegate.prototype.destroy = function () {
+    }
+    destroy() {
         this.release();
         this.ctrl = null;
-    };
-    return GestureDelegate;
-}());
-var BlockerDelegate = /** @class */ (function () {
-    function BlockerDelegate(id, controller, disable, disableScroll) {
-        this.id = id;
+    }
+}
+class BlockerDelegate {
+    constructor(blockerDelegateId, controller, disable, disableScroll) {
+        this.blockerDelegateId = blockerDelegateId;
         this.controller = controller;
         this.disable = disable;
         this.disableScroll = disableScroll;
         this.blocked = false;
     }
-    BlockerDelegate.prototype.block = function () {
-        var _this = this;
+    block() {
         if (!this.controller) {
             return;
         }
         if (this.disable) {
-            this.disable.forEach(function (gesture) {
-                _this.controller.disableGesture(gesture, _this.id);
+            this.disable.forEach(gesture => {
+                this.controller.disableGesture(gesture, this.blockerDelegateId);
             });
         }
         if (this.disableScroll) {
-            this.controller.disableScroll(this.id);
+            this.controller.disableScroll(this.blockerDelegateId);
         }
         this.blocked = true;
-    };
-    BlockerDelegate.prototype.unblock = function () {
-        var _this = this;
+    }
+    unblock() {
         if (!this.controller) {
             return;
         }
         if (this.disable) {
-            this.disable.forEach(function (gesture) {
-                _this.controller.enableGesture(gesture, _this.id);
+            this.disable.forEach(gesture => {
+                this.controller.enableGesture(gesture, this.blockerDelegateId);
             });
         }
         if (this.disableScroll) {
-            this.controller.enableScroll(this.id);
+            this.controller.enableScroll(this.blockerDelegateId);
         }
         this.blocked = false;
-    };
-    BlockerDelegate.prototype.destroy = function () {
+    }
+    destroy() {
         this.unblock();
         this.controller = null;
-    };
-    return BlockerDelegate;
-}());
-var BLOCK_ALL = {
+    }
+}
+const BLOCK_ALL = {
     disable: ['menu-swipe', 'goback-swipe'],
     disableScroll: true
 };
 
-var PanRecognizer = /** @class */ (function () {
-    function PanRecognizer(direction, threshold, maxAngle) {
-        this.direction = direction;
+// @stencil/core
+
+class PanRecognizer {
+    constructor(direction, threshold, maxAngle) {
         this.dirty = false;
         this.angle = 0;
         this.isPan = 0;
-        var radians = maxAngle * (Math.PI / 180);
+        const radians = maxAngle * (Math.PI / 180);
+        this.isDirX = direction === 'x';
         this.maxCosine = Math.cos(radians);
         this.threshold = threshold * threshold;
     }
-    PanRecognizer.prototype.start = function (x, y) {
+    start(x, y) {
         this.startX = x;
         this.startY = y;
         this.angle = 0;
         this.isPan = 0;
         this.dirty = true;
-    };
-    PanRecognizer.prototype.detect = function (x, y) {
+    }
+    detect(x, y) {
         if (!this.dirty) {
             return false;
         }
-        var deltaX = (x - this.startX);
-        var deltaY = (y - this.startY);
-        var distance = deltaX * deltaX + deltaY * deltaY;
-        if (distance >= this.threshold) {
-            var angle = Math.atan2(deltaY, deltaX);
-            var cosine = (this.direction === 'y')
-                ? Math.sin(angle)
-                : Math.cos(angle);
-            this.angle = angle;
-            if (cosine > this.maxCosine) {
-                this.isPan = 1;
-            }
-            else if (cosine < -this.maxCosine) {
-                this.isPan = -1;
-            }
-            else {
-                this.isPan = 0;
-            }
-            this.dirty = false;
-            return true;
+        const deltaX = (x - this.startX);
+        const deltaY = (y - this.startY);
+        const distance = deltaX * deltaX + deltaY * deltaY;
+        if (distance < this.threshold) {
+            return false;
         }
-        return false;
-    };
-    PanRecognizer.prototype.isGesture = function () {
+        const hypotenuse = Math.sqrt(distance);
+        const cosine = ((this.isDirX) ? deltaX : deltaY) / hypotenuse;
+        if (cosine > this.maxCosine) {
+            this.isPan = 1;
+        }
+        else if (cosine < -this.maxCosine) {
+            this.isPan = -1;
+        }
+        else {
+            this.isPan = 0;
+        }
+        this.dirty = false;
+        return true;
+    }
+    isGesture() {
+        return this.isPan !== 0;
+    }
+    getDirection() {
         return this.isPan;
-    };
-    return PanRecognizer;
-}());
+    }
+}
 
-var Gesture = /** @class */ (function () {
-    function Gesture() {
+class Gesture {
+    constructor() {
         this.detail = {};
         this.positions = [];
         this.lastTouch = 0;
         this.hasCapturedPan = false;
         this.hasPress = false;
         this.hasStartedPan = false;
-        this.requiresMove = false;
+        this.hasFiredStart = true;
         this.isMoveQueued = false;
+        this.enabled = true;
         this.attachTo = 'child';
         this.autoBlockAll = false;
         this.block = null;
@@ -355,229 +368,291 @@ var Gesture = /** @class */ (function () {
         this.gestureName = '';
         this.gesturePriority = 0;
         this.maxAngle = 40;
-        this.threshold = 20;
+        this.threshold = 10;
         this.type = 'pan';
     }
-    Gesture.prototype["componentDidLoad"] = function () {
-        var _this = this;
+    componentDidLoad() {
         // in this case, we already know the GestureController and Gesture are already
         // apart of the same bundle, so it's safe to load it this way
         // only create one instance of GestureController, and reuse the same one later
         this.ctrl = Context.gesture = Context.gesture || new GestureController;
         this.gesture = this.ctrl.createGesture(this.gestureName, this.gesturePriority, this.disableScroll);
-        var types = this.type.replace(/\s/g, '').toLowerCase().split(',');
+        const types = this.type.replace(/\s/g, '').toLowerCase().split(',');
         if (types.indexOf('pan') > -1) {
             this.pan = new PanRecognizer(this.direction, this.threshold, this.maxAngle);
-            this.requiresMove = true;
         }
         this.hasPress = (types.indexOf('press') > -1);
+        this.enabledChanged(this.enabled);
         if (this.pan || this.hasPress) {
-            Context.enableListener(this, 'touchstart', true, this.attachTo);
-            Context.enableListener(this, 'mousedown', true, this.attachTo);
-            Context.dom.write(function () {
-                applyStyles(getElementReference(_this.el, _this.attachTo), GESTURE_INLINE_STYLES);
+            Context.dom.write(() => {
+                applyStyles(getElementReference(this.el, this.attachTo), GESTURE_INLINE_STYLES);
             });
         }
         if (this.autoBlockAll) {
             this.blocker = this.ctrl.createBlocker(BLOCK_ALL);
             this.blocker.block();
         }
-    };
-    Gesture.prototype.blockChange = function (block) {
+    }
+    enabledChanged(isEnabled) {
+        if (this.pan || this.hasPress) {
+            Context.enableListener(this, 'touchstart', isEnabled, this.attachTo);
+            Context.enableListener(this, 'mousedown', isEnabled, this.attachTo);
+            if (!isEnabled) {
+                this.abortGesture();
+            }
+        }
+    }
+    blockChanged(block) {
         if (this.blocker) {
             this.blocker.destroy();
         }
         if (block) {
             this.blocker = this.ctrl.createBlocker({ disable: block.split(',') });
         }
-    };
+    }
     // DOWN *************************
-    Gesture.prototype.onTouchStart = function (ev) {
+    onTouchStart(ev) {
         this.lastTouch = now(ev);
-        this.enableMouse(false);
-        this.enableTouch(true);
-        this.pointerDown(ev, this.lastTouch);
-    };
-    Gesture.prototype.onMouseDown = function (ev) {
-        var timeStamp = now(ev);
-        if (this.lastTouch === 0 || (this.lastTouch + MOUSE_WAIT < timeStamp)) {
-            this.enableMouse(true);
-            this.enableTouch(false);
-            this.pointerDown(ev, timeStamp);
+        if (this.pointerDown(ev, this.lastTouch)) {
+            this.enableMouse(false);
+            this.enableTouch(true);
         }
-    };
-    Gesture.prototype.pointerDown = function (ev, timeStamp) {
-        if (!this.gesture || this.hasStartedPan) {
+        else {
+            this.abortGesture();
+        }
+    }
+    onMouseDown(ev) {
+        const timeStamp = now(ev);
+        if (this.lastTouch === 0 || (this.lastTouch + MOUSE_WAIT < timeStamp)) {
+            if (this.pointerDown(ev, timeStamp)) {
+                this.enableMouse(true);
+                this.enableTouch(false);
+            }
+            else {
+                this.abortGesture();
+            }
+        }
+    }
+    pointerDown(ev, timeStamp) {
+        if (!this.gesture || this.hasStartedPan || !this.hasFiredStart) {
             return false;
         }
-        var detail = this.detail;
-        detail.startX = detail.currentX = pointerCoordX(ev);
-        detail.startY = detail.currentY = pointerCoordY(ev);
+        const detail = this.detail;
+        updateDetail(ev, detail);
+        detail.startX = detail.currentX;
+        detail.startY = detail.currentY;
         detail.startTimeStamp = detail.timeStamp = timeStamp;
         detail.velocityX = detail.velocityY = detail.deltaX = detail.deltaY = 0;
-        detail.directionX = detail.directionY = detail.velocityDirectionX = detail.velocityDirectionY = null;
         detail.event = ev;
         this.positions.length = 0;
+        assert(this.hasFiredStart, 'fired start must be false');
+        assert(!this.hasStartedPan, 'pan can be started at this point');
+        assert(!this.hasCapturedPan, 'pan can be started at this point');
+        assert(!this.isMoveQueued, 'some move is still queued');
+        assert(this.positions.length === 0, 'positions must be emprty');
+        // Check if gesture can start
         if (this.canStart && this.canStart(detail) === false) {
             return false;
         }
-        this.positions.push(detail.currentX, detail.currentY, timeStamp);
         // Release fallback
         this.gesture.release();
         // Start gesture
         if (!this.gesture.start()) {
             return false;
         }
+        this.positions.push(detail.currentX, detail.currentY, timeStamp);
         if (this.pan) {
             this.hasStartedPan = true;
-            this.hasCapturedPan = false;
+            if (this.threshold === 0) {
+                return this.tryToCapturePan();
+            }
             this.pan.start(detail.startX, detail.startY);
         }
         return true;
-    };
+    }
     // MOVE *************************
-    Gesture.prototype.onTouchMove = function (ev) {
+    onTouchMove(ev) {
         this.lastTouch = this.detail.timeStamp = now(ev);
         this.pointerMove(ev);
-    };
-    Gesture.prototype.onMoveMove = function (ev) {
-        var timeStamp = now(ev);
+    }
+    onMoveMove(ev) {
+        const timeStamp = now(ev);
         if (this.lastTouch === 0 || (this.lastTouch + MOUSE_WAIT < timeStamp)) {
             this.detail.timeStamp = timeStamp;
             this.pointerMove(ev);
         }
-    };
-    Gesture.prototype.pointerMove = function (ev) {
-        var _this = this;
-        var detail = this.detail;
+    }
+    pointerMove(ev) {
+        assert(!!this.pan, 'pan must be non null');
+        // fast path, if gesture is currently captured
+        // do minimun job to get user-land even dispatched
+        if (this.hasCapturedPan) {
+            if (!this.isMoveQueued && this.hasFiredStart) {
+                this.isMoveQueued = true;
+                this.calcGestureData(ev);
+                Context.dom.write(this.fireOnMove.bind(this));
+            }
+            return;
+        }
+        // gesture is currently being detected
+        const detail = this.detail;
         this.calcGestureData(ev);
-        if (this.pan) {
-            if (this.hasCapturedPan) {
-                if (!this.isMoveQueued) {
-                    this.isMoveQueued = true;
-                    Context.dom.write(function () {
-                        _this.isMoveQueued = false;
-                        detail.type = 'pan';
-                        if (_this.onMove) {
-                            _this.onMove(detail);
-                        }
-                        else {
-                            _this.ionGestureMove.emit(_this.detail);
-                        }
-                    });
-                }
-            }
-            else if (this.pan.detect(detail.currentX, detail.currentY)) {
-                if (this.pan.isGesture() !== 0) {
-                    if (!this.tryToCapturePan(ev)) {
-                        this.abortGesture();
-                    }
+        if (this.pan.detect(detail.currentX, detail.currentY)) {
+            if (this.pan.isGesture()) {
+                if (!this.tryToCapturePan()) {
+                    this.abortGesture();
                 }
             }
         }
-    };
-    Gesture.prototype.calcGestureData = function (ev) {
-        var detail = this.detail;
-        detail.currentX = pointerCoordX(ev);
-        detail.currentY = pointerCoordY(ev);
-        detail.deltaX = (detail.currentX - detail.startX);
-        detail.deltaY = (detail.currentY - detail.startY);
+    }
+    fireOnMove() {
+        // Since fireOnMove is called inside a RAF, onEnd() might be called,
+        // we must double check hasCapturedPan
+        if (!this.hasCapturedPan) {
+            return;
+        }
+        const detail = this.detail;
+        this.isMoveQueued = false;
+        if (this.onMove) {
+            this.onMove(detail);
+        }
+        else {
+            this.ionGestureMove.emit(detail);
+        }
+    }
+    calcGestureData(ev) {
+        const detail = this.detail;
+        updateDetail(ev, detail);
+        const currentX = detail.currentX;
+        const currentY = detail.currentY;
+        const timestamp = detail.timeStamp;
+        detail.deltaX = currentX - detail.startX;
+        detail.deltaY = currentY - detail.startY;
         detail.event = ev;
-        // figure out which direction we're movin'
-        detail.directionX = detail.velocityDirectionX = (detail.deltaX > 0 ? 'left' : (detail.deltaX < 0 ? 'right' : null));
-        detail.directionY = detail.velocityDirectionY = (detail.deltaY > 0 ? 'up' : (detail.deltaY < 0 ? 'down' : null));
-        var positions = this.positions;
-        positions.push(detail.currentX, detail.currentY, detail.timeStamp);
-        var endPos = (positions.length - 1);
-        var startPos = endPos;
-        var timeRange = (detail.timeStamp - 100);
+        const timeRange = timestamp - 100;
+        const positions = this.positions;
+        let startPos = positions.length - 1;
         // move pointer to position measured 100ms ago
-        for (var i = endPos; i > 0 && positions[i] > timeRange; i -= 3) {
-            startPos = i;
-        }
-        if (startPos !== endPos) {
+        for (; startPos > 0 && positions[startPos] > timeRange; startPos -= 3) { }
+        if (startPos > 1) {
             // compute relative movement between these two points
-            var movedX = (positions[startPos - 2] - positions[endPos - 2]);
-            var movedY = (positions[startPos - 1] - positions[endPos - 1]);
-            var factor = 16.67 / (positions[endPos] - positions[startPos]);
+            var frequency = 1 / (positions[startPos] - timestamp);
+            var movedY = positions[startPos - 1] - currentY;
+            var movedX = positions[startPos - 2] - currentX;
             // based on XXms compute the movement to apply for each render step
-            detail.velocityX = movedX * factor;
-            detail.velocityY = movedY * factor;
-            detail.velocityDirectionX = (movedX > 0 ? 'left' : (movedX < 0 ? 'right' : null));
-            detail.velocityDirectionY = (movedY > 0 ? 'up' : (movedY < 0 ? 'down' : null));
+            // velocity = space/time = s*(1/t) = s*frequency
+            detail.velocityX = movedX * frequency;
+            detail.velocityY = movedY * frequency;
         }
-    };
-    Gesture.prototype.tryToCapturePan = function (ev) {
+        else {
+            detail.velocityX = 0;
+            detail.velocityY = 0;
+        }
+        positions.push(currentX, currentY, timestamp);
+    }
+    tryToCapturePan() {
         if (this.gesture && !this.gesture.capture()) {
             return false;
         }
-        this.detail.event = ev;
+        this.hasCapturedPan = true;
+        this.hasFiredStart = false;
+        // reset start position since the real user-land event starts here
+        // If the pan detector threshold is big, not reseting the start position
+        // will cause a jump in the animation equal to the detector threshold.
+        // the array of positions used to calculate the gesture velocity does not
+        // need to be cleaned, more points in the positions array always results in a
+        // more acurate value of the velocity.
+        const detail = this.detail;
+        detail.startX = detail.currentX;
+        detail.startY = detail.currentY;
+        detail.startTimeStamp = detail.timeStamp;
+        if (this.onWillStart) {
+            this.onWillStart(this.detail).then(this.fireOnStart.bind(this));
+        }
+        else {
+            this.fireOnStart();
+        }
+        return true;
+    }
+    fireOnStart() {
+        assert(!this.hasFiredStart, 'has fired must be false');
         if (this.onStart) {
             this.onStart(this.detail);
         }
         else {
             this.ionGestureStart.emit(this.detail);
         }
-        this.hasCapturedPan = true;
-        return true;
-    };
-    Gesture.prototype.abortGesture = function () {
-        this.hasStartedPan = false;
-        this.hasCapturedPan = false;
-        this.gesture && this.gesture.release();
+        this.hasFiredStart = true;
+    }
+    abortGesture() {
+        this.reset();
         this.enable(false);
         this.notCaptured && this.notCaptured(this.detail);
-    };
+    }
+    reset() {
+        this.hasCapturedPan = false;
+        this.hasStartedPan = false;
+        this.isMoveQueued = false;
+        this.hasFiredStart = true;
+        this.gesture && this.gesture.release();
+    }
     // END *************************
-    Gesture.prototype.onTouchEnd = function (ev) {
+    onTouchCancel(ev) {
         this.lastTouch = this.detail.timeStamp = now(ev);
         this.pointerUp(ev);
         this.enableTouch(false);
-    };
-    Gesture.prototype.onMouseUp = function (ev) {
-        var timeStamp = now(ev);
+    }
+    onTouchEnd(ev) {
+        this.lastTouch = this.detail.timeStamp = now(ev);
+        this.pointerUp(ev);
+        this.enableTouch(false);
+    }
+    onMouseUp(ev) {
+        const timeStamp = now(ev);
         if (this.lastTouch === 0 || (this.lastTouch + MOUSE_WAIT < timeStamp)) {
             this.detail.timeStamp = timeStamp;
             this.pointerUp(ev);
             this.enableMouse(false);
         }
-    };
-    Gesture.prototype.pointerUp = function (ev) {
-        var detail = this.detail;
-        this.gesture && this.gesture.release();
-        detail.event = ev;
+    }
+    pointerUp(ev) {
+        const hasCaptured = this.hasCapturedPan;
+        const hasFiredStart = this.hasFiredStart;
+        this.reset();
+        if (!hasFiredStart) {
+            return;
+        }
+        const detail = this.detail;
         this.calcGestureData(ev);
-        if (this.pan) {
-            if (this.hasCapturedPan) {
-                detail.type = 'pan';
-                if (this.onEnd) {
-                    this.onEnd(detail);
-                }
-                else {
-                    this.ionGestureEnd.emit(detail);
-                }
-            }
-            else if (this.hasPress) {
-                this.detectPress();
+        // Try to capture press
+        if (hasCaptured) {
+            detail.type = 'pan';
+            if (this.onEnd) {
+                this.onEnd(detail);
             }
             else {
-                if (this.notCaptured) {
-                    this.notCaptured(detail);
-                }
-                else {
-                    this.ionGestureNotCaptured.emit(detail);
-                }
+                this.ionGestureEnd.emit(detail);
             }
+            return;
         }
-        else if (this.hasPress) {
-            this.detectPress();
+        // Try to capture press
+        if (this.hasPress && this.detectPress()) {
+            return;
         }
-        this.hasCapturedPan = false;
-        this.hasStartedPan = false;
-    };
-    Gesture.prototype.detectPress = function () {
-        var detail = this.detail;
-        if (Math.abs(detail.startX - detail.currentX) < 10 && Math.abs(detail.startY - detail.currentY) < 10) {
+        // Not captured any event
+        if (this.notCaptured) {
+            this.notCaptured(detail);
+        }
+        else {
+            this.ionGestureNotCaptured.emit(detail);
+        }
+    }
+    detectPress() {
+        const detail = this.detail;
+        const vecX = detail.deltaX;
+        const vecY = detail.deltaY;
+        const dis = vecX * vecX + vecY * vecY;
+        if (dis < 100) {
             detail.type = 'press';
             if (this.onPress) {
                 this.onPress(detail);
@@ -585,339 +660,78 @@ var Gesture = /** @class */ (function () {
             else {
                 this.ionPress.emit(detail);
             }
+            return true;
         }
-    };
+        return false;
+    }
     // ENABLE LISTENERS *************************
-    Gesture.prototype.enableMouse = function (shouldEnable) {
-        if (this.requiresMove) {
+    enableMouse(shouldEnable) {
+        if (this.pan) {
             Context.enableListener(this, 'document:mousemove', shouldEnable);
         }
         Context.enableListener(this, 'document:mouseup', shouldEnable);
-    };
-    Gesture.prototype.enableTouch = function (shouldEnable) {
-        if (this.requiresMove) {
-            Context.enableListener(this, 'touchmove', shouldEnable);
+    }
+    enableTouch(shouldEnable) {
+        if (this.pan) {
+            Context.enableListener(this, 'touchmove', shouldEnable, this.attachTo);
         }
-        Context.enableListener(this, 'touchend', shouldEnable);
-    };
-    Gesture.prototype.enable = function (shouldEnable) {
+        Context.enableListener(this, 'touchcancel', shouldEnable, this.attachTo);
+        Context.enableListener(this, 'touchend', shouldEnable, this.attachTo);
+    }
+    enable(shouldEnable) {
         this.enableMouse(shouldEnable);
         this.enableTouch(shouldEnable);
-    };
-    Gesture.prototype["componentDidunload"] = function () {
+    }
+    componentDidUnload() {
         if (this.blocker) {
             this.blocker.destroy();
             this.blocker = null;
         }
         this.gesture && this.gesture.destroy();
         this.ctrl = this.gesture = this.pan = this.detail = this.detail.event = null;
-    };
-    return Gesture;
-}());
-var GESTURE_INLINE_STYLES = {
+    }
+}
+const GESTURE_INLINE_STYLES = {
     'touch-action': 'none',
     'user-select': 'none',
     '-webkit-user-drag': 'none',
     '-webkit-tap-highlight-color': 'rgba(0,0,0,0)'
 };
-var MOUSE_WAIT = 2500;
+const MOUSE_WAIT = 2500;
 function now(ev) {
     return ev.timeStamp || Date.now();
 }
 
-var Scroll = /** @class */ (function () {
-    function Scroll() {
-        this.positions = [];
-        this.queued = false;
-        this.isScrolling = false;
-        this.detail = {};
-        this.enabled = true;
-        this.jsScroll = false;
-    }
-    Scroll.prototype["componentDidLoad"] = function () {
-        if (Context.isServer)
-            return;
-        var gestureCtrl = Context.gesture = Context.gesture || new GestureController;
-        this.gesture = gestureCtrl.createGesture('scroll', 100, false);
-    };
-    // Native Scroll *************************
-    Scroll.prototype.onNativeScroll = function () {
-        var self = this;
-        if (!self.queued && self.enabled) {
-            self.queued = true;
-            Context.dom.read(function (timeStamp) {
-                self.queued = false;
-                self.onScroll(timeStamp || Date.now());
-            });
-        }
-    };
-    Scroll.prototype.onScroll = function (timeStamp) {
-        var self = this;
-        var detail = self.detail;
-        var positions = self.positions;
-        detail.timeStamp = timeStamp;
-        // get the current scrollTop
-        // ******** DOM READ ****************
-        detail.scrollTop = self.getTop();
-        // get the current scrollLeft
-        // ******** DOM READ ****************
-        detail.scrollLeft = self.getLeft();
-        if (!self.isScrolling) {
-            // currently not scrolling, so this is a scroll start
-            self.isScrolling = true;
-            // remember the start positions
-            detail.startY = detail.scrollTop;
-            detail.startX = detail.scrollLeft;
-            // new scroll, so do some resets
-            detail.velocityY = detail.velocityX = detail.deltaY = detail.deltaX = positions.length = 0;
-            // emit only on the first scroll event
-            if (self.ionScrollStart) {
-                self.ionScrollStart(detail);
-            }
-        }
-        detail.directionX = detail.velocityDirectionX = (detail.deltaX > 0 ? 'left' : (detail.deltaX < 0 ? 'right' : null));
-        detail.directionY = detail.velocityDirectionY = (detail.deltaY > 0 ? 'up' : (detail.deltaY < 0 ? 'down' : null));
-        // actively scrolling
-        positions.push(detail.scrollTop, detail.scrollLeft, detail.timeStamp);
-        if (positions.length > 3) {
-            // we've gotten at least 2 scroll events so far
-            detail.deltaY = (detail.scrollTop - detail.startY);
-            detail.deltaX = (detail.scrollLeft - detail.startX);
-            var endPos = (positions.length - 1);
-            var startPos = endPos;
-            var timeRange = (detail.timeStamp - 100);
-            // move pointer to position measured 100ms ago
-            for (var i = endPos; i > 0 && positions[i] > timeRange; i -= 3) {
-                startPos = i;
-            }
-            if (startPos !== endPos) {
-                // compute relative movement between these two points
-                var movedTop = (positions[startPos - 2] - positions[endPos - 2]);
-                var movedLeft = (positions[startPos - 1] - positions[endPos - 1]);
-                var factor = 16.67 / (positions[endPos] - positions[startPos]);
-                // based on XXms compute the movement to apply for each render step
-                detail.velocityY = movedTop * factor;
-                detail.velocityX = movedLeft * factor;
-                // figure out which direction we're scrolling
-                detail.velocityDirectionX = (movedLeft > 0 ? 'left' : (movedLeft < 0 ? 'right' : null));
-                detail.velocityDirectionY = (movedTop > 0 ? 'up' : (movedTop < 0 ? 'down' : null));
-            }
-        }
-        clearTimeout(self.tmr);
-        self.tmr = setTimeout(function () {
-            // haven't scrolled in a while, so it's a scrollend
-            self.isScrolling = false;
-            Context.dom.read(function (timeStamp) {
-                if (!self.isScrolling) {
-                    self.onEnd(timeStamp);
-                }
-            });
-        }, 80);
-        // emit on each scroll event
-        if (self.ionScrollStart) {
-            self.ionScroll(detail);
-        }
-    };
-    Scroll.prototype.onEnd = function (timeStamp) {
-        var self = this;
-        var detail = self.detail;
-        detail.timeStamp = timeStamp || Date.now();
-        // emit that the scroll has ended
-        if (self.ionScrollEnd) {
-            self.ionScrollEnd(detail);
-        }
-    };
-    Scroll.prototype.enableJsScroll = function (contentTop, contentBottom) {
-        this.jsScroll = true;
-        Context.enableListener(this, 'scroll', false);
-        Context.enableListener(this, 'touchstart', true);
-        contentTop;
-        contentBottom;
-    };
-    // Touch Scroll *************************
-    Scroll.prototype.onTouchStart = function () {
-        if (!this.enabled) {
-            return;
-        }
-        Context.enableListener(this, 'touchmove', true);
-        Context.enableListener(this, 'touchend', true);
-        throw 'jsScroll: TODO!';
-    };
-    Scroll.prototype.onTouchMove = function () {
-        if (!this.enabled) {
-            return;
-        }
-    };
-    Scroll.prototype.onTouchEnd = function () {
-        Context.enableListener(this, 'touchmove', false);
-        Context.enableListener(this, 'touchend', false);
-        if (!this.enabled) {
-            return;
-        }
-    };
-    /**
-     * DOM READ
-     */
-    Scroll.prototype.getTop = function () {
-        if (this.jsScroll) {
-            return this._t;
-        }
-        return this._t = this.el.scrollTop;
-    };
-    /**
-     * DOM READ
-     */
-    Scroll.prototype.getLeft = function () {
-        if (this.jsScroll) {
-            return 0;
-        }
-        return this._l = this.el.scrollLeft;
-    };
-    /**
-     * DOM WRITE
-     */
-    Scroll.prototype.setTop = function (top) {
-        this._t = top;
-        if (this.jsScroll) {
-            this.el.style.transform = this.el.style.webkitTransform = "translate3d(" + this._l * -1 + "px," + top * -1 + "px,0px)";
-        }
-        else {
-            this.el.scrollTop = top;
-        }
-    };
-    /**
-     * DOM WRITE
-     */
-    Scroll.prototype.setLeft = function (left) {
-        this._l = left;
-        if (this.jsScroll) {
-            this.el.style.transform = this.el.style.webkitTransform = "translate3d(" + left * -1 + "px," + this._t * -1 + "px,0px)";
-        }
-        else {
-            this.el.scrollLeft = left;
-        }
-    };
-    Scroll.prototype.scrollTo = function (x, y, duration, done) {
-        // scroll animation loop w/ easing
-        // credit https://gist.github.com/dezinezync/5487119
-        var promise;
-        if (done === undefined) {
-            // only create a promise if a done callback wasn't provided
-            // done can be a null, which avoids any functions
-            promise = new Promise(function (resolve) {
-                done = resolve;
-            });
-        }
-        var self = this;
-        var el = self.el;
-        if (!el) {
-            // invalid element
-            done();
-            return promise;
-        }
-        if (duration < 32) {
-            self.setTop(y);
-            self.setLeft(x);
-            done();
-            return promise;
-        }
-        var fromY = el.scrollTop;
-        var fromX = el.scrollLeft;
-        var maxAttempts = (duration / 16) + 100;
-        var startTime;
-        var attempts = 0;
-        var stopScroll = false;
-        // scroll loop
-        function step(timeStamp) {
-            attempts++;
-            if (!self.el || stopScroll || attempts > maxAttempts) {
-                self.isScrolling = false;
-                el.style.transform = el.style.webkitTransform = '';
-                done();
-                return;
-            }
-            var time = Math.min(1, ((timeStamp - startTime) / duration));
-            // where .5 would be 50% of time on a linear scale easedT gives a
-            // fraction based on the easing method
-            var easedT = (--time) * time * time + 1;
-            if (fromY !== y) {
-                self.setTop((easedT * (y - fromY)) + fromY);
-            }
-            if (fromX !== x) {
-                self.setLeft(Math.floor((easedT * (x - fromX)) + fromX));
-            }
-            if (easedT < 1) {
-                // do not use DomController here
-                // must use nativeRaf in order to fire in the next frame
-                Context.dom.raf(step);
-            }
-            else {
-                stopScroll = true;
-                self.isScrolling = false;
-                el.style.transform = el.style.webkitTransform = '';
-                done();
-            }
-        }
-        // start scroll loop
-        self.isScrolling = true;
-        // chill out for a frame first
-        Context.dom.write(function () {
-            Context.dom.write(function (timeStamp) {
-                startTime = timeStamp;
-                step(timeStamp);
-            });
-        });
-        return promise;
-    };
-    Scroll.prototype.scrollToTop = function (duration) {
-        return this.scrollTo(0, 0, duration);
-    };
-    Scroll.prototype.scrollToBottom = function (duration) {
-        var y = 0;
-        if (this.el) {
-            y = this.el.scrollHeight - this.el.clientHeight;
-        }
-        return this.scrollTo(0, y, duration);
-    };
-    Scroll.prototype["componentDidunload"] = function () {
-        this.gesture && this.gesture.destroy();
-        this.gesture = this.detail = this.detail.event = null;
-    };
-    Scroll.prototype.render = function () {
-        return h(0, 0);
-    };
-    return Scroll;
-}());
-
-exports['ION-GESTURE'] = Gesture;
-exports['ION-SCROLL'] = Scroll;
+exports['ion-gesture'] = Gesture;
 },
 
 
 /***************** ion-gesture *****************/
 [
 /** ion-gesture: tag **/
-"ION-GESTURE",
+"ion-gesture",
 
 /** ion-gesture: members **/
 [
-  [ "attachTo", /** prop **/ 1 ],
-  [ "autoBlockAll", /** prop **/ 1, /** type boolean **/ 1 ],
-  [ "block", /** prop **/ 1 ],
-  [ "canStart", /** prop **/ 1 ],
-  [ "direction", /** prop **/ 1 ],
-  [ "disableScroll", /** prop **/ 1, /** type boolean **/ 1 ],
-  [ "el", /** element ref **/ 7 ],
-  [ "gestureName", /** prop **/ 1 ],
-  [ "gesturePriority", /** prop **/ 1, /** type number **/ 2 ],
-  [ "maxAngle", /** prop **/ 1, /** type number **/ 2 ],
-  [ "notCaptured", /** prop **/ 1 ],
-  [ "onEnd", /** prop **/ 1 ],
-  [ "onMove", /** prop **/ 1 ],
-  [ "onPress", /** prop **/ 1 ],
-  [ "onStart", /** prop **/ 1 ],
-  [ "threshold", /** prop **/ 1, /** type number **/ 2 ],
-  [ "type", /** prop **/ 1 ]
+  [ "attachTo", /** prop **/ 1, /** observe attribute **/ 1, /** type any **/ 1 ],
+  [ "autoBlockAll", /** prop **/ 1, /** observe attribute **/ 1, /** type boolean **/ 3 ],
+  [ "block", /** prop **/ 1, /** observe attribute **/ 1, /** type string **/ 2 ],
+  [ "canStart", /** prop **/ 1, /** observe attribute **/ 1, /** type any **/ 1 ],
+  [ "direction", /** prop **/ 1, /** observe attribute **/ 1, /** type string **/ 2 ],
+  [ "disableScroll", /** prop **/ 1, /** observe attribute **/ 1, /** type boolean **/ 3 ],
+  [ "el", /** element ref **/ 7, /** do not observe attribute **/ 0, /** type any **/ 1 ],
+  [ "enabled", /** prop **/ 1, /** observe attribute **/ 1, /** type boolean **/ 3 ],
+  [ "gestureName", /** prop **/ 1, /** observe attribute **/ 1, /** type string **/ 2 ],
+  [ "gesturePriority", /** prop **/ 1, /** observe attribute **/ 1, /** type number **/ 4 ],
+  [ "maxAngle", /** prop **/ 1, /** observe attribute **/ 1, /** type number **/ 4 ],
+  [ "notCaptured", /** prop **/ 1, /** observe attribute **/ 1, /** type any **/ 1 ],
+  [ "onEnd", /** prop **/ 1, /** observe attribute **/ 1, /** type any **/ 1 ],
+  [ "onMove", /** prop **/ 1, /** observe attribute **/ 1, /** type any **/ 1 ],
+  [ "onPress", /** prop **/ 1, /** observe attribute **/ 1, /** type any **/ 1 ],
+  [ "onStart", /** prop **/ 1, /** observe attribute **/ 1, /** type any **/ 1 ],
+  [ "onWillStart", /** prop **/ 1, /** observe attribute **/ 1, /** type any **/ 1 ],
+  [ "threshold", /** prop **/ 1, /** observe attribute **/ 1, /** type number **/ 4 ],
+  [ "type", /** prop **/ 1, /** observe attribute **/ 1, /** type string **/ 2 ]
 ],
 
 /** ion-gesture: host **/
@@ -954,31 +768,15 @@ exports['ION-SCROLL'] = Scroll;
 [
   [
     /*****  ion-gesture prop did change [0] ***** /
+    /* prop name **/ "enabled",
+    /* call fn *****/ "enabledChanged"
+  ],
+  [
+    /*****  ion-gesture prop did change [1] ***** /
     /* prop name **/ "block",
-    /* call fn *****/ "blockChange"
+    /* call fn *****/ "blockChanged"
   ]
 ]
 
-],
-
-/***************** ion-scroll *****************/
-[
-/** ion-scroll: tag **/
-"ION-SCROLL",
-
-/** ion-scroll: members **/
-[
-  [ "config", /** prop context **/ 3, /** type any **/ 0, /** context ***/ "config" ],
-  [ "el", /** element ref **/ 7 ],
-  [ "enabled", /** prop **/ 1, /** type boolean **/ 1 ],
-  [ "ionScroll", /** prop **/ 1 ],
-  [ "ionScrollEnd", /** prop **/ 1 ],
-  [ "ionScrollStart", /** prop **/ 1 ],
-  [ "jsScroll", /** prop **/ 1, /** type boolean **/ 1 ]
-],
-
-/** ion-scroll: host **/
-{}
-
 ]
-)
+);

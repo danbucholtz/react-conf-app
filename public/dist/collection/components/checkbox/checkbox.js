@@ -1,62 +1,93 @@
-var Checkbox = /** @class */ (function () {
-    function Checkbox() {
-        /*
-         * @input {boolean} If true, the checkbox is checked. Default false.
+import { BlurEvent, CheckboxInput, CheckedInputChangeEvent, FocusEvent, StyleEvent } from '../../utils/input-interfaces';
+import { CssClassMap, EventEmitter } from '@stencil/core';
+export class Checkbox {
+    constructor() {
+        /**
+         * @input {boolean} If true, the checkbox is selected. Defaults to `false`.
          */
         this.checked = false;
         /*
-         * @input {boolean} If true, the user cannot interact with this element. Default false.
+         * @input {boolean} If true, the user cannot interact with the checkbox. Default false.
          */
         this.disabled = false;
     }
-    Checkbox.prototype["componentWillLoad"] = function () {
+    componentWillLoad() {
+        this.inputId = 'ion-cb-' + (checkboxIds++);
+        if (this.value === undefined) {
+            this.value = this.inputId;
+        }
         this.emitStyle();
-    };
-    Checkbox.prototype.checkedChanged = function (val) {
-        this.ionChange.emit({ checked: val });
+    }
+    componentDidLoad() {
+        this.nativeInput.checked = this.checked;
+        this.didLoad = true;
+        const parentItem = this.nativeInput.closest('ion-item');
+        if (parentItem) {
+            const itemLabel = parentItem.querySelector('ion-label');
+            if (itemLabel) {
+                itemLabel.id = this.inputId + '-lbl';
+                this.nativeInput.setAttribute('aria-labelledby', itemLabel.id);
+            }
+        }
+    }
+    checkedChanged(isChecked) {
+        if (this.nativeInput.checked !== isChecked) {
+            // keep the checked value and native input `nync
+            this.nativeInput.checked = isChecked;
+        }
+        if (this.didLoad) {
+            this.ionChange.emit({
+                checked: isChecked,
+                value: this.value
+            });
+        }
         this.emitStyle();
-    };
-    Checkbox.prototype.disabledChanged = function () {
+    }
+    disabledChanged(isDisabled) {
+        this.nativeInput.disabled = isDisabled;
         this.emitStyle();
-    };
-    Checkbox.prototype.emitStyle = function () {
-        var _this = this;
+    }
+    emitStyle() {
         clearTimeout(this.styleTmr);
-        this.styleTmr = setTimeout(function () {
-            _this.ionStyle.emit({
-                'checkbox-disabled': _this.disabled,
-                'checkbox-checked': _this.checked,
+        this.styleTmr = setTimeout(() => {
+            this.ionStyle.emit({
+                'checkbox-disabled': this.disabled,
+                'checkbox-checked': this.checked,
             });
         });
-    };
-    Checkbox.prototype.onSpace = function (ev) {
-        this.toggle();
-        ev.stopPropagation();
-        ev.preventDefault();
-    };
-    Checkbox.prototype.toggle = function () {
+    }
+    onChange() {
         this.checked = !this.checked;
-    };
-    Checkbox.prototype.hostData = function () {
+    }
+    onKeyUp() {
+        this.keyFocus = true;
+    }
+    onFocus() {
+        this.ionFocus.emit();
+    }
+    onBlur() {
+        this.keyFocus = false;
+        this.ionBlur.emit();
+    }
+    hostData() {
         return {
             class: {
                 'checkbox-checked': this.checked,
-                'checkbox-disabled': this.disabled
+                'checkbox-disabled': this.disabled,
+                'checkbox-key': this.keyFocus
             }
         };
-    };
-    Checkbox.prototype.render = function () {
-        var _this = this;
-        var checkboxClasses = {
+    }
+    render() {
+        const checkboxClasses = {
             'checkbox-icon': true,
             'checkbox-checked': this.checked
         };
         return [
-            h("div", { "c": checkboxClasses },
-                h("div", { "c": { "checkbox-inner": true } })),
-            h("button", { "c": { "checkbox-cover": true }, "o": { "click": function () { return _this.toggle(); } }, "a": { "aria-checked": this.checked ? 'true' : false, "aria-disabled": this.disabled ? 'true' : false, "aria-labelledby": this.labelId, "role": 'checkbox' }, "p": { "id": this.id, "tabIndex": 0 } })
+            h("div", { class: checkboxClasses },
+                h("div", { class: 'checkbox-inner' })),
+            h("input", { type: 'checkbox', onChange: this.onChange.bind(this), onFocus: this.onFocus.bind(this), onBlur: this.onBlur.bind(this), onKeyUp: this.onKeyUp.bind(this), id: this.inputId, name: this.name, value: this.value, disabled: this.disabled, ref: r => this.nativeInput = r })
         ];
-    };
-    return Checkbox;
-}());
-export { Checkbox };
+    }
+}
+let checkboxIds = 0;

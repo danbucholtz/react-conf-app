@@ -2,208 +2,81 @@
  * (C) Ionic http://ionicframework.com - MIT License
  * Built with http://stenciljs.com
  */
+
+Ionic.loadStyles("ion-fab","ion-fab {\n  position: absolute;\n  z-index: 999;\n}\n\nion-fab[center] {\n  left: 50%;\n  margin-left: -28px;\n}\n\nion-fab[middle] {\n  margin-top: -28px;\n  top: 50%;\n}\n\nion-fab[top] {\n  top: 10px;\n}\n\nion-fab[right] {\n  right: 10px;\n  right: calc(10px + constant(safe-area-inset-right));\n  right: calc(10px + env(safe-area-inset-right));\n}\n\nion-fab[end] {\n  right: 10px;\n  right: calc(constant(safe-area-inset-right) + 10px);\n  right: calc(env(safe-area-inset-right) + 10px);\n}\n\nion-fab[bottom] {\n  bottom: 10px;\n}\n\nion-fab[left] {\n  left: 10px;\n  left: calc(10px + constant(safe-area-inset-left));\n  left: calc(10px + env(safe-area-inset-left));\n}\n\nion-fab[start] {\n  left: 10px;\n  left: calc(constant(safe-area-inset-left) + 10px);\n  left: calc(env(safe-area-inset-left) + 10px);\n}\n\nion-fab[top][edge] {\n  top: -28px;\n}\n\nion-fab[bottom][edge] {\n  bottom: -28px;\n}\nion-fab.hydrated{visibility:inherit}","ion-fab-list","ion-fab-list {\n  margin: 66px 0;\n  position: absolute;\n  top: 0;\n  display: none;\n  flex-direction: column;\n  align-items: center;\n  min-width: 56px;\n  min-height: 56px;\n}\n\n.fab-list-active {\n  display: flex;\n}\n\n.fab-button-in-list {\n  margin: 8px 0;\n  width: 40px;\n  height: 40px;\n  opacity: 0;\n  visibility: hidden;\n  transform: scale(0);\n}\n\n.fab-button-in-list.fab-button-show {\n  opacity: 1;\n  visibility: visible;\n  transform: scale(1);\n}\n\nion-fab-list[side=left] .fab-button-in-list,\nion-fab-list[side=right] .fab-button-in-list {\n  margin: 0 8px;\n}\n\nion-fab-list[side=top] {\n  top: auto;\n  bottom: 0;\n  flex-direction: column-reverse;\n}\n\nion-fab-list[side=left] {\n  margin: 0 66px;\n  right: 0;\n  flex-direction: row-reverse;\n}\n\nion-fab-list[side=right] {\n  margin: 0 66px;\n  left: 0;\n  flex-direction: row;\n}\nion-fab-list.hydrated{visibility:inherit}");
 Ionic.loadComponents(
 
 /**** module id (dev mode) ****/
 "ion-fab",
 
 /**** component modules ****/
-function importComponent(exports, h, t, Context, publicPath) {
-var FabContainer = /** @class */ (function () {
-    function FabContainer() {
+function importComponent(exports, h, Context, publicPath) {
+"use strict";
+class Fab {
+    constructor() {
+        this.activated = false;
+        this.toggleActive = () => {
+            this.activated = !this.activated;
+        };
     }
     /**
      * Close an active FAB list container
      */
-    FabContainer.prototype.close = function () {
-        var fab = this.el.querySelector('ion-fab-button');
-        fab.close();
-    };
-    FabContainer.prototype.render = function () {
-        return (h(0, 0));
-    };
-    return FabContainer;
-}());
-
-/**
- * Create the mode and color classes for the component based on the classes passed in
- */
-function createThemedClasses(mode, color, classes) {
-    var classObj = {};
-    return classes.split(' ')
-        .reduce(function (classObj, classString) {
-        classObj[classString] = true;
-        if (mode) {
-            classObj[classString + "-" + mode] = true;
-            if (color) {
-                classObj[classString + "-" + color] = true;
-                classObj[classString + "-" + mode + "-" + color] = true;
-            }
-        }
-        return classObj;
-    }, classObj);
-}
-/**
- * Get the classes from a class list and return them as an object
- */
-function getElementClassObject(classList) {
-    var classObj = {};
-    for (var i = 0; i < classList.length; i++) {
-        classObj[classList.item(i)] = true;
-    }
-    return classObj;
-}
-
-var __assign = (undefined && undefined.__assign) || Object.assign || function(t) {
-    for (var s, i = 1, n = arguments.length; i < n; i++) {
-        s = arguments[i];
-        for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
-            t[p] = s[p];
-    }
-    return t;
-};
-var FabButton = /** @class */ (function () {
-    function FabButton() {
-        this.activated = false;
-        this.show = false;
-        this.inContainer = false;
-        this.inList = false;
-        /**
-         * @Prop {boolean} If true, sets the button into a disabled state.
-         */
-        this.disabled = false;
-    }
-    FabButton.prototype["componentDidLoad"] = function () {
-        var parentNode = this.el.parentNode.nodeName;
-        this.inList = (parentNode === 'ION-FAB-LIST');
-        this.inContainer = (parentNode === 'ION-FAB');
-    };
-    FabButton.prototype.clickedFab = function () {
-        if (this.inContainer) {
-            var activated = !this.activated;
-            this.setActiveLists(activated);
-        }
-    };
-    /**
-     * @hidden
-     */
-    FabButton.prototype.setActiveLists = function (activated) {
-        var lists = this.el.parentElement.querySelectorAll('ion-fab-list');
-        if (lists.length > 0) {
-            this.activated = activated;
-        }
-        for (var i = 0; i < lists.length; i++) {
-            var list = lists[i].$instance;
-            list.activated = activated;
-        }
-    };
-    /**
-     * Close an active FAB list container
-     */
-    FabButton.prototype.close = function () {
-        this.setActiveLists(false);
-    };
-    /**
-     * @hidden
-     * Get the classes for fab buttons in lists
-     */
-    FabButton.prototype.getFabListClassList = function () {
-        if (!this.inList) {
-            return [];
-        }
-        return [
-            "fab-in-list",
-            "fab-" + this.mode + "-in-list"
-        ];
-    };
-    /**
-     * @hidden
-     * Get the close active class for fab buttons
-     */
-    FabButton.prototype.getFabActiveClassList = function () {
-        if (!this.activated) {
-            return [];
-        }
-        return [
-            "fab-close-active"
-        ];
-    };
-    /**
-     * @hidden
-     * Get the show class for fab buttons
-     */
-    FabButton.prototype.getFabShowClassList = function () {
-        if (!this.show) {
-            return [];
-        }
-        return [
-            "show"
-        ];
-    };
-    FabButton.prototype.render = function () {
-        var themedClasses = createThemedClasses(this.mode, this.color, 'fab');
-        var hostClasses = getElementClassObject(this.el.classList);
-        var elementClasses = []
-            .concat(this.getFabListClassList(), this.getFabActiveClassList(), this.getFabShowClassList())
-            .reduce(function (prevValue, cssClass) {
-            prevValue[cssClass] = true;
-            return prevValue;
-        }, {});
-        var TagType = this.href ? 'a' : 'button';
-        var fabClasses = __assign({}, themedClasses, hostClasses, elementClasses);
-        return (h(TagType, { "c": fabClasses, "o": { "click": this.clickedFab.bind(this) }, "a": { "disabled": this.disabled } },
-            h("ion-icon", { "c": { "fab-close-icon": true }, "a": { "name": "close" } }),
-            h("span", { "c": { "button-inner": true } },
-                h(0, 0)),
-            h("div", { "c": { "button-effect": true } })));
-    };
-    return FabButton;
-}());
-
-var FabList = /** @class */ (function () {
-    function FabList() {
+    close() {
         this.activated = false;
     }
-    FabList.prototype.activatedChange = function (activated) {
-        var fabs = this.el.querySelectorAll('ion-fab-button');
+    render() {
+        const fab = this.el.querySelector('ion-fab-button');
+        fab.toggleActive = this.toggleActive;
+        fab.activated = this.activated;
+        const lists = this.el.querySelectorAll('ion-fab-list');
+        for (let i = 0, length = lists.length; i < length; i += 1) {
+            lists[i].activated = this.activated;
+        }
+        return (h("slot", null));
+    }
+}
+
+class FabList {
+    constructor() {
+        this.activated = false;
+    }
+    activatedChanged(activated) {
+        const fabs = this.el.querySelectorAll('ion-fab-button');
         // if showing the fabs add a timeout, else show immediately
         var timeout = activated ? 30 : 0;
-        var _loop_1 = function () {
-            var fab = fabs[i].$instance;
-            setTimeout(function () { return fab.show = activated; }, i * timeout);
-        };
         for (var i = 0; i < fabs.length; i++) {
-            _loop_1();
+            const fab = fabs[i];
+            setTimeout(() => fab.show = activated, i * timeout);
         }
-    };
-    FabList.prototype.hostData = function () {
+    }
+    hostData() {
         return {
             class: {
                 'fab-list-active': this.activated
             }
         };
-    };
-    FabList.prototype.render = function () {
-        return (h(0, 0));
-    };
-    return FabList;
-}());
+    }
+    render() {
+        return (h("slot", null));
+    }
+}
 
-exports['ION-FAB'] = FabContainer;
-exports['ION-FAB-BUTTON'] = FabButton;
-exports['ION-FAB-LIST'] = FabList;
+exports['ion-fab'] = Fab;
+exports['ion-fab-list'] = FabList;
 },
 
 
 /***************** ion-fab *****************/
 [
 /** ion-fab: tag **/
-"ION-FAB",
+"ion-fab",
 
 /** ion-fab: members **/
 [
-  [ "close", /** method **/ 6 ],
-  [ "el", /** element ref **/ 7 ]
+  [ "activated", /** state **/ 5, /** do not observe attribute **/ 0, /** type any **/ 1 ],
+  [ "close", /** method **/ 6, /** do not observe attribute **/ 0, /** type any **/ 1 ],
+  [ "el", /** element ref **/ 7, /** do not observe attribute **/ 0, /** type any **/ 1 ]
 ],
 
 /** ion-fab: host **/
@@ -211,37 +84,15 @@ exports['ION-FAB-LIST'] = FabList;
 
 ],
 
-/***************** ion-fab-button *****************/
-[
-/** ion-fab-button: tag **/
-"ION-FAB-BUTTON",
-
-/** ion-fab-button: members **/
-[
-  [ "activated", /** state **/ 5 ],
-  [ "close", /** method **/ 6 ],
-  [ "disabled", /** prop **/ 1, /** type boolean **/ 1 ],
-  [ "el", /** element ref **/ 7 ],
-  [ "href", /** prop **/ 1 ],
-  [ "inContainer", /** state **/ 5 ],
-  [ "inList", /** state **/ 5 ],
-  [ "show", /** state **/ 5 ]
-],
-
-/** ion-fab-button: host **/
-{}
-
-],
-
 /***************** ion-fab-list *****************/
 [
 /** ion-fab-list: tag **/
-"ION-FAB-LIST",
+"ion-fab-list",
 
 /** ion-fab-list: members **/
 [
-  [ "activated", /** state **/ 5 ],
-  [ "el", /** element ref **/ 7 ]
+  [ "activated", /** prop **/ 1, /** observe attribute **/ 1, /** type boolean **/ 3 ],
+  [ "el", /** element ref **/ 7, /** do not observe attribute **/ 0, /** type any **/ 1 ]
 ],
 
 /** ion-fab-list: host **/
@@ -258,9 +109,9 @@ exports['ION-FAB-LIST'] = FabList;
   [
     /*****  ion-fab-list prop did change [0] ***** /
     /* prop name **/ "activated",
-    /* call fn *****/ "activatedChange"
+    /* call fn *****/ "activatedChanged"
   ]
 ]
 
 ]
-)
+);

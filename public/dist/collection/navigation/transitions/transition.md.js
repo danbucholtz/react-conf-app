@@ -1,15 +1,16 @@
+import { AnimationOptions, Transition, ViewController } from '../../index';
 import { canNavGoBack } from '../nav-utils';
 import { isDef } from '../../utils/helpers';
-var TRANSLATEY = 'translateY';
-var OFF_BOTTOM = '40px';
-var CENTER = '0px';
-var SHOW_BACK_BTN_CSS = 'show-back-button';
+const TRANSLATEY = 'translateY';
+const OFF_BOTTOM = '40px';
+const CENTER = '0px';
+const SHOW_BACK_BTN_CSS = 'show-back-button';
 export function buildMdTransition(rootTransition, enteringView, leavingView, opts) {
     rootTransition.enteringView = enteringView;
     rootTransition.leavingView = leavingView;
     rootTransition.addElement(enteringView.element);
-    rootTransition.beforeAddClass('show-page');
-    var backDirection = (opts.direction === 'back');
+    rootTransition.beforeRemoveClass('hide-page');
+    const backDirection = (opts.direction === 'back');
     if (enteringView) {
         if (backDirection) {
             rootTransition.duration(isDef(opts.duration) ? opts.duration : 200).easing('cubic-bezier(0.47,0,0.745,0.715)');
@@ -20,12 +21,12 @@ export function buildMdTransition(rootTransition, enteringView, leavingView, opt
                 .fromTo(TRANSLATEY, OFF_BOTTOM, CENTER, true)
                 .fromTo('opacity', 0.01, 1, true);
         }
-        var enteringNavbarEle = enteringView.element.querySelector('ion-navbar');
+        const enteringNavbarEle = enteringView.element.querySelector('ion-navbar');
         if (enteringNavbarEle) {
-            var enteringNavBar = rootTransition.create();
+            const enteringNavBar = rootTransition.create();
             enteringNavBar.addElement(enteringNavbarEle);
             rootTransition.add(enteringNavBar);
-            var enteringBackButton = rootTransition.create();
+            const enteringBackButton = rootTransition.create();
             enteringBackButton.addElement(enteringNavbarEle.querySelector('.back-button'));
             rootTransition.add(enteringBackButton);
             if (canNavGoBack(enteringView.nav)) {
@@ -40,7 +41,7 @@ export function buildMdTransition(rootTransition, enteringView, leavingView, opt
     if (leavingView && backDirection) {
         // leaving content
         rootTransition.duration(opts.duration || 200).easing('cubic-bezier(0.47,0,0.745,0.715)');
-        var leavingPage = rootTransition.create();
+        const leavingPage = rootTransition.create();
         leavingPage.addElement(leavingView.element);
         rootTransition.add(leavingPage.fromTo(TRANSLATEY, CENTER, OFF_BOTTOM).fromTo('opacity', 1, 0));
     }

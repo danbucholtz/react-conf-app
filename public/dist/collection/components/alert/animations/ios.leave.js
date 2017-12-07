@@ -1,11 +1,12 @@
+import { Animation } from '../../../index';
 /**
  * iOS Alert Leave Animation
  */
-export default function (Animation, baseElm) {
-    var baseAnimation = new Animation();
-    var backdropAnimation = new Animation();
+export default function iosLeaveAnimation(Animation, baseElm) {
+    const baseAnimation = new Animation();
+    const backdropAnimation = new Animation();
     backdropAnimation.addElement(baseElm.querySelector('.alert-backdrop'));
-    var wrapperAnimation = new Animation();
+    const wrapperAnimation = new Animation();
     wrapperAnimation.addElement(baseElm.querySelector('.alert-wrapper'));
     backdropAnimation.fromTo('opacity', 0.3, 0);
     wrapperAnimation.fromTo('opacity', 0.99, 0).fromTo('scale', 1, 0.9);

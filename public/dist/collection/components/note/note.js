@@ -1,9 +1,5 @@
-var Note = /** @class */ (function () {
-    function Note() {
+export class Note {
+    render() {
+        return h("slot", null);
     }
-    Note.prototype.render = function () {
-        return h(0, 0);
-    };
-    return Note;
-}());
-export { Note };
+}

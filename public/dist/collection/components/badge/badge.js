@@ -1,9 +1,5 @@
-var Badge = /** @class */ (function () {
-    function Badge() {
+export class Badge {
+    render() {
+        return h("slot", null);
     }
-    Badge.prototype.render = function () {
-        return h(0, 0);
-    };
-    return Badge;
-}());
-export { Badge };
+}

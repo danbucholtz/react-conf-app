@@ -1,10 +1,8 @@
-var SkeletonText = /** @class */ (function () {
-    function SkeletonText() {
+export class SkeletonText {
+    constructor() {
         this.width = '100%';
     }
-    SkeletonText.prototype.render = function () {
-        return h("span", { "s": { "width": this.width } }, t("\u00A0"));
-    };
-    return SkeletonText;
-}());
-export { SkeletonText };
+    render() {
+        return h("span", { style: { width: this.width } }, "\u00A0");
+    }
+}

@@ -1,92 +1,110 @@
-import iOSEnterAnimation from './animations/ios.enter';
-import iOSLeaveAnimation from './animations/ios.leave';
-var ActionSheet = /** @class */ (function () {
-    function ActionSheet() {
+import { CssClassMap, EventEmitter } from '@stencil/core';
+import { Animation, AnimationBuilder, AnimationController, Config, OverlayDismissEvent, OverlayDismissEventDetail } from '../../index';
+import { domControllerAsync, playAnimationAsync } from '../../utils/helpers';
+import { createThemedClasses } from '../../utils/theme';
+import iosEnterAnimation from './animations/ios.enter';
+import iosLeaveAnimation from './animations/ios.leave';
+import mdEnterAnimation from './animations/md.enter';
+import mdLeaveAnimation from './animations/md.leave';
+export class ActionSheet {
+    constructor() {
+        /**
+         * If true, the action-sheet will be dismissed when the backdrop is clicked.
+         */
         this.enableBackdropDismiss = true;
+        /**
+         * If true, action-sheet will become translucent. Requires support for backdrop-filters.
+         */
+        this.translucent = false;
+        /**
+         * Enable action-sheet animations. If false, action-sheet will not animate in
+         */
+        this.animate = true;
     }
-    ActionSheet.prototype.present = function () {
-        var _this = this;
-        return new Promise(function (resolve) {
-            _this._present(resolve);
-        });
-    };
-    ActionSheet.prototype._present = function (resolve) {
-        var _this = this;
+    /**
+     * Present the action-sheet after is has been created
+     */
+    present() {
         if (this.animation) {
             this.animation.destroy();
             this.animation = null;
         }
-        this.ionActionSheetWillPresent.emit({ actionSheet: this });
+        this.ionActionSheetWillPresent.emit();
         // get the user's animation fn if one was provided
-        var animationBuilder = this.enterAnimation;
-        if (!animationBuilder) {
-            // user did not provide a custom animation fn
-            // decide from the config which animation to use
-            animationBuilder = iOSEnterAnimation;
-        }
+        const animationBuilder = this.enterAnimation || this.config.get('actionSheetEnter', this.mode === 'ios' ? iosEnterAnimation : mdEnterAnimation);
         // build the animation and kick it off
-        this.animationCtrl.create(animationBuilder, this.el).then(function (animation) {
-            _this.animation = animation;
-            animation.onFinish(function (a) {
-                a.destroy();
-                _this.ionViewDidEnter();
-                resolve();
-            }).play();
+        return this.animationCtrl.create(animationBuilder, this.el).then(animation => {
+            this.animation = animation;
+            if (!this.animate) {
+                // if the duration is 0, it won't actually animate I don't think
+                // TODO - validate this
+                this.animation = animation.duration(0);
+            }
+            return playAnimationAsync(animation);
+        }).then((animation) => {
+            animation.destroy();
+            this.ionActionSheetDidPresent.emit();
         });
-    };
-    ActionSheet.prototype.dismiss = function () {
-        var _this = this;
+    }
+    /**
+     * Dismiss the action-sheet programatically
+     */
+    dismiss(data, role) {
         if (this.animation) {
             this.animation.destroy();
             this.animation = null;
         }
-        return new Promise(function (resolve) {
-            _this.ionActionSheetWillDismiss.emit({ actionSheet: _this });
-            // get the user's animation fn if one was provided
-            var animationBuilder = _this.exitAnimation;
-            if (!animationBuilder) {
-                // user did not provide a custom animation fn
-                // decide from the config which animation to use
-                animationBuilder = iOSLeaveAnimation;
-            }
-            // build the animation and kick it off
-            _this.animationCtrl.create(animationBuilder, _this.el).then(function (animation) {
-                _this.animation = animation;
-                animation.onFinish(function (a) {
-                    a.destroy();
-                    _this.ionActionSheetDidDismiss.emit({ actionSheet: _this });
-                    Context.dom.write(function () {
-                        _this.el.parentNode.removeChild(_this.el);
-                    });
-                    resolve();
-                }).play();
+        this.ionActionSheetWillDismiss.emit({
+            data,
+            role
+        });
+        const animationBuilder = this.leaveAnimation || this.config.get('actionSheetLeave', this.mode === 'ios' ? iosLeaveAnimation : mdLeaveAnimation);
+        return this.animationCtrl.create(animationBuilder, this.el).then(animation => {
+            this.animation = animation;
+            return playAnimationAsync(animation);
+        }).then((animation) => {
+            animation.destroy();
+            return domControllerAsync(Context.dom.write, () => {
+                this.el.parentNode.removeChild(this.el);
+            });
+        }).then(() => {
+            this.ionActionSheetDidDismiss.emit({
+                data,
+                role
             });
         });
-    };
-    ActionSheet.prototype["componentDidunload"] = function () {
-        this.ionActionSheetDidUnload.emit({ actionSheet: this });
-    };
-    ActionSheet.prototype.onDismiss = function (ev) {
+    }
+    componentDidLoad() {
+        this.ionActionSheetDidLoad.emit();
+    }
+    componentDidUnload() {
+        this.ionActionSheetDidUnload.emit();
+    }
+    onDismiss(ev) {
         ev.stopPropagation();
         ev.preventDefault();
         this.dismiss();
-    };
-    ActionSheet.prototype["componentDidLoad"] = function () {
-        this.ionActionSheetDidLoad.emit({ actionSheet: this });
-    };
-    ActionSheet.prototype.ionViewDidEnter = function () {
-        this.ionActionSheetDidPresent.emit({ loading: this });
-    };
-    ActionSheet.prototype.backdropClick = function () {
+    }
+    backdropClick() {
         if (this.enableBackdropDismiss) {
-            // const opts: NavOptions = {
-            //   minClickBlockDuration: 400
-            // };
             this.dismiss();
         }
-    };
-    ActionSheet.prototype.click = function (button) {
-        var shouldDismiss = true;
+    }
+    buttonClass(button) {
+        let buttonClass = !button.role
+            ? ['action-sheet-button']
+            : [`action-sheet-button`, `action-sheet-${button.role}`];
+        if (button.cssClass) {
+            let customClass = button.cssClass.split(' ').filter(b => b.trim() !== '').join(' ');
+            buttonClass.push(customClass);
+        }
+        return buttonClass.reduce((prevValue, cssClass) => {
+            prevValue[cssClass] = true;
+            return prevValue;
+        }, {});
+    }
+    buttonClick(button) {
+        let shouldDismiss = true;
         if (button.handler) {
             if (button.handler() === false) {
                 shouldDismiss = false;
@@ -95,16 +113,24 @@ var ActionSheet = /** @class */ (function () {
         if (shouldDismiss) {
             this.dismiss();
         }
-    };
-    ActionSheet.prototype.render = function () {
-        var _this = this;
-        var userCssClass = 'action-sheet-content';
+    }
+    hostData() {
+        const themedClasses = this.translucent ? createThemedClasses(this.mode, this.color, 'action-sheet-translucent') : {};
+        const hostClasses = Object.assign({}, themedClasses);
+        return {
+            class: hostClasses
+        };
+    }
+    render() {
         if (this.cssClass) {
-            userCssClass += ' ' + this.cssClass;
+            this.cssClass.split(' ').forEach(cssClass => {
+                if (cssClass.trim() !== '')
+                    this.el.classList.add(cssClass);
+            });
         }
-        var cancelButton;
-        var buttons = this.buttons
-            .map(function (b) {
+        let cancelButton;
+        let buttons = this.buttons
+            .map(b => {
             if (typeof b === 'string') {
                 b = { text: b };
             }
@@ -117,45 +143,34 @@ var ActionSheet = /** @class */ (function () {
             }
             return b;
         })
-            .filter(function (b) { return b !== null; });
+            .filter(b => b !== null);
         return [
-            h("ion-backdrop", { "c": { "action-sheet-backdrop": true }, "o": { "click": this.backdropClick.bind(this) } }),
-            h("div", { "c": { "action-sheet-wrapper": true }, "a": { "role": "dialog" } },
-                h("div", { "c": { "action-sheet-container": true } },
-                    h("div", { "c": { "action-sheet-group": true } },
+            h("ion-backdrop", { onClick: this.backdropClick.bind(this), class: 'action-sheet-backdrop' }),
+            h("div", { class: 'action-sheet-wrapper', role: 'dialog' },
+                h("div", { class: 'action-sheet-container' },
+                    h("div", { class: 'action-sheet-group' },
                         this.title
-                            ? h("div", { "c": { "action-sheet-title": true } }, this.title)
+                            ? h("div", { class: 'action-sheet-title' }, this.title)
                             : null,
                         this.subTitle
-                            ? h("div", { "c": { "action-sheet-sub-title": true } }, this.subTitle)
+                            ? h("div", { class: 'action-sheet-sub-title' }, this.subTitle)
                             : null,
-                        buttons.map(function (b) {
-                            return h("button", { "c": _this.buttonClass(b), "o": { "click": function () { return _this.click(b); } } },
-                                h("span", { "c": { "button-inner": true } },
-                                    b.icon
-                                        ? h("ion-icon", { "c": { "action-sheet-icon": true }, "p": { "name": b.icon } })
-                                        : null,
-                                    b.text));
-                        })),
-                    cancelButton
-                        ? h("div", { "c": { "action-sheet-group": true } },
-                            h("button", { "c": this.buttonClass(cancelButton), "o": { "click": function () { return _this.click(cancelButton); } } },
-                                cancelButton.icon
-                                    ? h("ion-icon", { "c": { "action-sheet-icon": true }, "p": { "name": cancelButton.icon } })
+                        buttons.map(b => h("button", { class: this.buttonClass(b), onClick: () => this.buttonClick(b) },
+                            h("span", { class: 'button-inner' },
+                                b.icon
+                                    ? h("ion-icon", { name: b.icon, class: 'action-sheet-icon' })
                                     : null,
-                                cancelButton.text))
+                                b.text)))),
+                    cancelButton
+                        ? h("div", { class: 'action-sheet-group action-sheet-group-cancel' },
+                            h("button", { class: this.buttonClass(cancelButton), onClick: () => this.buttonClick(cancelButton) },
+                                h("span", { class: 'button-inner' },
+                                    cancelButton.icon
+                                        ? h("ion-icon", { name: cancelButton.icon, class: 'action-sheet-icon' })
+                                        : null,
+                                    cancelButton.text)))
                         : null))
         ];
-    };
-    ActionSheet.prototype.buttonClass = function (button) {
-        var buttonClass = !button.role
-            ? ['action-sheet-button']
-            : ["action-sheet-button", "action-sheet-" + button.role];
-        return buttonClass.reduce(function (prevValue, cssClass) {
-            prevValue[cssClass] = true;
-            return prevValue;
-        }, {});
-    };
-    return ActionSheet;
-}());
-export { ActionSheet };
+    }
+}
+export { iosEnterAnimation as iosActionSheetEnterAnimation, iosLeaveAnimation as iosActionSheetLeaveAnimation, mdEnterAnimation as mdActionSheetEnterAnimation, mdLeaveAnimation as mdActionSheetetLeaveAnimation, };

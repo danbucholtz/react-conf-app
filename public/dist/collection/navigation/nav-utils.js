@@ -1,20 +1,22 @@
+import { Transition } from './nav-interfaces';
+import { Animation, AnimationOptions, Config, Nav, RouterEntry, TransitionBuilder, ViewController } from '..';
 import { isDef } from '../utils/helpers';
-export var STATE_NEW = 1;
-export var STATE_INITIALIZED = 2;
-export var STATE_ATTACHED = 3;
-export var STATE_DESTROYED = 4;
-export var INIT_ZINDEX = 100;
-export var PORTAL_Z_INDEX_OFFSET = 0;
-export var DIRECTION_BACK = 'back';
-export var DIRECTION_FORWARD = 'forward';
-export var DIRECTION_SWITCH = 'switch';
-export var NAV = 'nav';
-export var TABS = 'tabs';
-export var NAV_ID_START = 1000;
-export var VIEW_ID_START = 2000;
-var transitionIds = 0;
-var activeTransitions = new Map();
-var portalZindex = 9999;
+export const STATE_NEW = 1;
+export const STATE_INITIALIZED = 2;
+export const STATE_ATTACHED = 3;
+export const STATE_DESTROYED = 4;
+export const INIT_ZINDEX = 100;
+export const PORTAL_Z_INDEX_OFFSET = 0;
+export const DIRECTION_BACK = 'back';
+export const DIRECTION_FORWARD = 'forward';
+export const DIRECTION_SWITCH = 'switch';
+export const NAV = 'nav';
+export const TABS = 'tabs';
+export let NAV_ID_START = 1000;
+export let VIEW_ID_START = 2000;
+let transitionIds = 0;
+let activeTransitions = new Map();
+let portalZindex = 9999;
 export function isViewController(object) {
     return !!(object && object.didLoad && object.willUnload);
 }
@@ -22,6 +24,7 @@ export function setZIndex(nav, enteringView, leavingView, direction) {
     if (enteringView) {
         if (nav.isPortal) {
             if (direction === DIRECTION_FORWARD) {
+                // TODO - fix typing
                 updateZIndex(enteringView, nav.zIndexOffset + portalZindex);
             }
             portalZindex++;
@@ -37,6 +40,7 @@ export function setZIndex(nav, enteringView, leavingView, direction) {
             }
         }
         else {
+            // TODO - fix typing
             updateZIndex(enteringView, INIT_ZINDEX + nav.zIndexOffset);
         }
     }
@@ -59,7 +63,7 @@ export function canNavGoBack(nav) {
     return !!nav.getPrevious();
 }
 export function transitionFactory(animation) {
-    animation.registerTransitionStart = function (callback) {
+    animation.registerTransitionStart = (callback) => {
         animation.transitionStartFunction = callback;
     };
     animation.start = function () {
@@ -85,7 +89,7 @@ export function transitionDestroyImpl(transition) {
 export function getParentTransitionId(nav) {
     nav = nav.parent;
     while (nav) {
-        var transitionId = nav.transitionId;
+        const transitionId = nav.transitionId;
         if (isDef(transitionId)) {
             return transitionId;
         }
@@ -97,15 +101,15 @@ export function getNextTransitionId() {
     return transitionIds++;
 }
 export function destroyTransition(transitionId) {
-    var transition = activeTransitions.get(transitionId);
+    const transition = activeTransitions.get(transitionId);
     if (transition) {
         transition.destroy();
         activeTransitions.delete(transitionId);
     }
 }
 export function getHydratedTransition(name, config, transitionId, emptyTransition, enteringView, leavingView, opts, defaultTransitionFactory) {
-    var transitionFactory = config.get(name) || defaultTransitionFactory;
-    var hydratedTransition = transitionFactory(emptyTransition, enteringView, leavingView, opts);
+    const transitionFactory = config.get(name) || defaultTransitionFactory;
+    const hydratedTransition = transitionFactory(emptyTransition, enteringView, leavingView, opts);
     hydratedTransition.transitionId = transitionId;
     if (!activeTransitions.has(transitionId)) {
         // sweet, this is the root transition
@@ -133,10 +137,6 @@ export function getActiveChildNavs(nav) {
 export function getViews(nav) {
     return nav.views ? nav.views : [];
 }
-export function init(nav) {
-    nav.id = getNextNavId();
-    nav.views = [];
-}
 export function getActiveImpl(nav) {
     return nav.views && nav.views.length > 0 ? nav.views[nav.views.length - 1] : null;
 }
@@ -149,4 +149,7 @@ export function getPreviousImpl(nav, viewController) {
 export function getNextNavId() {
     return navControllerIds++;
 }
-var navControllerIds = NAV_ID_START;
+export function resolveRoute(nav, component) {
+    return nav.routes.find(r => r.id === component);
+}
+let navControllerIds = NAV_ID_START;

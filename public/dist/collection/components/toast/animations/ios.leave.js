@@ -1,20 +1,21 @@
+import { Animation } from '../../../index';
 /**
  * iOS Toast Leave Animation
  */
-export default function (Animation, baseElm, position) {
-    var baseAnimation = new Animation();
-    var wrapperAnimation = new Animation();
-    var wrapperEle = baseElm.querySelector('.toast-wrapper');
+export default function iosLeaveAnimation(Animation, baseElm, position) {
+    const baseAnimation = new Animation();
+    const wrapperAnimation = new Animation();
+    const wrapperEle = baseElm.querySelector('.toast-wrapper');
     wrapperAnimation.addElement(wrapperEle);
     switch (position) {
         case 'top':
-            wrapperAnimation.fromTo('translateY', 10 + "px", '-100%');
+            wrapperAnimation.fromTo('translateY', `${10}px`, '-100%');
             break;
         case 'middle':
             wrapperAnimation.fromTo('opacity', 0.99, 0);
             break;
         default:
-            wrapperAnimation.fromTo('translateY', 0 - 10 + "px", '100%');
+            wrapperAnimation.fromTo('translateY', `${0 - 10}px`, '100%');
             break;
     }
     return baseAnimation

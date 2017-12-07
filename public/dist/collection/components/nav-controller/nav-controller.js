@@ -1,75 +1,64 @@
-import { isReady } from '../../utils/helpers';
+import { Animation, AnimationController, ComponentDataPair, FrameworkDelegate, Nav, NavOptions, ViewController } from '../../index';
+import { DomFrameworkDelegate } from './dom-framework-delegate';
 import { insert as insertImpl, insertPages as insertPagesImpl, pop as popImpl, popTo as popToImpl, popToRoot as popToRootImpl, push as pushImpl, remove as removeImpl, removeView as removeViewImpl, setPages as setPagesImpl, setRoot as setRootImpl } from '../../navigation/nav-controller-functions';
-var defaultDelegate = null;
-var NavControllerImpl = /** @class */ (function () {
-    function NavControllerImpl() {
+let defaultDelegate = null;
+export class NavController {
+    constructor() {
     }
-    NavControllerImpl.prototype.push = function (nav, component, data, opts) {
-        return hydrateDelegateAndAnimation(this).then(function (_a) {
-            var delegate = _a[0], animation = _a[1];
+    push(nav, component, data, opts) {
+        return hydrateDelegateAndAnimation(this).then(([delegate, animation]) => {
             return pushImpl(nav, delegate, animation, component, data, opts);
         });
-    };
-    NavControllerImpl.prototype.pop = function (nav, opts) {
-        return hydrateDelegateAndAnimation(this).then(function (_a) {
-            var delegate = _a[0], animation = _a[1];
+    }
+    pop(nav, opts) {
+        return hydrateDelegateAndAnimation(this).then(([delegate, animation]) => {
             return popImpl(nav, delegate, animation, opts);
         });
-    };
-    NavControllerImpl.prototype.setRoot = function (nav, component, data, opts) {
-        return hydrateDelegateAndAnimation(this).then(function (_a) {
-            var delegate = _a[0], animation = _a[1];
+    }
+    setRoot(nav, component, data, opts) {
+        return hydrateDelegateAndAnimation(this).then(([delegate, animation]) => {
             return setRootImpl(nav, delegate, animation, component, data, opts);
         });
-    };
-    NavControllerImpl.prototype.insert = function (nav, insertIndex, page, params, opts) {
-        return hydrateDelegateAndAnimation(this).then(function (_a) {
-            var delegate = _a[0], animation = _a[1];
+    }
+    insert(nav, insertIndex, page, params, opts) {
+        return hydrateDelegateAndAnimation(this).then(([delegate, animation]) => {
             return insertImpl(nav, delegate, animation, insertIndex, page, params, opts);
         });
-    };
-    NavControllerImpl.prototype.insertPages = function (nav, insertIndex, insertPages, opts) {
-        return hydrateDelegateAndAnimation(this).then(function (_a) {
-            var delegate = _a[0], animation = _a[1];
+    }
+    insertPages(nav, insertIndex, insertPages, opts) {
+        return hydrateDelegateAndAnimation(this).then(([delegate, animation]) => {
             return insertPagesImpl(nav, delegate, animation, insertIndex, insertPages, opts);
         });
-    };
-    NavControllerImpl.prototype.popToRoot = function (nav, opts) {
-        return hydrateDelegateAndAnimation(this).then(function (_a) {
-            var delegate = _a[0], animation = _a[1];
+    }
+    popToRoot(nav, opts) {
+        return hydrateDelegateAndAnimation(this).then(([delegate, animation]) => {
             return popToRootImpl(nav, delegate, animation, opts);
         });
-    };
-    NavControllerImpl.prototype.popTo = function (nav, indexOrViewCtrl, opts) {
-        return hydrateDelegateAndAnimation(this).then(function (_a) {
-            var delegate = _a[0], animation = _a[1];
+    }
+    popTo(nav, indexOrViewCtrl, opts) {
+        return hydrateDelegateAndAnimation(this).then(([delegate, animation]) => {
             return popToImpl(nav, delegate, animation, indexOrViewCtrl, opts);
         });
-    };
-    NavControllerImpl.prototype.remove = function (nav, startIndex, removeCount, opts) {
-        return hydrateDelegateAndAnimation(this).then(function (_a) {
-            var delegate = _a[0], animation = _a[1];
+    }
+    removeIndex(nav, startIndex, removeCount, opts) {
+        return hydrateDelegateAndAnimation(this).then(([delegate, animation]) => {
             return removeImpl(nav, delegate, animation, startIndex, removeCount, opts);
         });
-    };
-    NavControllerImpl.prototype.removeView = function (nav, viewController, opts) {
-        return hydrateDelegateAndAnimation(this).then(function (_a) {
-            var delegate = _a[0], animation = _a[1];
+    }
+    removeView(nav, viewController, opts) {
+        return hydrateDelegateAndAnimation(this).then(([delegate, animation]) => {
             return removeViewImpl(nav, delegate, animation, viewController, opts);
         });
-    };
-    NavControllerImpl.prototype.setPages = function (nav, componentDataPairs, opts) {
-        return hydrateDelegateAndAnimation(this).then(function (_a) {
-            var delegate = _a[0], animation = _a[1];
+    }
+    setPages(nav, componentDataPairs, opts) {
+        return hydrateDelegateAndAnimation(this).then(([delegate, animation]) => {
             return setPagesImpl(nav, delegate, animation, componentDataPairs, opts);
         });
-    };
-    NavControllerImpl.prototype.render = function () {
-        return h(0, 0);
-    };
-    return NavControllerImpl;
-}());
-export { NavControllerImpl };
+    }
+    render() {
+        return h("slot", null);
+    }
+}
 export function hydrateDelegateAndAnimation(navController) {
     return Promise.all([hydrateDelegate(navController), hydrateAnimationController(navController.animationCtrl)]);
 }
@@ -77,13 +66,9 @@ export function hydrateDelegate(navController) {
     if (navController.delegate) {
         return Promise.resolve(navController.delegate);
     }
-    // no delegate is set, so fall back to inserting the stencil-ion-nav-delegate
-    var element = document.createElement('stencil-ion-nav-delegate');
-    document.body.appendChild(element);
-    return isReady(element).then(function () {
-        defaultDelegate = element;
-        return defaultDelegate;
-    });
+    // no delegate is set, so fall back to using the DomFrameworkDelegate
+    defaultDelegate = new DomFrameworkDelegate();
+    return Promise.resolve(defaultDelegate);
 }
 export function hydrateAnimationController(animationController) {
     return animationController.create();

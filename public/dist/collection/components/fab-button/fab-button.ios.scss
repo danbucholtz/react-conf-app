@@ -1,0 +1,84 @@
+@import "./fab-button";
+@import "./fab-button.ios.vars";
+
+// iOS FAB Button
+// --------------------------------------------------
+
+.fab-button-ios {
+  color: $fab-ios-text-color;
+  background-color: $fab-ios-background-color;
+}
+
+.fab-button-ios.activated {
+  background-color: $fab-ios-background-color-activated;
+}
+
+.fab-button-ios .icon {
+  fill: $fab-ios-icon-fill-color;
+}
+
+// FAB buttons in a list
+// --------------------------------------------------
+
+.fab-button-ios-in-list {
+  color: $fab-ios-list-button-text-color;
+  background-color: $fab-ios-list-button-background-color;
+
+  transition: transform $fab-ios-list-button-transition-duration $fab-ios-list-button-transition-timing-function $fab-ios-list-button-transition-delay,
+              opacity $fab-ios-list-button-transition-duration $fab-ios-list-button-transition-timing-function $fab-ios-list-button-transition-delay;
+}
+
+.fab-button-ios-in-list.activated {
+  background-color: $fab-ios-list-button-background-color-activated;
+}
+
+.fab-button-ios-in-list .icon {
+  fill: $fab-ios-list-button-icon-fill-color;
+}
+
+// Translucent FAB buttons
+// --------------------------------------------------
+
+.fab-translucent-ios {
+  background-color: rgba($fab-ios-background-color, $fab-ios-translucent-opacity);
+
+  -webkit-backdrop-filter: $fab-ios-translucent-filter;
+  backdrop-filter: $fab-ios-translucent-filter;
+}
+
+.fab-translucent-ios-in-list {
+  background-color: rgba($fab-ios-list-button-background-color, $fab-ios-translucent-opacity);
+}
+
+
+// Generate iOS FAB colors
+// --------------------------------------------------
+
+@each $color-name, $color-base, $color-contrast in get-colors($colors-ios) {
+
+  $bg-color: $color-base;
+  $bg-color-activated: color-shade($bg-color);
+  $fg-color: $color-contrast;
+
+  .fab-button-ios-#{$color-name} {
+    color: $fg-color;
+    background-color: $bg-color;
+  }
+
+  .fab-button-ios-#{$color-name} .icon {
+    fill: $fg-color;
+  }
+
+  .fab-button-ios-#{$color-name}.activated {
+    background-color: $bg-color-activated;
+  }
+
+  .fab-translucent-ios-#{$color-name} {
+    background-color: rgba($bg-color, $fab-ios-translucent-opacity);
+  }
+
+  .fab-translucent-ios-#{$color-name}.activated {
+    background-color: rgba($bg-color-activated, $fab-ios-translucent-opacity);
+  }
+}
+

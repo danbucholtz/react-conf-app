@@ -1,9 +1,5 @@
-var Thumbnail = /** @class */ (function () {
-    function Thumbnail() {
+export class Thumbnail {
+    render() {
+        return h("slot", null);
     }
-    Thumbnail.prototype.render = function () {
-        return h(0, 0);
-    };
-    return Thumbnail;
-}());
-export { Thumbnail };
+}

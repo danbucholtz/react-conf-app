@@ -31,7 +31,6 @@ export default class PageOne extends Component {
   }
 
   goToPageTwo() {
-    //const page = this.element.closest('ion-page');
     const nav = this.element.closest('ion-nav');
     nav.push(PageTwo, { paramOne: 'Tobey Flenderson'});
   }
@@ -46,9 +45,9 @@ export default class PageOne extends Component {
   render() {
     return [
       <ion-header ref={(element) => this.element = element}>
-        <ion-navbar>
+        <ion-toolbar>
           <ion-title>Page One</ion-title>
-        </ion-navbar>
+        </ion-toolbar>
       </ion-header>,
       <ion-content>
         Page One
